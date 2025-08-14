@@ -2,3 +2,38 @@
 /*  @ Import/write your custom styles here.
 /*  @ Styles from this file will override 'vendors.scss' and Fuse's base styles.
 /* ----------------------------------------------------------------------------------------------------- */
+.theme-default .light .mat-mdc-unelevated-button.mat-primary, .theme-default.light .mat-mdc-unelevated-button.mat-primary{
+    background: #802012;
+}
+.theme-default .dark, .theme-default.dark{
+      background: #410e06!important;
+}
+.bg-theme-color{
+     background: #802012;
+}
+
+.dark{
+    background: #802012;
+}
+.bg-gray-900{
+    background: #802012;
+}
+
+.mlogoleft{
+        position: absolute;
+    z-index: 999;
+    width: 500px;
+    left: 0;
+    right: 0;
+    align-items: center;
+    background: #fff;
+    text-align: center;
+    margin: auto;
+    justify-content: center;
+    display: flex;
+    padding: 4rem 4rem;
+    margin-top: 6rem;
+}
+.mcenter{
+    margin:0 auto;
+}
