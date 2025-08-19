@@ -18,6 +18,8 @@ import { UserService } from 'app/core/user/user.service';
 import { User } from 'app/core/user/user.types';
 import { Subject, takeUntil } from 'rxjs';
 import { FuseDrawerComponent,FuseDrawerService } from '@fuse/components/drawer';
+import { AuthService } from 'app/core/auth/auth.service';
+
 import {
     FuseConfig,
     FuseConfigService,
@@ -62,6 +64,7 @@ export class UserComponent implements OnInit, OnDestroy {
         private _changeDetectorRef: ChangeDetectorRef,
         private _router: Router,
         private _userService: UserService,
+        private _authService: AuthService,
         private _fuseConfigService: FuseConfigService,
         private _fuseDrawerService: FuseDrawerService
     ) {}
@@ -103,7 +106,9 @@ export class UserComponent implements OnInit, OnDestroy {
      * Sign out
      */
     signOut(): void {
-        this._router.navigate(['/sign-out']);
+        //alert("check here");
+        this._authService.signOut();
+        this._router.navigate(['sign-in']);
     }
 
     // -----------------------------------------------------------------------------------------------------
