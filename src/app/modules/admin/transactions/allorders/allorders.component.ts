@@ -1,11 +1,32 @@
 import { Component } from '@angular/core';
-
+import { MATERIAL_IMPORTS } from '../../../material.import';
 @Component({
   selector: 'app-allorders',
-  imports: [],
   templateUrl: './allorders.component.html',
-  styleUrl: './allorders.component.scss'
+  styleUrls: ['./allorders.component.scss'],
+  imports: [MATERIAL_IMPORTS]   // ✅ just one line
 })
 export class AllordersComponent {
+  searchText = '';
 
+  orders = [
+    { id: 'ORD1001', customer: 'John Doe', date: '2025-08-18', amount: 1200, status: 'Pending' },
+    { id: 'ORD1002', customer: 'Jane Smith', date: '2025-08-19', amount: 2500, status: 'Completed' },
+  ];
+
+  filteredOrders() {
+    return this.orders.filter(o =>
+      o.customer.toLowerCase().includes(this.searchText.toLowerCase()) ||
+      o.id.toLowerCase().includes(this.searchText.toLowerCase())
+    );
+  }
+
+  editOrder(order: any) {
+    alert(`Editing Order ${order.id}`);
+  }
+
+  deleteOrder(order: any) {
+    alert(`Deleting Order ${order.id}`);
+  }
 }
+

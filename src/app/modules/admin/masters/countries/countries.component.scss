@@ -69,6 +69,7 @@ img {
   padding: 1rem;
   border-radius: 10px;
   box-shadow: 0px 5px 5px #CDC;
+  border:1px solid #802012;
 
   .table {
     width: 100%;
@@ -98,6 +99,8 @@ img {
 .heading{
   font-size: 1.3rem;
   font-weight: 800;
+  color:#802012;
+  margin-left: 5px;
 
 }
 .row{
@@ -112,13 +115,7 @@ img {
       &:nth-child(1){
          width: 1rem;
       }
-       &:nth-child(3){
-         width: 60%;
-      }
-        &:nth-child(4){
-         width: 20%;
-      }
-     
+           
     }
   }
 }

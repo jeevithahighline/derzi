@@ -1,1 +1,55 @@
-<p>type works!</p>
+<div class="container p-4">
+    <!-- 🔎 Search -->
+    <div class="row">
+      <div class="col-6">
+        <div class="heading">
+             Type
+        </div>
+      </div>
+      <div class="col-6 dflexmain">
+        <button class="btn btn-sm btn-danger">
+              <i class="bi bi-trash"></i>
+               <img src="/images/icon/delete.svg" alt="">
+            </button>      
+        <input type="text" class="form-control searchinput" placeholder="Search type" [(ngModel)]="searchText" />
+        <button class="btn-add"> <img src="/images/icon/add-btn.svg" alt=""> Add Type</button>
+        
+      </div>
+    </div>
+  
+    <!-- 📊 Country Table --><div class="tableparent">
+    <table class="table table-striped table-bordered align-middle text-center">
+      <thead class="table-light">
+        <tr>
+           <th scope="col"><input type="checkbox"></th>
+          <th scope="col">ID</th>
+          <th scope="col">Type</th>
+          <th scope="col">Status</th>
+          <th scope="col">Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let country of filteredCountries()">
+          <td>
+            <input type="checkbox">
+          </td>
+          <td>{{ country.id }}</td>
+          <td>{{ country.name }}</td>  
+          <td>Active</td>         
+          <td>
+            <button class="btn btn-sm btn-primary me-2" (click)="editCountry(country)">
+              <img src="/images/icon/edit-2.svg" alt="">
+            </button>
+            <button class="btn btn-sm btn-danger" (click)="deleteCountry(country)">
+              <i class="bi bi-trash"></i>
+               <img src="/images/icon/delete.svg" alt="">
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    
+  
+    </div>
+  </div>
+  
