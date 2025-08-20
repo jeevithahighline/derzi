@@ -57,11 +57,18 @@ img {
   border-radius: 5px;
   
 }
-
+.searchinput{
+  background-image: url(../../../../../../public/images/icon/search-normal.svg);
+  background-repeat: no-repeat;
+  background-position: 5%;
+  background-size: 7%;
+  padding-left: 2.5rem;
+}
 .tableparent {
   background: #fff;
   padding: 1rem;
   border-radius: 10px;
+  box-shadow: 0px 5px 5px #CDC;
 
   .table {
     width: 100%;
@@ -85,6 +92,33 @@ img {
         object-fit: contain;
 
       }
+    }
+  }
+}
+.heading{
+  font-size: 1.3rem;
+  font-weight: 800;
+
+}
+.row{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+.table{
+  tr{
+    td{
+      &:nth-child(1){
+         width: 1rem;
+      }
+       &:nth-child(3){
+         width: 60%;
+      }
+        &:nth-child(4){
+         width: 20%;
+      }
+     
     }
   }
 }
