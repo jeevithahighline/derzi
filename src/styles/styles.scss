@@ -12,6 +12,15 @@
      background: #802012;
 }
 
+.loginfixed{
+    position: fixed!important;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-position: 100%;
+     background: #802012;
+     padding: 0 0 5rem 0;
+}
 .dark{
     background: #802012;
 }
@@ -20,7 +29,7 @@
 }
 
 .mlogoleft{
-        position: absolute;
+    position: absolute;
     z-index: 999;
     width: 500px;
     left: 0;
@@ -31,9 +40,16 @@
     margin: auto;
     justify-content: center;
     display: flex;
-    padding: 4rem 4rem;
-    margin-top: 6rem;
+    padding: 2rem 2rem;
+    margin-top: 3rem;
+    border-radius: 10px;
 }
 .mcenter{
     margin:0 auto;
+}
+.leftnavlogo{
+    padding: 1rem;
+}
+body{
+     background: #802012;
 }
