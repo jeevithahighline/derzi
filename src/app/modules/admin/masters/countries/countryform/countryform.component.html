@@ -1,12 +1,13 @@
 <h2 class="popuph2" mat-dialog-title>Add Country</h2>
 
-<form [formGroup]="countryForm" (ngSubmit)="save()" class="p-4 grid gap-1">
+<form [formGroup]="dynamicForm" (ngSubmit)="save()" class="p-4 grid gap-1">
 
   <!-- Country Name -->
   <mat-form-field appearance="outline">
     <mat-label>Country Name</mat-label>
     <input matInput formControlName="name" placeholder="Enter country name" />
-    <mat-error *ngIf="countryForm.get('name')?.hasError('required')">
+    <mat-error *ngIf="dynamicForm.get('name')?.hasError('required') && 
+    (dynamicForm.get('name')?.touched || dynamicForm.get('name')?.dirty)">
       Country name is required
     </mat-error>
   </mat-form-field>
@@ -15,7 +16,8 @@
   <mat-form-field appearance="outline">
     <mat-label>Country Code</mat-label>
     <input matInput formControlName="code" placeholder="E.g. IN, US" />
-    <mat-error *ngIf="countryForm.get('code')?.hasError('required')">
+    <mat-error *ngIf="dynamicForm.get('code')?.hasError('required') && 
+    (dynamicForm.get('code')?.touched || dynamicForm.get('code')?.dirty)">
       Country code is required
     </mat-error>
   </mat-form-field>
@@ -33,7 +35,7 @@
       <mat-option value="Active">Active</mat-option>
       <mat-option value="Inactive">Inactive</mat-option>
     </mat-select>
-    <mat-error *ngIf="countryForm.get('status')?.hasError('required')">
+    <mat-error *ngIf="dynamicForm.get('status')?.hasError('required')">
       Status is required
     </mat-error>
   </mat-form-field>
@@ -41,8 +43,8 @@
   <!-- Actions -->
   <div class="flex justify-end gap-3 mt-2">
     <button mat-stroked-button type="button" (click)="close()">Cancel</button>
-    <button mat-raised-button color="primary" class="mat-primary-button" type="submit" [disabled]="countryForm.invalid">
-      Save
+    <button mat-raised-button color="primary" class="mat-primary-button" type="submit">
+      Submit
     </button>
   </div>
 </form>

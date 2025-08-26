@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { MATERIAL_IMPORTS } from '../../../material.import';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Router,ActivatedRoute  } from '@angular/router';
 
 @Component({
   selector: 'app-servicesform',
@@ -14,7 +15,7 @@ export class ServicesformComponent {
   categories = ['Stitching', 'Alteration', 'Dry Cleaning', 'Embroidery'];
   fabrics = ['Customer', 'Shop'];
 
-  constructor(private fb: FormBuilder) {
+  constructor(private _router: Router,private fb: FormBuilder) {
     this.serviceForm = this.fb.group({
       name: ['', [Validators.required, Validators.minLength(3)]],
       name_ar: ['', [Validators.required, Validators.minLength(3)]],
@@ -39,4 +40,20 @@ export class ServicesformComponent {
   get f() {
     return this.serviceForm.controls;
   }
+
+  saveService(){
+
+    if (this.serviceForm.invalid) {
+      this.serviceForm.markAllAsTouched();  // ✅ show validation errors
+      return;
+    }
+  
+    console.log(this.serviceForm.value); // ✅ form values when valid
+
+  }
+
+  onCancel() {
+    this.serviceForm.reset({ status: 'Active' });
+    this._router.navigate(['/services']);
+  }  
 }

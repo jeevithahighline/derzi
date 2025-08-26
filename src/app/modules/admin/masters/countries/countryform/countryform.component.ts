@@ -11,13 +11,13 @@ import { MatDialogRef } from '@angular/material/dialog';
   styleUrls: ['./countryform.component.scss']
 })
 export class CountryformComponent {
-  countryForm: FormGroup;
+  dynamicForm: FormGroup;
 
   constructor(
     private fb: FormBuilder,
     private dialogRef: MatDialogRef<CountryformComponent>
   ) {
-    this.countryForm = this.fb.group({
+    this.dynamicForm = this.fb.group({
       name: ['', Validators.required],
       code: ['', Validators.required],
       flag: [''],
@@ -26,10 +26,13 @@ export class CountryformComponent {
   }
 
   save() {
-    if (this.countryForm.valid) {
-      this.dialogRef.close(this.countryForm.value); // send data back
+    if (this.dynamicForm.invalid) {
+      this.dynamicForm.markAllAsTouched();  // ✅ force all errors to show
+      return;
     }
+    this.dialogRef.close(this.dynamicForm.value);
   }
+  
 
   close() {
     this.dialogRef.close();

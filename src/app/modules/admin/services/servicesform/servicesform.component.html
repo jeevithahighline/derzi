@@ -1,31 +1,24 @@
 <div class="container p-4">
-  <!-- 🔎 Search -->
+ 
   <div class="row">
     <div class="col-6">
       <div class="heading">
-        Services
+          Add Services
       </div>
     </div>
-    <div class="col-6 dflexmain">&nbsp;</div>
+    <div class="col-6 dflexmain">  
+     
+      <button class="btn-add" (click)="saveService()"> <img src="/images/icon/add-btn.svg" alt=""> Save</button>
+      
+      <button class="btn-cancel" (click)="onCancel()">  Cancel</button>
+    </div>
   </div>
 
-  <!-- <div class="container bg-white p-2">
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 ">
-      <div class="bg-blue-300 p-4">Column 1</div>
-      <div class="bg-green-300 p-4">Column 2</div>
-    </div>
-
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
-      <div class="bg-blue-300 p-4">Column 1</div>
-      <div class="bg-green-300 p-4">Column 2</div>
-    </div>
-
-  </div> -->
-
-
+  <div class="row">&nbsp;</div>
   <!---Form Section-->
   <div class="bg-white p-2 border rounded ">
     <form [formGroup]="serviceForm" (ngSubmit)="onSubmit()" class="p-4 grid">
+      
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4 ">
         <div class="w-full">
           <p> <label>Service Name</label><span class="required-astreik">*</span></p>
@@ -55,9 +48,6 @@
           </mat-form-field>
         </div>
       </div>
-
-
-
 
       <!-- Category -->
       <mat-form-field class="w-full">
@@ -120,10 +110,7 @@
           </mat-form-field>
         </div>
       </div>
-      <!-- Price -->
-
-
-      <!-- Duration -->
+     
 
 
       <!-- Fabric Provided By -->
@@ -137,12 +124,7 @@
         </mat-error>
       </mat-form-field>
 
-      <!-- Submit -->
-       <div class="w-full">
- <button mat-raised-button color="primary" class="primarybtn" type="submit">
-        Save Service
-      </button>
-       </div>
+    
      
     </form>
 

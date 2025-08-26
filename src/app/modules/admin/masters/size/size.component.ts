@@ -1,6 +1,7 @@
 import { Component, ViewChild, AfterViewInit } from '@angular/core';
 import { MATERIAL_IMPORTS } from '../../../material.import';
-
+import { MatDialog } from '@angular/material/dialog';
+import { SizeformComponent } from './sizeform/sizeform.component';
 
 @Component({
   selector: 'app-size',
@@ -11,6 +12,9 @@ import { MATERIAL_IMPORTS } from '../../../material.import';
 export class SizeComponent {
   searchText = '';
   totalItems = 2;
+
+  constructor(private dialog: MatDialog) {}
+
   countries = [
     { id: 1, name: 'XL'},
     { id: 2, name: 'Medium' }
@@ -28,6 +32,19 @@ export class SizeComponent {
 
   deleteCountry(country: any) {
     alert(`Deleting ${country.name}`);
+  }
+
+  openAddForm() {
+    const dialogRef = this.dialog.open(SizeformComponent, {
+      width: '500px',
+      disableClose: true
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.countries.push(result);  // add new country
+      }
+    });
   }
 
 }

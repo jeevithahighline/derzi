@@ -1,6 +1,7 @@
 import { Component, ViewChild, AfterViewInit } from '@angular/core';
 import { MATERIAL_IMPORTS } from '../../../material.import';
-
+import { TypeformComponent } from './typeform/typeform.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-type',
@@ -11,6 +12,9 @@ import { MATERIAL_IMPORTS } from '../../../material.import';
 export class TypeComponent {
   searchText = '';
   totalItems = 2;
+
+  constructor(private dialog: MatDialog) {}
+
   countries = [
     { id: 1, name: 'Normal'},
     { id: 2, name: 'Casual' }
@@ -28,6 +32,19 @@ export class TypeComponent {
 
   deleteCountry(country: any) {
     alert(`Deleting ${country.name}`);
+  }
+
+  openAddForm() {
+    const dialogRef = this.dialog.open(TypeformComponent, {
+      width: '500px',
+      disableClose: true
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.countries.push(result);  // add new country
+      }
+    });
   }
 
 }
