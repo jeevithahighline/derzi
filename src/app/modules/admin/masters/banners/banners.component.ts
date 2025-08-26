@@ -10,7 +10,7 @@ import { MATERIAL_IMPORTS } from '../../../material.import';
 })
 export class BannersComponent {
   searchText = '';
-
+  totalItems = 2;
   countries = [
     { id: 1, title: 'Fashion', content:"Lorem ipsum"},
     { id: 2, title: 'Clothing' , content:"Lorem ipsum"}

@@ -28,7 +28,6 @@
             <th>Date</th>
             <th>Amount</th>
             <th>Status</th>
-            <th>Action</th>
           </tr>
         </thead>
         <tbody>
@@ -37,19 +36,13 @@
             <td>{{ order.id }}</td>
             <td>{{ order.customer }}</td>
             <td>{{ order.date }}</td>
-            <td>{{ order.amount | currency:'INR' }}</td>
+            <td>{{ order.amount | currency:'BHD' }}</td>
             <td>{{ order.status }}</td>
-            <td>
-              <button class="btn btn-sm btn-primary me-2" (click)="editOrder(order)">
-                <img src="/images/icon/edit-2.svg" alt="" />
-              </button>
-              <button class="btn btn-sm btn-danger" (click)="deleteOrder(order)">
-                <img src="/images/icon/delete.svg" alt="" />
-              </button>
-            </td>
+            
           </tr>
         </tbody>
       </table>
+      <mat-paginator [length]="totalItems"  [pageSize]="10" [pageSizeOptions]="[10,25,100]" ></mat-paginator>
     </div>
   </div>
   

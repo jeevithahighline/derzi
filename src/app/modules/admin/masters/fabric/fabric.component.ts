@@ -9,6 +9,7 @@ import { MATERIAL_IMPORTS } from '../../../material.import';
 
 export class FabricComponent {
   searchText = '';
+  totalItems = 2;
 
   countries = [
     { id: 1, name: 'Cotton'},

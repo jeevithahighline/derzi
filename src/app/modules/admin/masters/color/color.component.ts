@@ -9,7 +9,7 @@ import { MATERIAL_IMPORTS } from '../../../material.import';
 
 export class ColorComponent {
   searchText = '';
-
+  totalItems = 2;
   countries = [
     { id: 1, name: 'Pink'},
     { id: 2, name: 'Blue' }

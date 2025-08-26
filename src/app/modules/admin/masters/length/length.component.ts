@@ -10,6 +10,7 @@ import { MATERIAL_IMPORTS } from '../../../material.import';
 })
 export class LengthComponent {
   searchText = '';
+  totalItems = 2;
 
   countries = [
     { id: 1, name: 'Shorts'},

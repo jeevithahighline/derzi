@@ -8,7 +8,7 @@ import { MATERIAL_IMPORTS } from '../../../material.import';
 })
 export class InvoicesComponent {
   searchText = '';
-
+  totalItems = 2;
   invoices = [
     { invoiceNo: 'INV5001', orderId: 'ORD1001', customer: 'John Doe', date: '2025-08-18', total: 1200, status: 'Paid' },
     { invoiceNo: 'INV5002', orderId: 'ORD1002', customer: 'Jane Smith', date: '2025-08-19', total: 2500, status: 'Unpaid' },

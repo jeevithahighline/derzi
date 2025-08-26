@@ -10,7 +10,7 @@ import { MATERIAL_IMPORTS } from '../../material.import';
 })
 export class PagesComponent {
   searchText = '';
-
+  totalItems = 2;
   pages = [
     { id: 1, pagetitle: 'Home Page',pagecontent:'Lorem ipsum'},
     { id: 2, pagetitle: 'About us Page',pagecontent:'Lorem ipsum' }

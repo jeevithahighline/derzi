@@ -10,6 +10,7 @@ import { MATERIAL_IMPORTS } from '../../material.import';
 })
 export class FaqComponent {
   searchText = '';
+  totalItems = 2;
 
   countries = [
     { id: 1, questions: 'How do I find my size in different size standards?',answers:'It is in description of the product'},

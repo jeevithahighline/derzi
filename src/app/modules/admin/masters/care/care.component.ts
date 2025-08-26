@@ -10,7 +10,7 @@ import { MATERIAL_IMPORTS } from '../../../material.import';
 
 export class CareComponent {
   searchText = '';
-
+  totalItems = 2;
   countries = [
     { id: 1, name: 'Dry wash'},
     { id: 2, name: 'Normal' }

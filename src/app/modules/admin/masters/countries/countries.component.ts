@@ -1,5 +1,7 @@
 import { Component, ViewChild, AfterViewInit } from '@angular/core';
 import { MATERIAL_IMPORTS } from '../../../material.import';
+import { CountryformComponent } from './countryform/countryform.component';
+import { MatDialog } from '@angular/material/dialog';
 
 
 @Component({
@@ -10,6 +12,9 @@ import { MATERIAL_IMPORTS } from '../../../material.import';
 })
 export class CountriesComponent {
   searchText = '';
+  totalItems = 3;
+
+  constructor(private dialog: MatDialog) {}
 
   countries = [
     { id: 1, name: 'Bahrain', flag: 'https://flagcdn.com/w20/bh.png' },
@@ -31,4 +36,18 @@ export class CountriesComponent {
     alert(`Deleting ${country.name}`);
   }
 
+  openAddCountry() {
+    const dialogRef = this.dialog.open(CountryformComponent, {
+      width: '500px',
+      disableClose: true
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.countries.push(result);  // add new country
+      }
+    });
+  }
+
 }
+

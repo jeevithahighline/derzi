@@ -10,7 +10,7 @@ import { MATERIAL_IMPORTS } from '../../../material.import';
 
 export class PromocodeComponent {
   searchText = '';
-
+  totalItems = 2;
   countries = [
     { id: 1, code: 'T20',description:'Get 20% off on your first order'},
     { id: 2, code: 'DEAL100',description:'50% off for new customers' }

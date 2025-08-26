@@ -10,7 +10,7 @@ import { MATERIAL_IMPORTS } from '../../../material.import';
 
 export class CategoriesComponent {
   searchText = '';
-
+  totalItems = 2;
   countries = [
     { id: 1, name: 'Men'},
     { id: 2, name: 'Women' }

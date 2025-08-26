@@ -1,5 +1,6 @@
 import { Component, ViewChild, AfterViewInit } from '@angular/core';
 import { MATERIAL_IMPORTS } from '../../material.import';
+import { Router,ActivatedRoute  } from '@angular/router';
 
 @Component({
   selector: 'app-services',
@@ -10,11 +11,13 @@ import { MATERIAL_IMPORTS } from '../../material.import';
 
 export class ServicesComponent {
   searchText = '';
-
+  totalItems = 2;
   countries = [
     { id: 1, name: 'Shirt Stitching',category:'Men',description:'details of what’s included',price:'100 BHD',duration:'2 days'},
     { id: 2, name: 'Blouse Design' ,category:'Women',description:'details of what’s included',price:'100 BHD',duration:'2 weeks'}
   ];
+
+  constructor(private _router: Router) {}
 
   filteredCountries() {
     return this.countries.filter(c =>
@@ -28,6 +31,10 @@ export class ServicesComponent {
 
   deleteCountry(country: any) {
     alert(`Deleting ${country.name}`);
+  }
+
+  addService(){
+    this._router.navigate(['/addservice']);
   }
 
 }

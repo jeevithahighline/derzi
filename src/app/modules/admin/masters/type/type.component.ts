@@ -10,7 +10,7 @@ import { MATERIAL_IMPORTS } from '../../../material.import';
 })
 export class TypeComponent {
   searchText = '';
-
+  totalItems = 2;
   countries = [
     { id: 1, name: 'Normal'},
     { id: 2, name: 'Casual' }

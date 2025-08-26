@@ -46,7 +46,7 @@ import { SmstemplatesComponent} from 'app/modules/admin/configuration/smstemplat
 import { PagesComponent} from 'app/modules/admin/pages/pages.component';
 import { FaqComponent} from 'app/modules/admin/faq/faq.component';
 import { ServicesComponent} from 'app/modules/admin/services/services.component';
-
+import { ServicesformComponent} from 'app/modules/admin/services/servicesform/servicesform.component';
 
 //Reports
 import { DriverreportComponent} from 'app/modules/admin/reports/driverreport/driverreport.component';
@@ -63,6 +63,7 @@ import { MessagecenterComponent} from 'app/modules/admin/settings/messagecenter/
 import { AllordersComponent } from 'app/modules/admin/transactions/allorders/allorders.component';
 import { InvoicesComponent } from 'app/modules/admin/transactions/invoices/invoices.component';
 import { PaymenthistoryComponent} from 'app/modules/admin/transactions/paymenthistory/paymenthistory.component';
+import { UserreportComponent } from './modules/admin/reports/userreport/userreport.component';
 
 
 export const appRoutes: Route[] = [
@@ -117,6 +118,22 @@ export const appRoutes: Route[] = [
 
             {path: 'allorders', component: AllordersComponent},
             {path: 'invoices', component: InvoicesComponent},
+
+            {path: 'merchants', component: MerchantsComponent},
+            {path: 'users', component: UsersComponent},
+            {path: 'drivers', component: DriversComponent},
+
+            {path: 'roles', component: RolesComponent},
+            {path: 'groups', component: GroupsComponent},
+
+            {path: 'driverreport', component: DriverreportComponent},
+            {path: 'userreport', component: UserreportComponent},
+            {path: 'merchantreport', component: MerchantreportComponent},
+            {path: 'productsreport', component: ProductreportComponent},
+            {path: 'ordersreport', component: OrdersreportComponent},
+
+            {path: 'addservice', component: ServicesformComponent},
+            {path: 'addservice/:id', component: ServicesformComponent},
         ]
     }
 ];
