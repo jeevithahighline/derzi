@@ -45,7 +45,6 @@
                             "includePaths": ["src/@fuse/styles"]
                         },
                         "styles": [   
-                            "node_modules/bootstrap/dist/css/bootstrap.min.css",                         
                             "src/styles/splash-screen.css",
                             "src/styles/inter.css",
                             "src/@fuse/styles/tailwind.scss",
