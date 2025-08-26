@@ -44,7 +44,8 @@
                         "stylePreprocessorOptions": {
                             "includePaths": ["src/@fuse/styles"]
                         },
-                        "styles": [
+                        "styles": [   
+                            "node_modules/bootstrap/dist/css/bootstrap.min.css",                         
                             "src/styles/splash-screen.css",
                             "src/styles/inter.css",
                             "src/@fuse/styles/tailwind.scss",
@@ -53,6 +54,7 @@
                             "src/@fuse/styles/main.scss",
                             "src/styles/styles.scss",
                             "src/styles/tailwind.scss"
+                            
                         ],
                         "scripts": []
                     },
