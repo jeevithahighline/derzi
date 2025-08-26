@@ -1,15 +1,13 @@
 <div class="container p-4">
  
-  <div class="row">
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2">
     <div class="col-6">
-      <div class="heading">
+      <div class="heading pt-2">
           Add Services
       </div>
     </div>
-    <div class="col-6 dflexmain">  
-     
-      <button class="btn-add" (click)="saveService()"> <img src="/images/icon/add-btn.svg" alt=""> Save</button>
-      
+    <div class="col-6 dflexmain">       
+      <button class="btn-add" (click)="saveService()"> <img src="/images/icon/add-btn.svg" alt=""> Save</button>      
       <button class="btn-cancel" (click)="onCancel()">  Cancel</button>
     </div>
   </div>
