@@ -1,6 +1,6 @@
-<h2 mat-dialog-title>Add Country</h2>
+<h2 class="popuph2" mat-dialog-title>Add Country</h2>
 
-<form [formGroup]="countryForm" (ngSubmit)="save()" class="p-4 grid gap-4">
+<form [formGroup]="countryForm" (ngSubmit)="save()" class="p-4 grid gap-1">
 
   <!-- Country Name -->
   <mat-form-field appearance="outline">
@@ -39,9 +39,9 @@
   </mat-form-field>
 
   <!-- Actions -->
-  <div class="flex justify-end gap-3 mt-4">
+  <div class="flex justify-end gap-3 mt-2">
     <button mat-stroked-button type="button" (click)="close()">Cancel</button>
-    <button mat-raised-button color="primary" type="submit" [disabled]="countryForm.invalid">
+    <button mat-raised-button color="primary" class="mat-primary-button" type="submit" [disabled]="countryForm.invalid">
       Save
     </button>
   </div>

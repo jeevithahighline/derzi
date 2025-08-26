@@ -55,3 +55,10 @@ input{
 body{
      background: #802012;
 }
+
+@media (min-width: 600px) {
+    .mat-mdc-paginator .mat-mdc-paginator-container {
+        justify-content: normal;
+        justify-content: right;
+    }
+}

@@ -3,25 +3,34 @@
   <div class="row">
     <div class="col-6">
       <div class="heading">
-          Services
+        Services
       </div>
     </div>
     <div class="col-6 dflexmain">&nbsp;</div>
   </div>
-  
+
+  <!-- <div class="container bg-white p-2">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 ">
+      <div class="bg-blue-300 p-4">Column 1</div>
+      <div class="bg-green-300 p-4">Column 2</div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
+      <div class="bg-blue-300 p-4">Column 1</div>
+      <div class="bg-green-300 p-4">Column 2</div>
+    </div>
+
+  </div> -->
+
+
   <!---Form Section-->
-  <div class="row">
-
-
-    <form [formGroup]="serviceForm" (ngSubmit)="onSubmit()" class="p-4 grid gap-4">
-
-      <div class="row">
-
-        <div class="col-md-6">
-
-          <label>Service Name</label><span class="required-astreik">*</span>
-          <mat-form-field appearance="outline">
-            <input matInput formControlName="name" placeholder="Enter service name" />
+  <div class="bg-white p-2 border rounded ">
+    <form [formGroup]="serviceForm" (ngSubmit)="onSubmit()" class="p-4 grid">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 ">
+        <div class="w-full">
+          <p> <label>Service Name</label><span class="required-astreik">*</span></p>
+          <mat-form-field class="w-full">
+            <input matInput formControlName="name" class="w-full border rounded" placeholder="Enter service name" />
             <mat-error *ngIf="f['name'].hasError('required')">
               Service name is required
             </mat-error>
@@ -29,13 +38,14 @@
               Minimum 3 characters required
             </mat-error>
           </mat-form-field>
-
         </div>
-        <div class="col-md-6">
+
+        <div class="w-full">
+           <mat-label>Service Name</mat-label> <span class="required-astreik">*</span>
           
-          <label>Service Name</label><span class="required-astreik">*</span>
-          <mat-form-field appearance="outline">
-            <input matInput formControlName="name_ar" placeholder="Enter service name in Arabic" />
+          <mat-form-field class="w-full">
+            <input matInput formControlName="name_ar" class="w-full border rounded"
+              placeholder="Enter service name in Arabic" />
             <mat-error *ngIf="f['name_ar'].hasError('required')">
               Service name in Arabic is required
             </mat-error>
@@ -43,13 +53,14 @@
               Minimum 3 characters required
             </mat-error>
           </mat-form-field>
-
         </div>
       </div>
-   
-    
+
+
+
+
       <!-- Category -->
-      <mat-form-field appearance="outline">
+      <mat-form-field class="w-full">
         <mat-label>Category</mat-label>
         <mat-select formControlName="category">
           <mat-option *ngFor="let cat of categories" [value]="cat">{{ cat }}</mat-option>
@@ -58,9 +69,9 @@
           Category is required
         </mat-error>
       </mat-form-field>
-    
+
       <!-- Description -->
-      <mat-form-field appearance="outline">
+      <mat-form-field class="w-full">
         <mat-label>Description</mat-label>
         <textarea matInput rows="3" formControlName="description"></textarea>
         <mat-error *ngIf="f['description'].hasError('required')">
@@ -71,7 +82,7 @@
         </mat-error>
       </mat-form-field>
 
-      <mat-form-field appearance="outline">
+      <mat-form-field class="w-full">
         <mat-label>Description - Arabic</mat-label>
         <textarea matInput rows="3" formControlName="description_ar"></textarea>
         <mat-error *ngIf="f['description_ar'].hasError('required')">
@@ -81,33 +92,42 @@
           Maximum 250 characters allowed
         </mat-error>
       </mat-form-field>
-    
+
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div class="w-full">
+          <mat-form-field class="w-full">
+            <mat-label>Price</mat-label>
+            <input matInput type="number" formControlName="price" placeholder="Enter price" />
+            <mat-error *ngIf="f['price'].hasError('required')">
+              Price is required
+            </mat-error>
+            <mat-error *ngIf="f['price'].hasError('min')">
+              Price must be greater than 0
+            </mat-error>
+          </mat-form-field>
+        </div>
+        <div class="w-full">
+          <mat-form-field class="w-full">
+            <mat-label>Duration (in days)</mat-label>
+            <input matInput type="number" formControlName="duration" placeholder="Enter duration" />
+            <mat-error *ngIf="f['duration'].hasError('required')">
+              Duration is required
+            </mat-error>
+            <mat-error *ngIf="f['duration'].hasError('min')">
+              Duration must be at least 1
+            </mat-error>
+          </mat-form-field>
+        </div>
+      </div>
       <!-- Price -->
-      <mat-form-field appearance="outline">
-        <mat-label>Price</mat-label>
-        <input matInput type="number" formControlName="price" placeholder="Enter price" />
-        <mat-error *ngIf="f['price'].hasError('required')">
-          Price is required
-        </mat-error>
-        <mat-error *ngIf="f['price'].hasError('min')">
-          Price must be greater than 0
-        </mat-error>
-      </mat-form-field>
-    
+
+
       <!-- Duration -->
-      <mat-form-field appearance="outline">
-        <mat-label>Duration (in days)</mat-label>
-        <input matInput type="number" formControlName="duration" placeholder="Enter duration" />
-        <mat-error *ngIf="f['duration'].hasError('required')">
-          Duration is required
-        </mat-error>
-        <mat-error *ngIf="f['duration'].hasError('min')">
-          Duration must be at least 1
-        </mat-error>
-      </mat-form-field>
-    
+
+
       <!-- Fabric Provided By -->
-      <mat-form-field appearance="outline">
+      <mat-form-field class="w-full">
         <mat-label>Fabric Provided By</mat-label>
         <mat-select formControlName="fabricProvidedBy">
           <mat-option *ngFor="let fabric of fabrics" [value]="fabric">{{ fabric }}</mat-option>
@@ -116,23 +136,18 @@
           Please select who provides fabric
         </mat-error>
       </mat-form-field>
-    
+
       <!-- Submit -->
-      <button mat-raised-button color="primary" type="submit">
+       <div class="w-full">
+ <button mat-raised-button color="primary" class="primarybtn" type="submit">
         Save Service
       </button>
-  </form>
+       </div>
+     
+    </form>
 
 
 
   </div>
 
 </div>
-
-
-
-
-
-
-
-  
