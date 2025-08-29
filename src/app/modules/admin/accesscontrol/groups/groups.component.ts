@@ -1,6 +1,7 @@
 import { Component, ViewChild, AfterViewInit } from '@angular/core';
 import { MATERIAL_IMPORTS } from '../../../material.import';
-
+import { GroupformComponent } from './groupform/groupform.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-groups',
@@ -11,6 +12,9 @@ import { MATERIAL_IMPORTS } from '../../../material.import';
 export class GroupsComponent {
   searchText = '';
   totalItems = 2;
+
+  constructor(private dialog: MatDialog) {}
+  
   countries = [
     { id: 1, name: 'Premium Merchants', description:"High-profile clothing brands with large inventories"},
     { id: 2, name: 'Local Boutiques' , description:"Small-scale clothing shops focused on regional styles"}
@@ -28,6 +32,19 @@ export class GroupsComponent {
 
   deleteCountry(country: any) {
     alert(`Deleting ${country.name}`);
+  }
+
+  openAddForm() {
+    const dialogRef = this.dialog.open(GroupformComponent, {
+      width: '500px',
+      disableClose: true
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.countries.push(result);  // add new country
+      }
+    });
   }
 
 }

@@ -1,5 +1,7 @@
 import { Component, ViewChild, AfterViewInit } from '@angular/core';
 import { MATERIAL_IMPORTS } from '../../../material.import';
+import { RoleformComponent } from './roleform/roleform.component';
+import { MatDialog } from '@angular/material/dialog';
 
 
 @Component({
@@ -11,6 +13,9 @@ import { MATERIAL_IMPORTS } from '../../../material.import';
 export class RolesComponent {
   searchText = '';
   totalItems = 3;
+
+  constructor(private dialog: MatDialog) {}
+  
   countries = [
     { id: 1, name: 'Super Admin', description:"Lorem ipsum"},
     { id: 2, name: 'Staff' , description:"Lorem ipsum"},
@@ -29,6 +34,19 @@ export class RolesComponent {
 
   deleteCountry(country: any) {
     alert(`Deleting ${country.name}`);
+  }
+
+  openAddForm() {
+    const dialogRef = this.dialog.open(RoleformComponent, {
+      width: '500px',
+      disableClose: true
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.countries.push(result);  // add new country
+      }
+    });
   }
 
 }

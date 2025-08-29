@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
 import { MATERIAL_IMPORTS } from '../../../material.import';
+import { Router,ActivatedRoute  } from '@angular/router';
+
 @Component({
   selector: 'app-users',
   imports: [MATERIAL_IMPORTS],   // ✅ just one line
@@ -10,6 +12,9 @@ import { MATERIAL_IMPORTS } from '../../../material.import';
 export class UsersComponent {
   searchText = '';
   totalItems = 2;
+
+  constructor(private _router: Router) {}
+  
   countries = [
     { id: 1, first_name: 'Ahmed',last_name:'Khan',email:'test@gmail.com'},
     { id: 2, first_name: 'Salman',last_name:'Khan',email:'test@gmail.com'}
@@ -27,6 +32,10 @@ export class UsersComponent {
 
   deleteCountry(country: any) {
     alert(`Deleting ${country.name}`);
+  }
+
+  addForm(){
+    this._router.navigate(['/adduser']);
   }
 
 }

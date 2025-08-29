@@ -13,7 +13,7 @@ import { MatDialogRef } from '@angular/material/dialog';
 
 export class BannersformComponent {
   dynamicForm: FormGroup;
-
+  selectedFileName = '';
   constructor(
     private fb: FormBuilder,
     private dialogRef: MatDialogRef<BannersformComponent>

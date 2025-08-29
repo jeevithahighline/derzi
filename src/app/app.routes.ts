@@ -23,6 +23,7 @@ import { CareComponent} from 'app/modules/admin/masters/care/care.component';
 import { CategoriesComponent } from 'app/modules/admin/inventory/categories/categories.component';
 import { ProductsComponent } from 'app/modules/admin/inventory/products/products.component';
 import { PromocodeComponent} from 'app/modules/admin/inventory/promocode/promocode.component';
+import { PromocodeformComponent} from 'app/modules/admin/inventory/promocode/promocodeform/promocodeform.component';
 
 //Access Control
 import { GroupsComponent } from 'app/modules/admin/accesscontrol/groups/groups.component';
@@ -64,6 +65,12 @@ import { AllordersComponent } from 'app/modules/admin/transactions/allorders/all
 import { InvoicesComponent } from 'app/modules/admin/transactions/invoices/invoices.component';
 import { PaymenthistoryComponent} from 'app/modules/admin/transactions/paymenthistory/paymenthistory.component';
 import { UserreportComponent } from './modules/admin/reports/userreport/userreport.component';
+import { ProductformComponent } from './modules/admin/inventory/products/productform/productform.component';
+import { PageformComponent } from './modules/admin/pages/pageform/pageform.component';
+import { FaqformComponent } from './modules/admin/faq/faqform/faqform.component';
+import { DriversformComponent } from './modules/admin/accounts/drivers/driversform/driversform.component';
+import { MerchantformComponent } from './modules/admin/accounts/merchants/merchantform/merchantform.component';
+import { UsersformComponent } from './modules/admin/accounts/users/usersform/usersform.component';
 
 
 export const appRoutes: Route[] = [
@@ -134,6 +141,30 @@ export const appRoutes: Route[] = [
 
             {path: 'addservice', component: ServicesformComponent},
             {path: 'addservice/:id', component: ServicesformComponent},
+
+            {path: 'addproduct', component: ProductformComponent},
+            {path: 'addproduct/:id', component: ProductformComponent},
+
+            {path: 'addpromocode', component: PromocodeformComponent},
+            {path: 'addpromocode/:id', component: PromocodeformComponent},
+
+            {path: 'addpromocode', component: PromocodeformComponent},
+            {path: 'addpromocode/:id', component: PromocodeformComponent},
+
+            {path: 'addPage', component: PageformComponent},
+            {path: 'addPage/:id', component: PageformComponent},
+
+            {path: 'addfaq', component: FaqformComponent},
+            {path: 'addfaq/:id', component: FaqformComponent},
+
+            {path: 'adddriver', component: DriversformComponent},
+            {path: 'adddriver/:id', component: DriversformComponent},
+
+            {path: 'addmerchant', component: MerchantformComponent},
+            {path: 'addmerchant/:id', component: MerchantformComponent},
+
+            {path: 'adduser', component: UsersformComponent},
+            {path: 'adduser/:id', component: UsersformComponent},
         ]
     }
 ];

@@ -1,5 +1,6 @@
 import { Component, ViewChild, AfterViewInit } from '@angular/core';
 import { MATERIAL_IMPORTS } from '../../../material.import';
+import { Router,ActivatedRoute  } from '@angular/router';
 
 @Component({
   selector: 'app-promocode',
@@ -11,6 +12,9 @@ import { MATERIAL_IMPORTS } from '../../../material.import';
 export class PromocodeComponent {
   searchText = '';
   totalItems = 2;
+
+  constructor(private _router: Router) {}
+
   countries = [
     { id: 1, code: 'T20',description:'Get 20% off on your first order'},
     { id: 2, code: 'DEAL100',description:'50% off for new customers' }
@@ -28,6 +32,10 @@ export class PromocodeComponent {
 
   deleteCountry(country: any) {
     alert(`Deleting ${country.name}`);
+  }
+
+  addPromocode(){
+    this._router.navigate(['/addpromocode']);
   }
 
 }

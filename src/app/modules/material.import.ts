@@ -9,10 +9,17 @@ import { MatSelectModule } from '@angular/material/select'; // ✅ needed for <m
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { MatDialogModule } from '@angular/material/dialog';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core'; 
+import { MatMenuModule } from '@angular/material/menu';
+
 
 export const MATERIAL_IMPORTS = [
   CommonModule,
   FormsModule,
+  MatMenuModule,
+  MatDatepickerModule,
+  MatNativeDateModule,
   ReactiveFormsModule,
   MatFormFieldModule,
   MatInputModule,

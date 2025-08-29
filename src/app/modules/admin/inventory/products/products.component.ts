@@ -1,5 +1,6 @@
 import { Component, ViewChild, AfterViewInit } from '@angular/core';
 import { MATERIAL_IMPORTS } from '../../../material.import';
+import { Router,ActivatedRoute  } from '@angular/router';
 
 @Component({
   selector: 'app-products',
@@ -16,6 +17,8 @@ export class ProductsComponent {
     { id: 2, name: 'Salwar',description:'Lorem ipsum' }
   ];
 
+  constructor(private _router: Router) {}
+
   filteredCountries() {
     return this.countries.filter(c =>
       c.name.toLowerCase().includes(this.searchText.toLowerCase())
@@ -28,6 +31,10 @@ export class ProductsComponent {
 
   deleteCountry(country: any) {
     alert(`Deleting ${country.name}`);
+  }
+
+  addProduct(){
+    this._router.navigate(['/addproduct']);
   }
 
 }

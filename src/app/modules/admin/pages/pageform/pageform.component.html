@@ -1,1 +1,99 @@
-<p>pageform works!</p>
+<div class="container p-4">
+ 
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2">
+      <div class="col-6">
+        <div class="heading pt-2">
+            Add Page
+        </div>
+      </div>
+      <div class="col-6 dflexmain">       
+        <button class="btn-add" (click)="savePage()"> Save</button>      
+        <button class="btn-cancel" (click)="onCancel()">  Cancel</button>
+      </div>
+    </div>
+  
+    <div class="row">&nbsp;</div>
+    <!---Form Section-->
+    <div class="bg-white p-2 border rounded ">
+      <form [formGroup]="pageForm" (ngSubmit)="onSubmit()" class="p-4 grid">
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 ">
+          <div class="w-full">
+            <p> <label>Page name</label><span class="required-astreik">*</span></p>
+            <mat-form-field class="w-full">
+              <input matInput formControlName="pagename" class="w-full border rounded" placeholder="Enter Page name" />
+              <!-- <mat-error *ngIf="f['name'].hasError('required')">
+                Service name is required
+              </mat-error> -->
+              <mat-error *ngIf="f['pagename'].hasError('minlength')">
+                Minimum 3 characters required
+              </mat-error>
+            </mat-form-field>
+          </div>
+  
+          
+        </div>
+  
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 ">
+          <div class="w-full">
+            <p> <label>Title</label><span class="required-astreik">*</span></p>
+            <mat-form-field class="w-full">
+              <input matInput formControlName="title" class="w-full border rounded" placeholder="Enter title" />
+              <!-- <mat-error *ngIf="f['name'].hasError('required')">
+                Service name is required
+              </mat-error> -->
+              <mat-error *ngIf="f['title'].hasError('minlength')">
+                Minimum 3 characters required
+              </mat-error>
+            </mat-form-field>
+          </div>
+  
+          <div class="w-full">
+             <mat-label>Title - Arabic</mat-label> <span class="required-astreik">*</span>
+            
+            <mat-form-field class="w-full">
+              <input matInput formControlName="title_ar" class="w-full border rounded"
+                placeholder="Enter title in Arabic" />
+              <!-- <mat-error *ngIf="f['name_ar'].hasError('required')">
+                Service name in Arabic is required
+              </mat-error> -->
+              <mat-error *ngIf="f['title_ar'].hasError('minlength')">
+                Minimum 3 characters required
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+  
+        <!-- Description -->
+        <mat-form-field class="w-full">
+          <mat-label>Description</mat-label>
+          <textarea matInput rows="3" formControlName="description"></textarea>
+          <!-- <mat-error *ngIf="f['description'].hasError('required')">
+            Description is required
+          </mat-error> -->
+          <mat-error *ngIf="f['description'].hasError('maxlength')">
+            Maximum 250 characters allowed
+          </mat-error>
+        </mat-form-field>
+  
+        <mat-form-field class="w-full">
+          <mat-label>Description - Arabic</mat-label>
+          <textarea matInput rows="3" formControlName="description_ar"></textarea>
+          <!-- <mat-error *ngIf="f['description_ar'].hasError('required')">
+            Description - Arabic is required
+          </mat-error> -->
+          <mat-error *ngIf="f['description_ar'].hasError('maxlength')">
+            Maximum 250 characters allowed
+          </mat-error>
+        </mat-form-field>
+  
+  
+       
+              
+      </form>
+  
+  
+  
+    </div>
+  
+  </div>

@@ -1,1 +1,82 @@
-<p>faqform works!</p>
+<div class="container p-4">
+ 
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2">
+      <div class="col-6">
+        <div class="heading pt-2">
+            Add Faq
+        </div>
+      </div>
+      <div class="col-6 dflexmain">       
+        <button class="btn-add" (click)="savePage()"> Save</button>      
+        <button class="btn-cancel" (click)="onCancel()">  Cancel</button>
+      </div>
+    </div>
+  
+    <div class="row">&nbsp;</div>
+    <!---Form Section-->
+    <div class="bg-white p-2 border rounded ">
+      <form [formGroup]="faqform" (ngSubmit)="onSubmit()" class="p-4 grid">
+        
+        
+  
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 ">
+          <div class="w-full">
+            <p> <label>Question</label><span class="required-astreik">*</span></p>
+            <mat-form-field class="w-full">
+              <input matInput formControlName="question" class="w-full border rounded" placeholder="Enter question" />
+              <!-- <mat-error *ngIf="f['name'].hasError('required')">
+                Service name is required
+              </mat-error> -->
+              <mat-error *ngIf="f['question'].hasError('minlength')">
+                Minimum 3 characters required
+              </mat-error>
+            </mat-form-field>
+          </div>
+  
+          <div class="w-full">
+             <mat-label>Question - Arabic</mat-label> <span class="required-astreik">*</span>
+            
+            <mat-form-field class="w-full">
+              <input matInput formControlName="question_ar" class="w-full border rounded"
+                placeholder="Enter title in Arabic" />
+              <!-- <mat-error *ngIf="f['name_ar'].hasError('required')">
+                Service name in Arabic is required
+              </mat-error> -->
+              <mat-error *ngIf="f['question_ar'].hasError('minlength')">
+                Minimum 3 characters required
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+  
+        <!-- Description -->
+        <mat-form-field class="w-full">
+          <mat-label>Answer</mat-label>
+          <textarea matInput rows="3" formControlName="answer"></textarea>
+          <!-- <mat-error *ngIf="f['description'].hasError('required')">
+            Description is required
+          </mat-error> -->
+          <mat-error *ngIf="f['answer'].hasError('maxlength')">
+            Maximum 250 characters allowed
+          </mat-error>
+        </mat-form-field>
+  
+        <mat-form-field class="w-full">
+          <mat-label>Answer - Arabic</mat-label>
+          <textarea matInput rows="3" formControlName="answer_ar"></textarea>
+          <!-- <mat-error *ngIf="f['description_ar'].hasError('required')">
+            Description - Arabic is required
+          </mat-error> -->
+          <mat-error *ngIf="f['answer_ar'].hasError('maxlength')">
+            Maximum 250 characters allowed
+          </mat-error>
+        </mat-form-field>
+       
+              
+      </form>
+  
+  
+  
+    </div>
+  
+  </div>

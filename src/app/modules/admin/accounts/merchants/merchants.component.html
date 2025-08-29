@@ -12,7 +12,7 @@
                <img src="/images/icon/delete.svg" alt="">
             </button>      
         <input type="text" class="form-control searchinput" placeholder="Search Merchant" [(ngModel)]="searchText" />
-        <button class="btn-add"> <img src="/images/icon/add-btn.svg" alt=""> Add Merchant</button>
+        <button class="btn-add" (click)="addForm()"> <img src="/images/icon/add-btn.svg" alt=""> Add Merchant</button>
         
       </div>
     </div>
@@ -24,7 +24,7 @@
           <th><input type="checkbox"></th>
           <th>Merchant ID</th>
           <th>Merchant Name</th>
-          <th>Category</th>
+          <!-- <th>Category</th> -->
           <th>Email</th>
           <th>Phone</th>
           <th>Location</th>
@@ -37,7 +37,7 @@
           <td><input type="checkbox"></td>
           <td>{{ merchant.merchant_id }}</td>
           <td>{{ merchant.merchant_name }}</td>
-          <td>{{ merchant.category }}</td>
+          <!-- <td>{{ merchant.category }}</td> -->
           <td>{{ merchant.contact_email }}</td>
           <td>{{ merchant.phone }}</td>
           <td>{{ merchant.location }}</td>

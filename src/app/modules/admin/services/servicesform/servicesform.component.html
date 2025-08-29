@@ -7,7 +7,7 @@
       </div>
     </div>
     <div class="col-6 dflexmain">       
-      <button class="btn-add" (click)="saveService()"> <img src="/images/icon/add-btn.svg" alt=""> Save</button>      
+      <button class="btn-add" (click)="saveService()"> Save</button>      
       <button class="btn-cancel" (click)="onCancel()">  Cancel</button>
     </div>
   </div>
@@ -22,9 +22,9 @@
           <p> <label>Service Name</label><span class="required-astreik">*</span></p>
           <mat-form-field class="w-full">
             <input matInput formControlName="name" class="w-full border rounded" placeholder="Enter service name" />
-            <mat-error *ngIf="f['name'].hasError('required')">
+            <!-- <mat-error *ngIf="f['name'].hasError('required')">
               Service name is required
-            </mat-error>
+            </mat-error> -->
             <mat-error *ngIf="f['name'].hasError('minlength')">
               Minimum 3 characters required
             </mat-error>
@@ -37,9 +37,9 @@
           <mat-form-field class="w-full">
             <input matInput formControlName="name_ar" class="w-full border rounded"
               placeholder="Enter service name in Arabic" />
-            <mat-error *ngIf="f['name_ar'].hasError('required')">
+            <!-- <mat-error *ngIf="f['name_ar'].hasError('required')">
               Service name in Arabic is required
-            </mat-error>
+            </mat-error> -->
             <mat-error *ngIf="f['name_ar'].hasError('minlength')">
               Minimum 3 characters required
             </mat-error>
@@ -53,18 +53,18 @@
         <mat-select formControlName="category">
           <mat-option *ngFor="let cat of categories" [value]="cat">{{ cat }}</mat-option>
         </mat-select>
-        <mat-error *ngIf="f['category'].hasError('required')">
+        <!-- <mat-error *ngIf="f['category'].hasError('required')">
           Category is required
-        </mat-error>
+        </mat-error> -->
       </mat-form-field>
 
       <!-- Description -->
       <mat-form-field class="w-full">
         <mat-label>Description</mat-label>
         <textarea matInput rows="3" formControlName="description"></textarea>
-        <mat-error *ngIf="f['description'].hasError('required')">
+        <!-- <mat-error *ngIf="f['description'].hasError('required')">
           Description is required
-        </mat-error>
+        </mat-error> -->
         <mat-error *ngIf="f['description'].hasError('maxlength')">
           Maximum 250 characters allowed
         </mat-error>
@@ -73,9 +73,9 @@
       <mat-form-field class="w-full">
         <mat-label>Description - Arabic</mat-label>
         <textarea matInput rows="3" formControlName="description_ar"></textarea>
-        <mat-error *ngIf="f['description_ar'].hasError('required')">
+        <!-- <mat-error *ngIf="f['description_ar'].hasError('required')">
           Description - Arabic is required
-        </mat-error>
+        </mat-error> -->
         <mat-error *ngIf="f['description_ar'].hasError('maxlength')">
           Maximum 250 characters allowed
         </mat-error>
@@ -87,9 +87,9 @@
           <mat-form-field class="w-full">
             <mat-label>Price</mat-label>
             <input matInput type="number" formControlName="price" placeholder="Enter price" />
-            <mat-error *ngIf="f['price'].hasError('required')">
+            <!-- <mat-error *ngIf="f['price'].hasError('required')">
               Price is required
-            </mat-error>
+            </mat-error> -->
             <mat-error *ngIf="f['price'].hasError('min')">
               Price must be greater than 0
             </mat-error>
@@ -99,9 +99,9 @@
           <mat-form-field class="w-full">
             <mat-label>Duration (in days)</mat-label>
             <input matInput type="number" formControlName="duration" placeholder="Enter duration" />
-            <mat-error *ngIf="f['duration'].hasError('required')">
+            <!-- <mat-error *ngIf="f['duration'].hasError('required')">
               Duration is required
-            </mat-error>
+            </mat-error> -->
             <mat-error *ngIf="f['duration'].hasError('min')">
               Duration must be at least 1
             </mat-error>
@@ -117,9 +117,9 @@
         <mat-select formControlName="fabricProvidedBy">
           <mat-option *ngFor="let fabric of fabrics" [value]="fabric">{{ fabric }}</mat-option>
         </mat-select>
-        <mat-error *ngIf="f['fabricProvidedBy'].hasError('required')">
+        <!-- <mat-error *ngIf="f['fabricProvidedBy'].hasError('required')">
           Please select who provides fabric
-        </mat-error>
+        </mat-error> -->
       </mat-form-field>
 
     

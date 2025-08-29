@@ -1,1 +1,106 @@
-<p>merchantform works!</p>
+<div class="container p-4">
+
+    <!-- Header with Actions -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2">
+      <div class="col-6">
+        <div class="heading pt-2">Add Merchant</div>
+      </div>
+      <div class="col-6 dflexmain">
+        <button class="btn-add" (click)="onSubmit()">
+          Save
+        </button>
+        <button class="btn-cancel" (click)="onCancel()">Cancel</button>
+      </div>
+    </div>
+  
+    <div class="row">&nbsp;</div>
+  
+    <!-- Form Section -->
+    <div class="bg-white p-2 border rounded">
+      <form [formGroup]="merchantform" class="p-4 grid gap-4">
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <mat-form-field class="w-full">
+            <mat-label>Merchant Id</mat-label>
+            <input matInput formControlName="merchant_id" placeholder="Enter Merchant Id" />
+            <!-- <mat-error *ngIf="merchantform.get('code')?.hasError('required')">Code is required</mat-error> -->
+          </mat-form-field>
+  
+          <mat-form-field class="w-full">
+              <mat-label>Merchant Name</mat-label>
+              <input matInput formControlName="merchant_name" placeholder="Enter merchant name" />
+              <!-- <mat-error *ngIf="merchantform.get('code')?.hasError('required')">Code is required</mat-error> -->
+            </mat-form-field>
+    
+          </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <mat-form-field class="w-full">
+          <mat-label>Firstname</mat-label>
+          <input matInput formControlName="firstname" placeholder="Enter Firstname" />
+          <!-- <mat-error *ngIf="merchantform.get('code')?.hasError('required')">Code is required</mat-error> -->
+        </mat-form-field>
+
+        <mat-form-field class="w-full">
+            <mat-label>Lastname</mat-label>
+            <input matInput formControlName="lastname" placeholder="Enter lastname" />
+            <!-- <mat-error *ngIf="merchantform.get('code')?.hasError('required')">Code is required</mat-error> -->
+          </mat-form-field>
+  
+        </div>
+             
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">            
+    
+            <mat-form-field class="w-full">
+                <mat-label>Email</mat-label>
+                <input matInput formControlName="email" placeholder="Enter email" />
+                <!-- <mat-error *ngIf="merchantform.get('code')?.hasError('required')">Code is required</mat-error> -->
+              </mat-form-field>
+
+              <mat-form-field class="w-full">
+                <mat-label>Mobile number</mat-label>
+                <input matInput formControlName="mobilenumber" placeholder="Enter mobilenumber" />
+                <!-- <mat-error *ngIf="merchantform.get('code')?.hasError('required')">Code is required</mat-error> -->
+              </mat-form-field>  
+      
+        </div>   
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <mat-form-field class="w-full">
+              <mat-label>Username</mat-label>
+              <input matInput formControlName="username" placeholder="Enter username" />
+              <!-- <mat-error *ngIf="merchantform.get('code')?.hasError('required')">Code is required</mat-error> -->
+            </mat-form-field>
+    
+            <mat-form-field class="w-full">
+                <mat-label>Password</mat-label>
+                <input matInput formControlName="password" placeholder="Enter password" />
+                <!-- <mat-error *ngIf="merchantform.get('code')?.hasError('required')">Code is required</mat-error> -->
+              </mat-form-field>
+      
+        </div>   
+      
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+          <mat-form-field class="w-full">
+                <mat-label>Location</mat-label>
+                <input matInput formControlName="location" placeholder="Enter location" />
+                <!-- <mat-error *ngIf="merchantform.get('code')?.hasError('required')">Code is required</mat-error> -->
+          </mat-form-field>   
+
+          <mat-form-field class="w-full">
+            <mat-label>Status</mat-label>
+            <mat-select formControlName="status">
+              <mat-option value="Active">Active</mat-option>
+              <mat-option value="Inactive">Inactive</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        
+      </form>
+      
+    </div>
+  </div>
+  
+
+

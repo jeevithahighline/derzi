@@ -6,20 +6,20 @@
   <mat-form-field appearance="outline">
     <mat-label>Country Name</mat-label>
     <input matInput formControlName="name" placeholder="Enter country name" />
-    <mat-error *ngIf="dynamicForm.get('name')?.hasError('required') && 
+    <!-- <mat-error *ngIf="dynamicForm.get('name')?.hasError('required') && 
     (dynamicForm.get('name')?.touched || dynamicForm.get('name')?.dirty)">
       Country name is required
-    </mat-error>
+    </mat-error> -->
   </mat-form-field>
 
   <!-- Country Code -->
   <mat-form-field appearance="outline">
     <mat-label>Country Code</mat-label>
     <input matInput formControlName="code" placeholder="E.g. IN, US" />
-    <mat-error *ngIf="dynamicForm.get('code')?.hasError('required') && 
+    <!-- <mat-error *ngIf="dynamicForm.get('code')?.hasError('required') && 
     (dynamicForm.get('code')?.touched || dynamicForm.get('code')?.dirty)">
       Country code is required
-    </mat-error>
+    </mat-error> -->
   </mat-form-field>
 
   <!-- Flag URL -->

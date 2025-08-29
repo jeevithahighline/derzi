@@ -12,7 +12,7 @@
                <img src="/images/icon/delete.svg" alt="">
             </button>      
         <input type="text" class="form-control searchinput" placeholder="Search faq" [(ngModel)]="searchText" />
-        <button class="btn-add"> <img src="/images/icon/add-btn.svg" alt=""> Add FAQ</button>
+        <button class="btn-add" (click)="addfaq()"> <img src="/images/icon/add-btn.svg" alt=""> Add FAQ</button>
         
       </div>
     </div>
@@ -25,6 +25,7 @@
           <th scope="col">ID</th>
           <th scope="col">Questions</th>
           <th scope="col">Answers</th>
+          <th scope="col">Status</th>
           <th scope="col">Action</th>
         </tr>
       </thead>

@@ -1,5 +1,6 @@
 import { Component, ViewChild, AfterViewInit } from '@angular/core';
 import { MATERIAL_IMPORTS } from '../../../material.import';
+import { Router,ActivatedRoute  } from '@angular/router';
 
 @Component({
   selector: 'app-drivers',
@@ -11,6 +12,9 @@ import { MATERIAL_IMPORTS } from '../../../material.import';
 export class DriversComponent {
   searchText = '';
   totalItems = 2;
+
+  constructor(private _router: Router) {}
+  
   countries = [
     {
       id:'1',
@@ -42,6 +46,10 @@ export class DriversComponent {
 
   deleteCountry(country: any) {
     alert(`Deleting ${country.name}`);
+  }
+
+  addForm(){
+    this._router.navigate(['/adddriver']);
   }
 
 }

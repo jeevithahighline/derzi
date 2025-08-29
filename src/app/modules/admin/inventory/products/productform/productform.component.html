@@ -1,1 +1,219 @@
-<p>productform works!</p>
+<div class="container p-4">
+
+    <!-- Header with Actions -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2">
+      <div class="col-6">
+        <div class="heading pt-2">Add Product</div>
+      </div>
+      <div class="col-6 dflexmain">
+        <button class="btn-add" (click)="onSubmit()">
+         Save
+        </button>
+        <button class="btn-cancel" (click)="onCancel()">Cancel</button>
+      </div>
+    </div>
+  
+    <div class="row">&nbsp;</div>
+  
+    <!-- Form Section -->
+    <div class="bg-white p-2 border rounded">
+      <form [formGroup]="productForm" class="p-4 grid">
+  
+        <!-- Name & Name (Arabic) -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <mat-form-field class="w-full">
+            <mat-label>Product Name</mat-label>
+            <input matInput formControlName="name" placeholder="Enter product name" />
+            <!-- <mat-error *ngIf="f['name'].hasError('required')">Product name is required</mat-error> -->
+          </mat-form-field>
+  
+          <mat-form-field class="w-full">
+            <mat-label>Product Name (Arabic)</mat-label>
+            <input matInput formControlName="name_ar" placeholder="Enter product name in Arabic" />
+            <!-- <mat-error *ngIf="f['name_ar'].hasError('required')">Arabic name is required</mat-error> -->
+          </mat-form-field>
+        </div>
+  
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <!-- Description -->
+        <mat-form-field class="w-full">
+          <mat-label>Description</mat-label>
+          <textarea matInput rows="3" formControlName="description"></textarea>
+          <!-- <mat-error *ngIf="f['description'].hasError('required')">Description is required</mat-error> -->
+        </mat-form-field>
+  
+        <mat-form-field class="w-full">
+          <mat-label>Description (Arabic)</mat-label>
+          <textarea matInput rows="3" formControlName="description_ar"></textarea>
+          <!-- <mat-error *ngIf="f['description_ar'].hasError('required')">Arabic description is required</mat-error> -->
+        </mat-form-field>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <!-- Category -->
+        <mat-form-field class="w-full">
+          <mat-label>Category</mat-label>
+          <mat-select formControlName="category">
+            <mat-option *ngFor="let cat of categories" [value]="cat._id">{{ cat.name }}</mat-option>
+          </mat-select>
+          <!-- <mat-error *ngIf="f['category'].hasError('required')">Category is required</mat-error> -->
+        </mat-form-field>
+  
+        <!-- Quantity -->
+        <mat-form-field class="w-full">
+          <mat-label>Quantity</mat-label>
+          <input matInput type="number" formControlName="quantity" />
+          <!-- <mat-error *ngIf="f['quantity'].hasError('required')">Quantity is required</mat-error> -->
+        </mat-form-field>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <!-- Merchant -->
+        <mat-form-field class="w-full">
+          <mat-label>Merchant</mat-label>
+          <mat-select formControlName="merchant_id">
+            <mat-option *ngFor="let merchant of merchants" [value]="merchant._id">{{ merchant.name }}</mat-option>
+          </mat-select>
+          <!-- <mat-error *ngIf="f['merchant_id'].hasError('required')">Merchant is required</mat-error> -->
+        </mat-form-field>
+  
+        <!-- Length -->
+        <mat-form-field class="w-full">
+          <mat-label>Length</mat-label>
+          <mat-select formControlName="length_id">
+            <mat-option *ngFor="let length of lengths" [value]="length._id">{{ length.name }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <!-- Fabric -->
+        <mat-form-field class="w-full">
+          <mat-label>Fabric</mat-label>
+          <mat-select formControlName="fabric_id">
+            <mat-option *ngFor="let fabric of fabrics" [value]="fabric._id">{{ fabric.name }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+  
+        <!-- Type -->
+        <mat-form-field class="w-full">
+          <mat-label>Type</mat-label>
+          <mat-select formControlName="type_id">
+            <mat-option *ngFor="let type of types" [value]="type._id">{{ type.name }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+       </div>
+
+       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <!-- Brand -->
+        <mat-form-field class="w-full">
+          <mat-label>Brand</mat-label>
+          <mat-select formControlName="brand_id">
+            <mat-option *ngFor="let brand of brands" [value]="brand._id">{{ brand.name }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+  
+        <!-- Size -->
+        <mat-form-field class="w-full">
+          <mat-label>Size</mat-label>
+          <mat-select formControlName="size_id">
+            <mat-option *ngFor="let size of sizes" [value]="size._id">{{ size.name }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <!-- Color -->
+        <mat-form-field class="w-full">
+          <mat-label>Color</mat-label>
+          <mat-select formControlName="color_id">
+            <mat-option *ngFor="let color of colors" [value]="color._id">{{ color.name }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+  
+        <!-- Care -->
+        <mat-form-field class="w-full">
+          <mat-label>Care Instructions</mat-label>
+          <mat-select formControlName="care_id">
+            <mat-option *ngFor="let care of cares" [value]="care._id">{{ care.name }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <!-- Country -->
+        <mat-form-field class="w-full">
+          <mat-label>Country</mat-label>
+          <mat-select formControlName="country_id">
+            <mat-option *ngFor="let country of countries" [value]="country._id">{{ country.name }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="w-full">
+            <mat-label>Image</mat-label>
+          
+            <input
+              type="file"
+              class="hidden"
+              #fileInput
+              (change)="onFileSelected($event)"
+              formControlName="image"
+            />
+          
+            <!-- fake text input to show file name -->
+            <input
+              matInput
+              placeholder="Choose file"
+              [value]="selectedFileNames"
+              readonly
+              (click)="fileInput.click()"
+            />
+          
+            <button mat-icon-button matSuffix (click)="fileInput.click()" type="button">
+              <mat-icon>upload</mat-icon>
+            </button>
+          
+            <mat-error *ngIf="productForm.get('image')?.hasError('required') && productForm.get('image')?.touched">
+              Image is required
+            </mat-error>
+        </mat-form-field>
+         </div>
+        <!-- Price & Currency -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <mat-form-field class="w-full">
+            <mat-label>Price</mat-label>
+            <input matInput type="number" formControlName="price" />
+          </mat-form-field>
+  
+          <mat-form-field class="w-full">
+            <mat-label>Currency</mat-label>
+            <mat-select formControlName="currency">
+              <mat-option *ngFor="let c of currencies" [value]="c.code">{{ c.name }} ({{ c.code }})</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <!-- VAT -->
+        <mat-form-field class="w-full">
+          <mat-label>VAT Percentage</mat-label>
+          <input matInput type="number" formControlName="vatPercentage" />
+        </mat-form-field>
+  
+        <!-- Status -->
+        <mat-form-field class="w-full">
+          <mat-label>Status</mat-label>
+          <mat-select formControlName="status">
+            <mat-option value="Active">Active</mat-option>
+            <mat-option value="Inactive">Inactive</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        
+        </div>
+  
+   
+  
+        
+      </form>
+    </div>
+  </div>
+  

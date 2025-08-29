@@ -1,6 +1,6 @@
 import { Component, ViewChild, AfterViewInit } from '@angular/core';
 import { MATERIAL_IMPORTS } from '../../material.import';
-
+import { Router,ActivatedRoute  } from '@angular/router';
 
 @Component({
   selector: 'app-pages',
@@ -11,6 +11,8 @@ import { MATERIAL_IMPORTS } from '../../material.import';
 export class PagesComponent {
   searchText = '';
   totalItems = 2;
+
+  constructor(private _router: Router) {}
   pages = [
     { id: 1, pagetitle: 'Home Page',pagecontent:'Lorem ipsum'},
     { id: 2, pagetitle: 'About us Page',pagecontent:'Lorem ipsum' }
@@ -28,6 +30,10 @@ export class PagesComponent {
 
   deleteCountry(country: any) {
     alert(`Deleting ${country.name}`);
+  }
+
+  addPages(){
+    this._router.navigate(['/addPage']);
   }
 
 }

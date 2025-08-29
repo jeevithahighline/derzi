@@ -1,6 +1,7 @@
 import { Component, ViewChild, AfterViewInit } from '@angular/core';
 import { MATERIAL_IMPORTS } from '../../../material.import';
-
+import { CategoryformComponent } from './categoryform/categoryform.component';
+import { MatDialog } from '@angular/material/dialog';
 @Component({
   selector: 'app-categories',
   imports: [MATERIAL_IMPORTS],   // ✅ just one line
@@ -11,6 +12,9 @@ import { MATERIAL_IMPORTS } from '../../../material.import';
 export class CategoriesComponent {
   searchText = '';
   totalItems = 2;
+
+  constructor(private dialog: MatDialog) {}
+
   countries = [
     { id: 1, name: 'Men'},
     { id: 2, name: 'Women' }
@@ -28,6 +32,19 @@ export class CategoriesComponent {
 
   deleteCountry(country: any) {
     alert(`Deleting ${country.name}`);
+  }
+
+  openAddForm() {
+    const dialogRef = this.dialog.open(CategoryformComponent, {
+      width: '500px',
+      disableClose: true
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.countries.push(result);  // add new country
+      }
+    });
   }
 
 }

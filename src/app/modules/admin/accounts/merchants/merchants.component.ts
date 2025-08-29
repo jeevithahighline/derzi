@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { MATERIAL_IMPORTS } from '../../../material.import';
+import { Router,ActivatedRoute  } from '@angular/router';
 
 @Component({
   selector: 'app-merchants',
@@ -11,6 +12,9 @@ import { MATERIAL_IMPORTS } from '../../../material.import';
 export class MerchantsComponent {
   searchText = '';
   totalItems = 2;
+
+  constructor(private _router: Router) {}
+  
   merchants = [
     {
       merchant_id: 'M001',
@@ -44,5 +48,9 @@ export class MerchantsComponent {
 
   deleteMerchant(merchant: any) {
     alert(`Deleting ${merchant.merchant_name}`);
+  }
+
+  addForm(){
+    this._router.navigate(['/addmerchant']);
   }
 }
