@@ -11,6 +11,8 @@ import { MATERIAL_IMPORTS } from '../../../material.import';
 export class MerchantreportComponent {
   searchText = '';
   totalItems = 2;
+  masterSelected: boolean = false;
+  
   merchants = [
     {
       merchant_id: 'M001',
@@ -19,7 +21,8 @@ export class MerchantreportComponent {
       contact_email: 'trendy@threads.com',
       phone: '+91-9876543210',
       location: 'Mumbai, India',
-      status: 'Active'
+      status: 'Active',
+      isSelected: false
     },
     {
       merchant_id: 'M002',
@@ -28,7 +31,8 @@ export class MerchantreportComponent {
       contact_email: 'urban@stylehub.com',
       phone: '+91-9123456780',
       location: 'Bangalore, India',
-      status: 'Inactive'
+      status: 'Inactive',
+      isSelected: false
     }
   ];
 
@@ -44,6 +48,16 @@ export class MerchantreportComponent {
 
   deleteMerchant(merchant: any) {
     alert(`Deleting ${merchant.merchant_name}`);
+  }
+
+  // Toggle all checkboxes
+  checkUncheckAll() {
+    this.merchants.forEach(merchants => merchants.isSelected = this.masterSelected);
+  }
+
+  // If all rows checked, master should be checked
+  isAllSelected() {
+    this.masterSelected = this.merchants.every(merchants => merchants.isSelected);
   }
 }
 

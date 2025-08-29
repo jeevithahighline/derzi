@@ -11,6 +11,8 @@ import { MATERIAL_IMPORTS } from '../../../material.import';
 export class DriverreportComponent {
   searchText = '';
   totalItems = 2;
+  masterSelected: boolean = false;
+  
   countries = [
     {
       id:'1',
@@ -18,7 +20,8 @@ export class DriverreportComponent {
       contact_email: 'ahmed@gmail.com',
       phone: '+91-9876543210',
       location: 'Mumbai, India',
-      status: 'Active'
+      status: 'Active',
+      isSelected: false
     },
     {
       id:'2',
@@ -26,7 +29,8 @@ export class DriverreportComponent {
       contact_email: 'sameem@gmail.com',
       phone: '+91-9123456780',
       location: 'Bangalore, India',
-      status: 'Inactive'
+      status: 'Inactive',
+      isSelected: false
     }
   ];
 
@@ -42,6 +46,16 @@ export class DriverreportComponent {
 
   deleteCountry(country: any) {
     alert(`Deleting ${country.name}`);
+  }
+
+  // Toggle all checkboxes
+  checkUncheckAll() {
+    this.countries.forEach(country => country.isSelected = this.masterSelected);
+  }
+
+  // If all rows checked, master should be checked
+  isAllSelected() {
+    this.masterSelected = this.countries.every(country => country.isSelected);
   }
 
 }
