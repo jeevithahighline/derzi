@@ -1,24 +1,29 @@
 <div class="container p-4">
-    <!-- 🔎 Search -->
-    <div class="row">
-      <div class="col-6">
-        <div class="heading">
-             Users Report
-        </div>
-      </div>
-      <div class="col-6 dflexmain">
-         
-        <input type="text" class="form-control searchinput" placeholder="Search User" [(ngModel)]="searchText" />
-        <button class="btn-add">Download</button>
-        
+  <!-- 🔎 Search -->
+  <div class="row">
+    <div class="col-6">
+      <div class="heading">
+        Users Report
       </div>
     </div>
-  
-    <!-- 📊 Country Table --><div class="tableparent">
+    <div class="col-6 dflexmain">
+      <input type="text" class="form-control searchinput" placeholder="Search User" [(ngModel)]="searchText" />
+      <button class="btn-add">Download</button>
+    </div>
+  </div>
+
+  <!-- 📊 Country Table -->
+  <div class="tableparent">
     <table class="table table-striped table-bordered align-middle text-center">
       <thead class="table-light">
         <tr>
-          <th scope="col"><input type="checkbox" [(ngModel)]="masterSelected" (change)="checkUncheckAll()"></th>
+          <th scope="col">
+            <label class="customcheckbox">
+              <input type="checkbox" [(ngModel)]="masterSelected" (change)="checkUncheckAll()">
+              <span class="checkmark"></span>
+            </label>
+            <!-- <input type="checkbox" > -->
+          </th>
           <th scope="col">ID</th>
           <th scope="col">First name</th>
           <th scope="col">Last name</th>
@@ -28,20 +33,22 @@
       </thead>
       <tbody>
         <tr *ngFor="let country of filteredCountries()">
-          <td>
-            <input type="checkbox" [(ngModel)]="country.isSelected"  (change)="isAllSelected()">
+          <td>           
+             <label class="customcheckbox">
+              <input type="checkbox" [(ngModel)]="country.isSelected" (change)="isAllSelected()">
+              <span class="checkmark"></span>
+            </label>
           </td>
           <td>{{ country.id }}</td>
-          <td>{{ country.first_name }}</td> 
-          <td>{{ country.last_name }}</td> 
-          <td>{{ country.email }}</td> 
-          <td>Active</td>                     
-          
+          <td>{{ country.first_name }}</td>
+          <td>{{ country.last_name }}</td>
+          <td>{{ country.email }}</td>
+          <td>Active</td>
+
         </tr>
       </tbody>
     </table>
-    <mat-paginator [length]="totalItems"  [pageSize]="10" [pageSizeOptions]="[10,25,100]" ></mat-paginator>
-  
-    </div>
+    <mat-paginator [length]="totalItems" [pageSize]="10" [pageSizeOptions]="[10,25,100]"></mat-paginator>
+
   </div>
-  
+</div>
