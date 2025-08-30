@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component,Inject } from '@angular/core';
 import { MATERIAL_IMPORTS } from '../../../material.import';
 @Component({
   selector: 'app-ordersreport',
@@ -7,9 +7,13 @@ import { MATERIAL_IMPORTS } from '../../../material.import';
   imports: [MATERIAL_IMPORTS]   // ✅ just one line
 })
 export class OrdersreportComponent {
-  searchText = '';
-  totalItems = 2;
+  searchText: string = '';
+  selectedStatus: string = '';
+  amount: string = '';
+  startDate: Date | null = null;
+  endDate: Date | null = null;
   masterSelected: boolean = false;
+  totalItems = 2;
 
   orders = [
     { id: 'ORD1001', customer: 'John Doe', date: '2025-08-18', amount: 1200, status: 'Pending',isSelected: false },
@@ -39,6 +43,26 @@ export class OrdersreportComponent {
   // If all rows checked, master should be checked
   isAllSelected() {
     this.masterSelected = this.orders.every(country => country.isSelected);
+  }
+
+  applyFilters() {
+    console.log({
+      search: this.searchText,
+      status: this.selectedStatus,
+      amount: this.amount,
+      start: this.startDate,
+      end: this.endDate
+    });
+
+    // Call API or filter logic here
+  }
+
+  clearFilters() {
+    this.searchText = '';
+    this.selectedStatus = '';
+    this.amount='';
+    this.startDate = null;
+    this.endDate = null;
   }
 }
 

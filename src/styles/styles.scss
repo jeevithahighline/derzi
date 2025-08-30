@@ -181,3 +181,9 @@ input:checked ~ .checkmark {
   -ms-transform: rotate(45deg);
   transform: rotate(45deg);
 }
+
+/* Make required asterisk (*) red in Angular Material */
+.mat-mdc-form-field-required-marker {
+    color: red !important;
+  }
+  

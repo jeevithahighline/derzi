@@ -1,1 +1,43 @@
-<p>paymentmethodform works!</p>
+<h2 class="popuph2" mat-dialog-title>
+
+    {{ data?.payment ? 'Edit Payment Method' : 'Add Payment Method' }}
+  
+  </h2>
+  
+  <form [formGroup]="dynamicForm" (ngSubmit)="save()" class="p-4 grid gap-1">
+  
+    <!-- Country Name -->
+    <mat-form-field appearance="outline">
+      <mat-label>Name</mat-label>
+      <input matInput formControlName="name" placeholder="Enter Payment Method" />
+      <!-- <mat-error *ngIf="dynamicForm.get('name')?.hasError('required') && 
+      (dynamicForm.get('name')?.touched || dynamicForm.get('name')?.dirty)">
+        Type is required
+      </mat-error> -->
+    </mat-form-field>
+  
+   
+  
+    <!-- Status -->
+    <mat-form-field appearance="outline">
+      <mat-label>Status</mat-label>
+      <mat-select formControlName="status">
+        <mat-option value="Active">Active</mat-option>
+        <mat-option value="Inactive">Inactive</mat-option>
+      </mat-select>
+      <mat-error *ngIf="dynamicForm.get('status')?.hasError('required')">
+        Status is required
+      </mat-error>
+    </mat-form-field>
+  
+    <!-- Actions -->
+    <div class="flex justify-end gap-3 mt-2">
+      <button mat-stroked-button type="button" (click)="close()">Cancel</button>
+      <button mat-raised-button color="primary" class="mat-primary-button" type="submit">
+        Submit
+      </button>
+    </div>
+  </form>
+  
+  
+  

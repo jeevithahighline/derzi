@@ -1,1 +1,84 @@
-<p>applicationnotification works!</p>
+<div class="container p-4">
+ 
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2">
+      <div class="col-6">
+        <div class="heading pt-2">
+            Application Notification
+        </div>
+      </div>
+      <div class="col-6 dflexmain">       
+        <button class="btn-add" (click)="savePage()"> Save</button>      
+        <button class="btn-cancel" (click)="onCancel()">  Cancel</button>
+      </div>
+    </div>
+  
+    <div class="row">&nbsp;</div>
+    <!---Form Section-->
+    <div class="bg-white p-2 border rounded ">
+    
+        <form [formGroup]="notificationform" (ngSubmit)="onSubmit()" class="p-4 grid gap-4">
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <!-- Notification Type -->
+                    <mat-form-field class="w-full">
+                        <mat-label>Notification Type</mat-label>
+                        <mat-select formControlName="notificationtype"
+                                    (selectionChange)="onNotificationTypeChange($event.value)">
+                        <mat-option value="General">General</mat-option>
+                        <mat-option value="Offer">Offer</mat-option>
+                        <mat-option value="User">User</mat-option>
+                        <mat-option value="Merchants">Merchants</mat-option>
+                        <mat-option value="Drivers">Drivers</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                    
+                    <!-- Conditional User Dropdown -->
+                    <div *ngIf="selectedTypeUsers.length > 0">
+                        <mat-form-field class="w-full">
+                        <mat-label>Select {{ notificationform.value.notificationtype }}</mat-label>
+                        <mat-select formControlName="targetUser">
+                            <mat-option *ngFor="let u of selectedTypeUsers" [value]="u.id">
+                            {{ u.name }}
+                            </mat-option>
+                        </mat-select>
+                        </mat-form-field>
+                    </div>
+  
+            </div>
+          
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <!-- English Title -->
+              <mat-form-field class="w-full" floatLabel="always">
+                <mat-label>English Title</mat-label>
+                <input matInput formControlName="title" placeholder="Title in English" />
+              </mat-form-field>
+          
+              <!-- Arabic Title -->
+              <mat-form-field class="w-full" floatLabel="always">
+                <mat-label>Arabic Title</mat-label>
+                <input matInput formControlName="title_ar" placeholder="Title in Arabic" />
+              </mat-form-field>
+            </div>
+          
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <!-- English Message -->
+              <mat-form-field class="w-full" floatLabel="always">
+                <mat-label>English Message</mat-label>
+                <textarea matInput rows="3" formControlName="message" placeholder="Message in English"></textarea>
+              </mat-form-field>
+          
+              <!-- Arabic Message -->
+              <mat-form-field class="w-full" floatLabel="always">
+                <mat-label>Arabic Message</mat-label>
+                <textarea matInput rows="3" formControlName="message_ar" placeholder="Message in Arabic"></textarea>
+              </mat-form-field>
+            </div>
+          
+          </form>
+          
+  
+    </div>
+  
+  </div>
+
+

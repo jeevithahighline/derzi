@@ -1,4 +1,8 @@
-<h2 class="popuph2" mat-dialog-title>Add Type</h2>
+<h2 class="popuph2" mat-dialog-title>
+
+  {{ data?.type ? 'Edit Type' : 'Add Type' }}
+
+</h2>
 
 <form [formGroup]="dynamicForm" (ngSubmit)="save()" class="p-4 grid gap-1">
 

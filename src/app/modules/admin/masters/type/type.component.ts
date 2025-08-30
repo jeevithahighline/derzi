@@ -12,26 +12,36 @@ import { MatDialog } from '@angular/material/dialog';
 export class TypeComponent {
   searchText = '';
   totalItems = 2;
-
+  masterSelected: boolean = false;
   constructor(private dialog: MatDialog) {}
 
-  countries = [
-    { id: 1, name: 'Normal'},
-    { id: 2, name: 'Casual' }
+  types = [
+    { id: 1, name: 'Normal',isSelected: false},
+    { id: 2, name: 'Casual',isSelected: false }
   ];
 
-  filteredCountries() {
-    return this.countries.filter(c =>
+  filteredData() {
+    return this.types.filter(c =>
       c.name.toLowerCase().includes(this.searchText.toLowerCase())
     );
   }
 
-  editCountry(country: any) {
-    alert(`Editing ${country.name}`);
+  edittype(type: any, index: number) {
+    const dialogRef = this.dialog.open(TypeformComponent, {
+      width: '500px',
+      disableClose: true,
+      data: { type }   // 👈 pass existing type to dialog
+    });
+  
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.types[index] = result; // 👈 update instead of push
+      }
+    });
   }
-
-  deleteCountry(country: any) {
-    alert(`Deleting ${country.name}`);
+  
+  deletetype(type: any) {
+    //alert(`Deleting ${type.name}`);
   }
 
   openAddForm() {
@@ -42,9 +52,19 @@ export class TypeComponent {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        this.countries.push(result);  // add new country
+        this.types.push(result);  // add new type
       }
     });
+  }
+
+  // Toggle all checkboxes
+  checkUncheckAll() {
+    this.types.forEach(type => type.isSelected = this.masterSelected);
+  }
+
+  // If all rows checked, master should be checked
+  isAllSelected() {
+    this.masterSelected = this.types.every(type => type.isSelected);
   }
 
 }

@@ -41,11 +41,11 @@ export class DriverreportComponent {
   }
 
   editCountry(country: any) {
-    alert(`Editing ${country.name}`);
+    //alert(`Editing ${country.name}`);
   }
 
   deleteCountry(country: any) {
-    alert(`Deleting ${country.name}`);
+    //alert(`Deleting ${country.name}`);
   }
 
   // Toggle all checkboxes

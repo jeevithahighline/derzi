@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component,Inject } from '@angular/core';
 import { MATERIAL_IMPORTS } from '../../../material.import';
 @Component({
   selector: 'app-userreport',
@@ -17,7 +17,7 @@ export class UserreportComponent {
     { id: 2, first_name: 'Salman',last_name:'Khan',email:'test@gmail.com', isSelected: false}
   ];
 
-  filteredCountries() {
+  filteredData() {
     return this.countries.filter(c =>
       c.first_name.toLowerCase().includes(this.searchText.toLowerCase())
     );
@@ -34,11 +34,11 @@ export class UserreportComponent {
   }
 
   editCountry(country: any) {
-    alert(`Editing ${country.name}`);
+    //alert(`Editing ${country.name}`);
   }
 
   deleteCountry(country: any) {
-    alert(`Deleting ${country.name}`);
+    //alert(`Deleting ${country.name}`);
   }
 
 }

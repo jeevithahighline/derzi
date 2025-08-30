@@ -38,10 +38,7 @@ import { UsersComponent} from 'app/modules/admin/accounts/users/users.component'
 //Configuration
 import { CurrencyComponent } from 'app/modules/admin/configuration/currency/currency.component';
 import { EmailtemplatesComponent } from 'app/modules/admin/configuration/emailtemplates/emailtemplates.component';
-import { LanguageComponent} from 'app/modules/admin/configuration/language/language.component';
-import { PaymentgatewayComponent } from 'app/modules/admin/configuration/paymentgateway/paymentgateway.component';
 import { PaymentmethodsComponent } from 'app/modules/admin/configuration/paymentmethods/paymentmethods.component';
-import { SmsComponent} from 'app/modules/admin/configuration/sms/sms.component';
 import { SmstemplatesComponent} from 'app/modules/admin/configuration/smstemplates/smstemplates.component';
 
 import { PagesComponent} from 'app/modules/admin/pages/pages.component';
@@ -58,7 +55,7 @@ import { ProductreportComponent} from 'app/modules/admin/reports/productreport/p
 //Settings
 import { ApplicationnotificationComponent } from 'app/modules/admin/settings/applicationnotification/applicationnotification.component';
 import { GlobalsettingsComponent } from 'app/modules/admin/settings/globalSettings/globalsettings.component';
-import { MessagecenterComponent} from 'app/modules/admin/settings/messagecenter/messagecenter.component';
+//import { MessagecenterComponent} from 'app/modules/admin/settings/messagecenter/messagecenter.component';
 
 //Transactions
 import { AllordersComponent } from 'app/modules/admin/transactions/allorders/allorders.component';
@@ -71,6 +68,9 @@ import { FaqformComponent } from './modules/admin/faq/faqform/faqform.component'
 import { DriversformComponent } from './modules/admin/accounts/drivers/driversform/driversform.component';
 import { MerchantformComponent } from './modules/admin/accounts/merchants/merchantform/merchantform.component';
 import { UsersformComponent } from './modules/admin/accounts/users/usersform/usersform.component';
+import { EmailtemplatesformComponent } from './modules/admin/configuration/emailtemplates/emailtemplatesform/emailtemplatesform.component';
+import { SmstemplatesformComponent } from './modules/admin/configuration/smstemplates/smstemplatesform/smstemplatesform.component';
+import { PrivilegeformComponent } from './modules/admin/accesscontrol/privilege/privilegeform/privilegeform.component';
 
 
 export const appRoutes: Route[] = [
@@ -165,6 +165,28 @@ export const appRoutes: Route[] = [
 
             {path: 'adduser', component: UsersformComponent},
             {path: 'adduser/:id', component: UsersformComponent},
+
+            {path: 'globalsettings', component: GlobalsettingsComponent},
+
+            {path: 'currency', component: CurrencyComponent},
+
+            {path: 'paymentmethod', component: PaymentmethodsComponent},
+
+            {path: 'smstemplates', component: SmstemplatesComponent},
+
+            {path: 'emailtemplates', component: EmailtemplatesComponent},
+
+            {path: 'applicationnotification', component: ApplicationnotificationComponent},
+
+            {path: 'addemailtemplate', component: EmailtemplatesformComponent},
+            {path: 'addemailtemplate/:id', component: EmailtemplatesformComponent},
+
+            {path: 'addsmstemplate', component: SmstemplatesformComponent},
+            {path: 'addsmstemplate/:id', component: SmstemplatesformComponent},
+
+            {path: 'privileges', component: PrivilegeComponent},
+            {path: 'addprivileges', component: PrivilegeformComponent},
+            {path: 'addprivileges/:id', component: PrivilegeformComponent},
         ]
     }
 ];

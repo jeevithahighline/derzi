@@ -1,1 +1,77 @@
-<p>smstemplatesform works!</p>
+<div class="container p-4">
+ 
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2">
+      <div class="col-6">
+        <div class="heading pt-2">
+            Add SMS Template
+        </div>
+      </div>
+      <div class="col-6 dflexmain">       
+        <button class="btn-add" (click)="saveTemplate()"> Save</button>      
+        <button class="btn-cancel" (click)="onCancel()">  Cancel</button>
+      </div>
+    </div>
+  
+    <div class="row">&nbsp;</div>
+    <!---Form Section-->
+    <div class="bg-white p-2 border rounded ">
+      <form [formGroup]="templateForm" (ngSubmit)="onSubmit()" class="p-4 grid">
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 ">
+          <div class="w-full">
+            <p> <label>Template name</label><span class="required-astreik">*</span></p>
+            <mat-form-field class="w-full">
+              <input matInput formControlName="templatename" class="w-full border rounded" placeholder="Enter Template name" />
+              <!-- <mat-error *ngIf="f['name'].hasError('required')">
+                Service name is required
+              </mat-error> -->
+              <mat-error *ngIf="f['templatename'].hasError('minlength')">
+                Minimum 3 characters required
+              </mat-error>
+            </mat-form-field>
+          </div>
+  
+          
+        </div>  
+    
+  
+        <!--Message-->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 ">
+
+            <div class="w-full">
+                <label class="block mb-2">Message <span class="required-astreik">*</span></label>
+                <quill-editor formControlName="description" [modules]="quillConfig" [styles]="{height: '150px'}"></quill-editor>
+              
+                <div class="text-red-500 text-sm mt-1" *ngIf="f['description'].hasError('maxlength')">
+                  Maximum 250 characters allowed
+                </div>
+            </div>
+            
+            <div class="w-full">
+                <label class="block mb-2">Message - Arabic<span class="required-astreik">*</span></label>
+                <quill-editor formControlName="description_ar" [modules]="quillConfig" [styles]="{height: '150px'}"></quill-editor>
+              
+                <div class="text-red-500 text-sm mt-1" *ngIf="f['description_ar'].hasError('maxlength')">
+                  Maximum 250 characters allowed
+                </div>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">         
+    
+          <mat-form-field class="w-full">
+            <mat-label>Status</mat-label>
+            <mat-select formControlName="status">
+              <mat-option value="Active">Active</mat-option>
+              <mat-option value="Inactive">Inactive</mat-option>
+            </mat-select>
+          </mat-form-field>
+    
+           </div>
+                  
+      </form>
+ 
+    </div>
+  
+  </div>
+

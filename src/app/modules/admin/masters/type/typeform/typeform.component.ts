@@ -1,7 +1,7 @@
-import { Component } from '@angular/core';
+import { Component,Inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MATERIAL_IMPORTS } from '../../../../material.import';
-import { MatDialogRef } from '@angular/material/dialog';
+import { MatDialogRef,MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-typeform',
@@ -15,14 +15,21 @@ export class TypeformComponent {
   dynamicForm: FormGroup;
 
   constructor(
-    private fb: FormBuilder,
+    private fb: FormBuilder, @Inject(MAT_DIALOG_DATA) public data: any,
     private dialogRef: MatDialogRef<TypeformComponent>
-  ) {
+  ) {}
+
+  ngOnInit(): void {
     this.dynamicForm = this.fb.group({
       name: ['', Validators.required],
       name_ar: ['', Validators.required],
       status: ['Active', Validators.required]
     });
+
+    // Prefill if editing
+    if (this.data?.type) {
+      this.dynamicForm.patchValue(this.data.country);
+    }
   }
 
   save() {

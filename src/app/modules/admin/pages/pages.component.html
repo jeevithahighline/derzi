@@ -21,7 +21,10 @@
     <table class="table table-striped table-bordered align-middle text-center">
       <thead class="table-light">
         <tr>
-           <th scope="col"><input type="checkbox"></th>
+           <th><label class="customcheckbox">
+                <input type="checkbox" [(ngModel)]="masterSelected" (change)="checkUncheckAll()">
+                <span class="checkmark"></span>
+              </label></th>
           <th scope="col">ID</th>
           <th scope="col">Page title</th>
           <th scope="col">Page Content</th>
@@ -32,7 +35,10 @@
       <tbody>
         <tr *ngFor="let pages of filteredpages()">
           <td>
-            <input type="checkbox">
+            <label class="customcheckbox">
+              <input type="checkbox" [(ngModel)]="pages.isSelected"  (change)="isAllSelected()">
+              <span class="checkmark"></span>
+            </label>
           </td>
           <td>{{ pages.id }}</td>
           <td>{{ pages.pagetitle }}</td>  

@@ -1,7 +1,7 @@
-import { Component } from '@angular/core';
+import { Component,Inject,OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MATERIAL_IMPORTS } from '../../../../material.import';
-import { MatDialogRef } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA,MatDialogRef } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-bannersform',
@@ -11,13 +11,16 @@ import { MatDialogRef } from '@angular/material/dialog';
   styleUrl: './bannersform.component.scss'
 })
 
-export class BannersformComponent {
+export class BannersformComponent implements OnInit{
   dynamicForm: FormGroup;
   selectedFileName = '';
   constructor(
     private fb: FormBuilder,
+    @Inject(MAT_DIALOG_DATA) public data: any,
     private dialogRef: MatDialogRef<BannersformComponent>
-  ) {
+  ) {}
+
+  ngOnInit(): void {
     this.dynamicForm = this.fb.group({
       name: ['', Validators.required],
       name_ar: ['', Validators.required],
@@ -26,7 +29,14 @@ export class BannersformComponent {
       image: [null, Validators.required],
       status: ['Active', Validators.required]
     });
+
+    // Prefill if editing
+    if (this.data?.banner) {
+      this.dynamicForm.patchValue(this.data.banner);
+    }
   }
+
+  
 
   save() {
     if (this.dynamicForm.invalid) {

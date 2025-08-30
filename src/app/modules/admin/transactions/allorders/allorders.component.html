@@ -12,7 +12,7 @@
         <!-- Search -->
         <input type="text" class="form-control" placeholder="Search Orders" [(ngModel)]="searchText" />
         <!-- Filters Button -->
-        <button mat-raised-button color="primary mleft" [matMenuTriggerFor]="filterMenu">
+        <button mat-raised-button color="primary mleft" [matMenuTriggerFor]="filterMenu" matMenuTriggerRestoreFocus="false">
           Filters
         </button>
       </div>
@@ -20,58 +20,46 @@
   </div>
 
 
-
-  <!-- <div class="d-flex justify-content-between align-items-center mb-3">
-      
-     
-    </div> -->
-
   <!-- Filters Panel -->
-  <mat-menu #filterMenu="matMenu" class="filter-panel p-3 matmenums">
-    <div class="">
-      <!-- Date Range -->
+  <mat-menu #filterMenu="matMenu" [hasBackdrop]="true" [overlapTrigger]="false" class="filter-panel p-3 matmenums">
+    <div class="p-2" (click)="$event.stopPropagation()">
+      
+      <!-- ✅ Date Range -->
       <mat-form-field class="w-full datemenu">
         <mat-label>Date Range</mat-label>
         <mat-date-range-input [rangePicker]="picker">
-          <input matStartDate placeholder="Start date" [(ngModel)]="startDate">
-          <input matEndDate placeholder="End date" [(ngModel)]="endDate">
+          <input matStartDate placeholder="Start date" [(ngModel)]="startDate" (click)="$event.stopPropagation()">
+          <input matEndDate placeholder="End date" [(ngModel)]="endDate" (click)="$event.stopPropagation()">
         </mat-date-range-input>
         <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
         <mat-date-range-picker #picker></mat-date-range-picker>
       </mat-form-field>
-    </div>
-    <!-- Order Status -->
-    <div class="">
+  
+      <!-- ✅ Order Status -->
       <mat-form-field class="w-full">
         <mat-label>Order Status</mat-label>
-        <mat-select [(ngModel)]="selectedStatus">
+        <mat-select [(ngModel)]="selectedStatus" (click)="$event.stopPropagation()">
           <mat-option value="">All</mat-option>
           <mat-option value="pending">Pending</mat-option>
           <mat-option value="completed">Completed</mat-option>
           <mat-option value="cancelled">Cancelled</mat-option>
         </mat-select>
       </mat-form-field>
-    </div>
-
-    <!-- Customer Name -->
-    <div class="">
+  
+      <!-- ✅ Customer Name -->
       <mat-form-field class="w-full">
-        <mat-label>Customer Name</mat-label>
-        <input matInput [(ngModel)]="customerName" />
+        <mat-label>Amount</mat-label>
+        <input matInput [(ngModel)]="amount" (click)="$event.stopPropagation()" />
       </mat-form-field>
+  
+      <!-- ✅ Buttons -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <button mat-stroked-button color="warn" (click)="clearFilters(); $event.stopPropagation()">Clear</button>
+        <button mat-raised-button color="primary" (click)="applyFilters(); $event.stopPropagation()">Apply</button>
+      </div>
     </div>
-
-    <!-- Buttons -->
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-      <button mat-stroked-button color="warn" (click)="clearFilters()">
-        Clear
-      </button>
-      <button mat-raised-button color="primary" (click)="applyFilters()">
-        Apply
-      </button>
-    </div>
-
   </mat-menu>
+  
 
 
   <!-- 📊 Orders Table -->
@@ -82,7 +70,7 @@
           <th>
             <!-- <input type="checkbox" /> -->
              <label class="customcheckbox">
-              <input type="checkbox">
+              <input type="checkbox" [(ngModel)]="masterSelected" (change)="checkUncheckAll()">
               <span class="checkmark"></span>
             </label>
           </th>
@@ -98,7 +86,7 @@
           <td>
             <!-- <input type="checkbox" /> -->
             <label class="customcheckbox">
-              <input type="checkbox">
+              <input type="checkbox" [(ngModel)]="order.isSelected"  (change)="isAllSelected()">
               <span class="checkmark"></span>
             </label>
           </td>

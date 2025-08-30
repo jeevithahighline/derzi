@@ -50,9 +50,9 @@
         </div>
   
         <!-- Description -->
-        <mat-form-field class="w-full">
+        <mat-form-field class="w-full" floatLabel="always">
           <mat-label>Answer</mat-label>
-          <textarea matInput rows="3" formControlName="answer"></textarea>
+          <textarea matInput rows="3" formControlName="answer" placeholder="Enter Answer"></textarea>
           <!-- <mat-error *ngIf="f['description'].hasError('required')">
             Description is required
           </mat-error> -->
@@ -61,9 +61,9 @@
           </mat-error>
         </mat-form-field>
   
-        <mat-form-field class="w-full">
+        <mat-form-field class="w-full" floatLabel="always">
           <mat-label>Answer - Arabic</mat-label>
-          <textarea matInput rows="3" formControlName="answer_ar"></textarea>
+          <textarea matInput rows="3" formControlName="answer_ar" placeholder="Enter Answer in Arabic"></textarea>
           <!-- <mat-error *ngIf="f['description_ar'].hasError('required')">
             Description - Arabic is required
           </mat-error> -->
@@ -74,8 +74,7 @@
        
               
       </form>
-  
-  
+
   
     </div>
   

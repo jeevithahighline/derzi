@@ -1,10 +1,10 @@
-<h2 class="popuph2">Add Role</h2>
+<h2 class="popuph2" mat-dialog-title>Add Role</h2>
 
 
-<form [formGroup]="dynamicForm" (ngSubmit)="save()" class="p-2 grid gap-1">
+<form [formGroup]="dynamicForm" (ngSubmit)="save()" class="p-4 grid gap-1">
 
   <!-- Country Name -->
-  <mat-form-field>
+  <mat-form-field appearance="outline">
     <mat-label>Name</mat-label>
     <input matInput formControlName="name" placeholder="Enter Role" />
     <!-- <mat-error *ngIf="dynamicForm.get('name')?.hasError('required') && 
@@ -14,7 +14,7 @@
   </mat-form-field>
 
   <!-- description  -->
-  <mat-form-field>
+  <mat-form-field appearance="outline">
     <mat-label>Description</mat-label>
     <textarea matInput rows="3" formControlName="description"></textarea>
     <!-- <mat-error *ngIf="dynamicForm.get('description')?.hasError('required') && 
@@ -24,7 +24,7 @@
   </mat-form-field>
 
   <!-- Status -->
-  <mat-form-field>
+  <mat-form-field appearance="outline">
     <mat-label>Status</mat-label>
     <mat-select formControlName="status">
       <mat-option value="Active">Active</mat-option>

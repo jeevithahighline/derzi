@@ -109,7 +109,7 @@
         </div>
       </div>
      
-
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
 
       <!-- Fabric Provided By -->
       <mat-form-field class="w-full">
@@ -122,7 +122,15 @@
         </mat-error> -->
       </mat-form-field>
 
-    
+      <mat-form-field class="w-full">
+        <mat-label>Status</mat-label>
+        <mat-select formControlName="status">
+          <mat-option value="Active">Active</mat-option>
+          <mat-option value="Inactive">Inactive</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+       </div>
      
     </form>
 

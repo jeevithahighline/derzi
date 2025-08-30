@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component,Inject } from '@angular/core';
 import { MATERIAL_IMPORTS } from '../../../material.import';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router,ActivatedRoute  } from '@angular/router';
@@ -24,7 +24,8 @@ export class ServicesformComponent {
       description_ar: ['', [Validators.required, Validators.maxLength(250)]],
       price: [null, [Validators.required, Validators.min(1)]],
       duration: [null, [Validators.required, Validators.min(1)]],
-      fabricProvidedBy: ['', Validators.required]
+      fabricProvidedBy: ['', Validators.required],
+      status: ['Active']
     });
   }
 

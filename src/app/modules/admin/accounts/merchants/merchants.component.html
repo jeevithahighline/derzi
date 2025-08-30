@@ -21,7 +21,10 @@
     <table class="table table-striped table-bordered align-middle text-center">
       <thead class="table-light">
         <tr>
-          <th><input type="checkbox"></th>
+          <th><label class="customcheckbox">
+            <input type="checkbox" [(ngModel)]="masterSelected" (change)="checkUncheckAll()">
+            <span class="checkmark"></span>
+          </label></th>
           <th>Merchant ID</th>
           <th>Merchant Name</th>
           <!-- <th>Category</th> -->
@@ -34,7 +37,12 @@
       </thead>
       <tbody>
         <tr *ngFor="let merchant of filteredMerchants()">
-          <td><input type="checkbox"></td>
+          <td>
+            <label class="customcheckbox">
+                <input type="checkbox" [(ngModel)]="merchant.isSelected"  (change)="isAllSelected()">
+                <span class="checkmark"></span>
+              </label>
+          </td>
           <td>{{ merchant.merchant_id }}</td>
           <td>{{ merchant.merchant_name }}</td>
           <!-- <td>{{ merchant.category }}</td> -->

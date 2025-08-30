@@ -12,12 +12,14 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core'; 
 import { MatMenuModule } from '@angular/material/menu';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 
 
 export const MATERIAL_IMPORTS = [
   CommonModule,
   FormsModule,
   MatMenuModule,
+  MatCheckboxModule,
   MatDatepickerModule,
   MatNativeDateModule,
   ReactiveFormsModule,

@@ -1,24 +1,73 @@
 <div class="container p-4">
-    <div class="row">
-      <div class="col-6">
-        <div class="heading">Invoices</div>
-      </div>
-      <div class="col-6 dflexmain">
-        <input
-          type="text"
-          class="form-control searchinput"
-          placeholder="Search Invoices"
-          [(ngModel)]="searchText"
-        />
+  <div class="row">
+    <div class="col-6">
+      <div class="heading">
+        Invoices
       </div>
     </div>
+    <div class="col-6">
+      <div class="d-flex text-right">
+        <!-- Search -->
+        <input type="text" class="form-control" placeholder="Search Invoices" [(ngModel)]="searchText" />
+        <!-- Filters Button -->
+        &nbsp;
+        <button mat-raised-button color="primary mleft" [matMenuTriggerFor]="filterMenu" matMenuTriggerRestoreFocus="false">
+          Filters
+        </button>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- Filters Panel -->
+  <mat-menu #filterMenu="matMenu" [hasBackdrop]="true" [overlapTrigger]="false" class="filter-panel p-3 matmenums">
+    <div class="p-2" (click)="$event.stopPropagation()">
+      
+      <!-- ✅ Date Range -->
+      <mat-form-field class="w-full datemenu">
+        <mat-label>Date Range</mat-label>
+        <mat-date-range-input [rangePicker]="picker">
+          <input matStartDate placeholder="Start date" [(ngModel)]="startDate" (click)="$event.stopPropagation()">
+          <input matEndDate placeholder="End date" [(ngModel)]="endDate" (click)="$event.stopPropagation()">
+        </mat-date-range-input>
+        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-date-range-picker #picker></mat-date-range-picker>
+      </mat-form-field>
+  
+      <!-- ✅ Order Status -->
+      <mat-form-field class="w-full">
+        <mat-label>Paid Status</mat-label>
+        <mat-select [(ngModel)]="selectedStatus" (click)="$event.stopPropagation()">
+          <mat-option value="">All</mat-option>
+          <mat-option value="paid">Paid</mat-option>
+          <mat-option value="Unpaid">Unpaid</mat-option>
+        </mat-select>
+      </mat-form-field>
+  
+      <!-- ✅ Customer Name -->
+      <mat-form-field class="w-full">
+        <mat-label>Customer Name</mat-label>
+        <input matInput [(ngModel)]="amount" (click)="$event.stopPropagation()" />
+      </mat-form-field>
+  
+      <!-- ✅ Buttons -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <button mat-stroked-button color="warn" (click)="clearFilters(); $event.stopPropagation()">Clear</button>
+        <button mat-raised-button color="primary" (click)="applyFilters(); $event.stopPropagation()">Apply</button>
+      </div>
+    </div>
+  </mat-menu>
   
     <!-- 📊 Invoices Table -->
     <div class="tableparent">
       <table class="table table-striped table-bordered align-middle text-center">
         <thead class="table-light">
           <tr>
-            <th><input type="checkbox" /></th>
+            <th><label class="customcheckbox">
+                <input type="checkbox" [(ngModel)]="masterSelected" (change)="checkUncheckAll()">
+                <span class="checkmark"></span>
+              </label>
+            </th>
             <th>Invoice No</th>
             <th>Order ID</th>
             <th>Customer</th>
@@ -30,12 +79,18 @@
         </thead>
         <tbody>
           <tr *ngFor="let invoice of filteredInvoices()">
-            <td><input type="checkbox" /></td>
+            <td>
+              <!-- <input type="checkbox" /> -->
+              <label class="customcheckbox">
+                <input type="checkbox" [(ngModel)]="invoice.isSelected"  (change)="isAllSelected()">
+                <span class="checkmark"></span>
+              </label>
+            </td>
             <td>{{ invoice.invoiceNo }}</td>
             <td>{{ invoice.orderId }}</td>
             <td>{{ invoice.customer }}</td>
-            <td>{{ invoice.date }}</td>
-            <td>{{ invoice.total | currency:'INR' }}</td>
+            <td>{{ invoice.date | date:'dd/MM/yyyy' }}</td>
+            <td>{{ invoice.total  }} BHD</td>
             <td>{{ invoice.status }}</td>
             <td>
               <button class="btn btn-sm me-2" (click)="viewInvoice(invoice)">

@@ -1,1 +1,113 @@
-<p>globalsettings works!</p>
+<div class="container p-4">
+ 
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2">
+      <div class="col-6">
+        <div class="heading pt-2">
+            Global Settings
+        </div>
+      </div>
+      <div class="col-6 dflexmain">       
+        <button class="btn-add" (click)="savePage()"> Save</button>      
+        <button class="btn-cancel" (click)="onCancel()">  Cancel</button>
+      </div>
+    </div>
+  
+    <div class="row">&nbsp;</div>
+    <!---Form Section-->
+    <div class="bg-white p-2 border rounded ">
+    
+      <form [formGroup]="globalform" (ngSubmit)="onSubmit()" class="p-4 grid gap-4">
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 ">
+          <!-- Site Name -->          
+          <div class="w-full">
+          <label>Site Name</label><span class="required-astreik">*</span>
+          <mat-form-field class="w-full">            
+            <input matInput formControlName="sitename" class="w-full border rounded" placeholder="Enter site name" />            
+            <mat-error *ngIf="f['sitename'].hasError('minlength')">
+              Minimum 3 characters required
+            </mat-error>
+          </mat-form-field>
+           </div>
+          <!-- Site Email -->
+          <mat-form-field  class="w-full" floatLabel="always">
+            <mat-label>Site Email</mat-label>
+            <input matInput type="email" formControlName="siteemail" placeholder="Enter site email" />
+            <!-- <mat-error *ngIf="f['siteemail'].hasError('required')">
+              Email is required
+            </mat-error> -->
+            <mat-error *ngIf="f['siteemail'].hasError('email')">
+              Enter a valid email
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 ">
+        <!-- Postal Code -->
+        <mat-form-field  class="w-full" floatLabel="always">
+          <mat-label>Phone number</mat-label>
+          <input matInput formControlName="phonenumber" placeholder="Enter phone number" />
+          <!-- <mat-error *ngIf="f['email'].hasError('required')">
+           Email is required
+          </mat-error> -->
+        </mat-form-field>
+      
+        <!-- Logo -->
+        <mat-form-field  class="w-full" floatLabel="always">
+          <mat-label>Mobile number</mat-label>
+          <input matInput formControlName="mobilenumber" placeholder="Enter mobile number" />
+          <!-- <mat-error *ngIf="f['logo'].hasError('required')">
+            Logo is required
+          </mat-error> -->
+        </mat-form-field>
+
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 ">
+          <!-- Postal Code -->
+          <mat-form-field  class="w-full" floatLabel="always">
+            <mat-label>Postal Code</mat-label>
+            <input matInput formControlName="postalcode" placeholder="Enter postal code" />
+            <!-- <mat-error *ngIf="f['email'].hasError('required')">
+             Email is required
+            </mat-error> -->
+          </mat-form-field>
+        
+          <!-- Logo -->
+          <mat-form-field  class="w-full" floatLabel="always">
+            <mat-label>Meta Name</mat-label>
+            <input matInput formControlName="metaname" placeholder="Enter meta name" />
+            <!-- <mat-error *ngIf="f['logo'].hasError('required')">
+              Logo is required
+            </mat-error> -->
+          </mat-form-field>
+  
+          </div>
+      
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 ">
+          <!-- Meta Name -->
+          <mat-form-field  class="w-full" floatLabel="always">
+            <mat-label>Address</mat-label>
+            <input matInput formControlName="address" placeholder="Enter address" />
+            <!-- <mat-error *ngIf="f['metaname'].hasError('required')">
+              Meta name is required
+            </mat-error> -->
+          </mat-form-field>
+        
+          <!-- Meta Description -->
+          <mat-form-field  class="w-full" floatLabel="always">
+            <mat-label>Meta Description</mat-label>
+            <textarea matInput rows="3" formControlName="metadescription" placeholder="Enter meta description"></textarea>
+            <!-- <mat-error *ngIf="f['metadescription'].hasError('required')">
+              Meta description is required
+            </mat-error> -->
+          </mat-form-field>
+        </div>
+       
+      
+      </form>
+  
+    </div>
+  
+  </div>
+

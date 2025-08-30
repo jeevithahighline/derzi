@@ -18,18 +18,18 @@ export class ProductreportComponent {
     { id: 2, name: 'Salwar',description:'Lorem ipsum' ,isSelected: false}
   ];
 
-  filteredCountries() {
+  filteredData() {
     return this.countries.filter(c =>
       c.name.toLowerCase().includes(this.searchText.toLowerCase())
     );
   }
 
   editCountry(country: any) {
-    alert(`Editing ${country.name}`);
+    //alert(`Editing ${country.name}`);
   }
 
   deleteCountry(country: any) {
-    alert(`Deleting ${country.name}`);
+    //alert(`Deleting ${country.name}`);
   }
 
   // Toggle all checkboxes

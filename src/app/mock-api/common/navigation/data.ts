@@ -51,6 +51,7 @@ const menuConfig: Record<string, { id: string; icon: string }> = {
      'Global Settings': { id: 'orders-report', icon: 'heroicons_outline:globe-alt' },
      'Application Notification': { id: 'orders-report', icon: 'heroicons_outline:bell-alert' },
      'Message Center': { id: 'orders-report', icon: 'heroicons_outline:inbox' },
+     'Currency': { id: 'orders-report', icon: 'heroicons_outline:currency-dollar' },
   };
   
   // 🔹 Function to apply ids/icons based on title
@@ -129,7 +130,7 @@ const menuConfig: Record<string, { id: string; icon: string }> = {
         children: [
           { title: 'Roles', type: 'basic', link: '/roles' },
           { title: 'Groups', type: 'basic', link: '/groups' },
-          //{ title: 'Privilege Management', type: 'basic', link: '/privileges' },
+          { title: 'Privilege Management', type: 'basic', link: '/privileges' },
         ],
     },
     { 
@@ -146,12 +147,10 @@ const menuConfig: Record<string, { id: string; icon: string }> = {
     {
       title: 'Configuration',
       type: 'collapsable',
-      children: [
-        { title: 'SMS', type: 'basic', link: '/sms' },
-        { title: 'Payment Gateway', type: 'basic', link: '/paymentconfiguration' },
+      children: [      
         { title: 'Payment Method', type: 'basic', link: '/paymentmethod' },
-        { title: 'Email Templates', type: 'basic', link: '/email-templates' },
-        { title: 'SMS Templates', type: 'basic', link: '/sms-templates' },
+        { title: 'Email Templates', type: 'basic', link: '/emailtemplates' },
+        { title: 'SMS Templates', type: 'basic', link: '/smstemplates' },
       ],
   },
     { 
@@ -160,7 +159,7 @@ const menuConfig: Record<string, { id: string; icon: string }> = {
         children: [
             { title: 'Global Settings', type: 'basic', link: '/globalsettings' },
             { title: 'Application Notification', type: 'basic', link: '/applicationnotification' },
-            //{ title: 'Message Center', type: 'basic', link: '/currency' },
+            { title: 'Currency', type: 'basic', link: '/currency' },
         ],
     },
     { title: 'FAQ', type: 'basic', link: '/faq' },
