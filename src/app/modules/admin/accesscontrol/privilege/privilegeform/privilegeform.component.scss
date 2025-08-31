@@ -36,6 +36,23 @@
   
   
   }
+
+  table{
+    tr:nth-child(even) {
+  background-color: #fafafa;
+}
+    tr{
+      th{
+        background: #fafafa;
+         padding: .8rem;
+      }
+    }
+    tr{
+      td{      
+        padding: .8rem;
+      }
+    }
+  }
   
   
   .btn-add {
@@ -100,3 +117,39 @@
     width: 250px;
     height: 40px;
   }
+
+  ::ng-deep .mdc-checkbox:hover .mdc-checkbox__native-control:checked~.mdc-checkbox__background {
+    background: #802012 !important;
+}
+ ::ng-deep .mdc-checkbox__native-control:enabled:checked~.mdc-checkbox__background{
+    background: #802012 !important;
+ }
+ ::ng-deep  .mdc-checkbox {
+    display: inline-block;
+    position: relative;
+    flex: 0;
+    box-sizing: content-box;
+    width: 0;
+    width: 0;
+    line-height: 0;
+    white-space: nowrap;
+    cursor: pointer;
+    vertical-align: bottom;
+    padding: 0!important;
+    margin: 0;
+    margin: 0 0 0 0;
+    position: relative;
+    top: -10px!important;
+    border-radius: 2px!important;
+  }
+  ::ng-deep .mdc-checkbox__checkmark {
+    position: absolute;
+    top: 2px!important;
+    right: 1px!important;
+    bottom: 0;
+    left: 2px!important;
+    width: 68%!important;
+    opacity: 0;
+    transition: opacity 180ms cubic-bezier(0.4, 0, 0.6, 1);
+    color: var(--mdc-checkbox-selected-checkmark-color, var(--mat-sys-on-primary));
+}

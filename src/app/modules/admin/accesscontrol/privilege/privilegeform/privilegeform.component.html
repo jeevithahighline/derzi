@@ -33,7 +33,7 @@
                 Maximum 250 characters allowed
               </mat-error>
             </mat-form-field>
-          
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-2">
             <!-- Role Name -->
             <mat-form-field class="w-full">
               <mat-label>Role Name</mat-label>
@@ -57,43 +57,43 @@
                 <mat-option *ngFor="let m of merchants" [value]="m">{{m}}</mat-option>                  
               </mat-select>
             </mat-form-field>
-          
+          </div>
             <!-- Permissions -->
-            <div class="border rounded p-4">
-                <h3 class="font-semibold mb-2">Permissions</h3>
+            <div class="">
+                <h3 class="font-semibold mb-2 heading">Permissions</h3>
                 
                 <table class="table-auto border-collapse w-full text-center">
                   <thead>
                     <tr class="bg-gray-100">
-                      <th class="border p-2 text-left">Module Name</th>
-                      <th class="border p-2">Add</th>
-                      <th class="border p-2">Edit</th>
-                      <th class="border p-2">Delete</th>
-                      <th class="border p-2">View</th>
+                      <th class="border text-left">Module Name</th>
+                      <th class="border">Add</th>
+                      <th class="border">Edit</th>
+                      <th class="border">Delete</th>
+                      <th class="border">View</th>
                     </tr>
                   </thead>
                   <tbody>
                     <tr *ngFor="let module of modules">
-                      <td class="border p-2 text-left font-medium">{{ module.name }}</td>
-                      <td class="border p-2">
+                      <td class="border text-left font-medium">{{ module.name }}</td>
+                      <td class="border">
                         <mat-checkbox 
                           [checked]="module.actions.includes('Add')" 
                           (change)="onPermissionChange(module.name, 'Add', $event)">
                         </mat-checkbox>
                       </td>
-                      <td class="border p-2">
+                      <td class="border">
                         <mat-checkbox 
                           [checked]="module.actions.includes('Edit')" 
                           (change)="onPermissionChange(module.name, 'Edit', $event)">
                         </mat-checkbox>
                       </td>
-                      <td class="border p-2">
+                     <td class="border">
                         <mat-checkbox 
                           [checked]="module.actions.includes('Delete')" 
                           (change)="onPermissionChange(module.name, 'Delete', $event)">
                         </mat-checkbox>
                       </td>
-                      <td class="border p-2">
+                      <td class="border">
                         <mat-checkbox 
                           [checked]="module.actions.includes('View')" 
                           (change)="onPermissionChange(module.name, 'View', $event)">

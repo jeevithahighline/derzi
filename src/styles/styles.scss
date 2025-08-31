@@ -187,3 +187,24 @@ input:checked ~ .checkmark {
     color: red !important;
   }
   
+
+  /***** Main *///
+  .heading{
+    font-size: 1.5rem;
+    color: #802012;
+    font-weight: 600;
+  }
+
+  .dashed h2{
+    font-size: 1.5rem;
+    color: #802012;
+    font-weight: 600;
+  }
+  .dashinner h2{
+    font-size: 1rem;
+    color: #802012;
+    font-weight: 600;
+  }
+  .radius-10{
+    border-radius: 10px;
+  }
