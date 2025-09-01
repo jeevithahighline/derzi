@@ -16,19 +16,31 @@ export class BrandComponent {
   masterSelected: boolean = false;
   constructor(private dialog: MatDialog) {}
 
-  countries = [
+  brands = [
     { id: 1, name: 'Nike', description:"Lorem ipsum",isSelected: false},
     { id: 2, name: 'Zara' , description:"Lorem ipsum",isSelected: false}
   ];
 
   filteredData() {
-    return this.countries.filter(c =>
+    return this.brands.filter(c =>
       c.name.toLowerCase().includes(this.searchText.toLowerCase())
     );
   }
 
-  editCountry(country: any) {
-    //alert(`Editing ${country.name}`);
+   editbrand(brand: any, index: number) {
+
+    //alert(brand.id);
+    const dialogRef = this.dialog.open(BrandformComponent, {
+      width: '500px',
+      disableClose: true,
+      data: { brand }   // 👈 pass existing brand to dialog
+    });
+  
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.brands[index] = result; // 👈 update instead of push
+      }
+    });
   }
 
   deleteCountry(country: any) {
@@ -43,19 +55,19 @@ export class BrandComponent {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        this.countries.push(result);  // add new country
+        this.brands.push(result);  // add new country
       }
     });
   }
 
   // Toggle all checkboxes
   checkUncheckAll() {
-    this.countries.forEach(country => country.isSelected = this.masterSelected);
+    this.brands.forEach(country => country.isSelected = this.masterSelected);
   }
 
   // If all rows checked, master should be checked
   isAllSelected() {
-    this.masterSelected = this.countries.every(country => country.isSelected);
+    this.masterSelected = this.brands.every(country => country.isSelected);
   }
 
 }

@@ -2,6 +2,8 @@ import { Component, ViewChild, AfterViewInit } from '@angular/core';
 import { MATERIAL_IMPORTS } from '../../../material.import';
 import { MatDialog } from '@angular/material/dialog';
 import { BannersformComponent } from './bannersform/bannersform.component';
+import { ToastService } from '../../../toastr.service';
+import { ConfirmdialogComponent } from '../../confirmdialog/confirmdialog.component';
 
 @Component({
   selector: 'app-banners',
@@ -13,7 +15,9 @@ export class BannersComponent {
   searchText = '';
   totalItems = 2;
   masterSelected: boolean = false;
-  constructor(private dialog: MatDialog) {}
+  selectedIds: string[] = []; // Store selected IDs
+  isDeleteTriggered:boolean;
+  constructor(private dialog: MatDialog,private _toastrService: ToastService) {}
   banners = [
     { id: 1, name: 'Fashion', description:"Lorem ipsum",isSelected: false},
     { id: 2, name: 'Clothing' , description:"Lorem ipsum",isSelected: false}
@@ -41,9 +45,22 @@ export class BannersComponent {
     });
   }
 
-  deletebanner(banner: any) {
-    alert(`Deleting ${banner.id}`);
+  public deletebanner(index: number): void {
+    //console.log('deleteselectedData', this.selectedIds);
+  
+    const dialogRef = this.dialog.open(ConfirmdialogComponent, {
+      width: '500px',
+      disableClose: true,
+    });
+  
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.banners[index] = result; // 👈 update instead of push
+      }
+    });
+    
   }
+ 
 
   openAddForm() {
     const dialogRef = this.dialog.open(BannersformComponent, {

@@ -15,23 +15,35 @@ export class CareComponent {
   masterSelected: boolean = false;
   constructor(private dialog: MatDialog) {}
 
-  countries = [
+  cares = [
     { id: 1, name: 'Dry wash',isSelected: false},
     { id: 2, name: 'Normal' ,isSelected: false}
   ];
 
   filteredData() {
-    return this.countries.filter(c =>
+    return this.cares.filter(c =>
       c.name.toLowerCase().includes(this.searchText.toLowerCase())
     );
+  }  
+
+  editcare(care: any, index: number) {
+
+    //alert(banner.id);
+    const dialogRef = this.dialog.open(CareformComponent, {
+      width: '500px',
+      disableClose: true,
+      data: { care }   // 👈 pass existing banner to dialog
+    });
+  
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.cares[index] = result; // 👈 update instead of push
+      }
+    });
   }
 
-  editCountry(country: any) {
-    //alert(`Editing ${country.name}`);
-  }
-
-  deleteCountry(country: any) {
-    //alert(`Deleting ${country.name}`);
+  deletecare(care: any) {
+    //alert(`Deleting ${care.name}`);
   }
 
   openAddForm() {
@@ -42,19 +54,19 @@ export class CareComponent {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        this.countries.push(result);  // add new country
+        this.cares.push(result);  // add new care
       }
     });
   }
 
   // Toggle all checkboxes
   checkUncheckAll() {
-    this.countries.forEach(country => country.isSelected = this.masterSelected);
+    this.cares.forEach(care => care.isSelected = this.masterSelected);
   }
 
   // If all rows checked, master should be checked
   isAllSelected() {
-    this.masterSelected = this.countries.every(country => country.isSelected);
+    this.masterSelected = this.cares.every(care => care.isSelected);
   }
 
 }

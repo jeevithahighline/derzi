@@ -14,23 +14,35 @@ export class LengthComponent {
   totalItems = 2;
   masterSelected: boolean = false;
   constructor(private dialog: MatDialog) {}
-  countries = [
+  lengths = [
     { id: 1, name: 'Shorts',isSelected: false},
     { id: 2, name: 'Mini Skirts',isSelected: false }
   ];
 
   filteredData() {
-    return this.countries.filter(c =>
+    return this.lengths.filter(c =>
       c.name.toLowerCase().includes(this.searchText.toLowerCase())
     );
   }
 
-  editCountry(country: any) {
-    //alert(`Editing ${country.name}`);
+  editlength(length: any, index: number) {
+
+    //alert(banner.id);
+    const dialogRef = this.dialog.open(LengthformComponent, {
+      width: '500px',
+      disableClose: true,
+      data: { length }   // 👈 pass existing banner to dialog
+    });
+  
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.lengths[index] = result; // 👈 update instead of push
+      }
+    });
   }
 
-  deleteCountry(country: any) {
-    //alert(`Deleting ${country.name}`);
+  deletelength(length: any) {
+    //alert(`Deleting ${length.name}`);
   }
 
   openAddForm() {
@@ -41,19 +53,19 @@ export class LengthComponent {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        this.countries.push(result);  // add new country
+        this.lengths.push(result);  // add new length
       }
     });
   }
 
   // Toggle all checkboxes
   checkUncheckAll() {
-    this.countries.forEach(country => country.isSelected = this.masterSelected);
+    this.lengths.forEach(length => length.isSelected = this.masterSelected);
   }
 
   // If all rows checked, master should be checked
   isAllSelected() {
-    this.masterSelected = this.countries.every(country => country.isSelected);
+    this.masterSelected = this.lengths.every(length => length.isSelected);
   }
 
 }

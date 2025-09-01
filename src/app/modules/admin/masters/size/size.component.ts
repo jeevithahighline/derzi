@@ -15,23 +15,36 @@ export class SizeComponent {
   masterSelected: boolean = false;
   constructor(private dialog: MatDialog) {}
 
-  countries = [
+  sizes = [
     { id: 1, name: 'XL',isSelected: false},
     { id: 2, name: 'Medium',isSelected: false }
   ];
 
   filteredData() {
-    return this.countries.filter(c =>
+    return this.sizes.filter(c =>
       c.name.toLowerCase().includes(this.searchText.toLowerCase())
     );
   }
 
-  editCountry(country: any) {
-    //alert(`Editing ${country.name}`);
+
+  editsize(size: any, index: number) {
+
+    //alert(banner.id);
+    const dialogRef = this.dialog.open(SizeformComponent, {
+      width: '500px',
+      disableClose: true,
+      data: { size }   // 👈 pass existing banner to dialog
+    });
+  
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.sizes[index] = result; // 👈 update instead of push
+      }
+    });
   }
 
-  deleteCountry(country: any) {
-    //alert(`Deleting ${country.name}`);
+  deletesize(size: any) {
+    //alert(`Deleting ${size.name}`);
   }
 
   openAddForm() {
@@ -42,19 +55,19 @@ export class SizeComponent {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        this.countries.push(result);  // add new country
+        this.sizes.push(result);  // add new size
       }
     });
   }
 
   // Toggle all checkboxes
   checkUncheckAll() {
-    this.countries.forEach(country => country.isSelected = this.masterSelected);
+    this.sizes.forEach(size => size.isSelected = this.masterSelected);
   }
 
   // If all rows checked, master should be checked
   isAllSelected() {
-    this.masterSelected = this.countries.every(country => country.isSelected);
+    this.masterSelected = this.sizes.every(size => size.isSelected);
   }
 
 }

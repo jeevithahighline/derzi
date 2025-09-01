@@ -71,6 +71,7 @@ import { UsersformComponent } from './modules/admin/accounts/users/usersform/use
 import { EmailtemplatesformComponent } from './modules/admin/configuration/emailtemplates/emailtemplatesform/emailtemplatesform.component';
 import { SmstemplatesformComponent } from './modules/admin/configuration/smstemplates/smstemplatesform/smstemplatesform.component';
 import { PrivilegeformComponent } from './modules/admin/accesscontrol/privilege/privilegeform/privilegeform.component';
+import { ProfilesettingsComponent } from './modules/admin/settings/profilesettings/profilesettings.component';
 
 
 export const appRoutes: Route[] = [
@@ -187,6 +188,8 @@ export const appRoutes: Route[] = [
             {path: 'privileges', component: PrivilegeComponent},
             {path: 'addprivileges', component: PrivilegeformComponent},
             {path: 'addprivileges/:id', component: PrivilegeformComponent},
+
+            {path: 'profilesettings', component: ProfilesettingsComponent},
         ]
     }
 ];

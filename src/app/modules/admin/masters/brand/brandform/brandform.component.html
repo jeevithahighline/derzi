@@ -1,4 +1,8 @@
-<h2 class="popuph2" mat-dialog-title>Add Brand</h2>
+<h2 class="popuph2" mat-dialog-title>
+
+  {{ data?.brand ? 'Edit Brand' : 'Add Brand' }}
+
+</h2>
 
 <form [formGroup]="dynamicForm" (ngSubmit)="save()" class="p-4 grid gap-1">
 

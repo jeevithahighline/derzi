@@ -15,23 +15,35 @@ export class FabricComponent {
   masterSelected: boolean = false;
   constructor(private dialog: MatDialog) {}
 
-  countries = [
+  fabrics = [
     { id: 1, name: 'Cotton',isSelected: false},
     { id: 2, name: 'Silk' ,isSelected: false}
   ];
 
   filteredData() {
-    return this.countries.filter(c =>
+    return this.fabrics.filter(c =>
       c.name.toLowerCase().includes(this.searchText.toLowerCase())
     );
   }
 
-  editCountry(country: any) {
-    //alert(`Editing ${country.name}`);
+  editfabric(fabric: any, index: number) {
+
+    //alert(banner.id);
+    const dialogRef = this.dialog.open(FabricformComponent, {
+      width: '500px',
+      disableClose: true,
+      data: { fabric }   // 👈 pass existing banner to dialog
+    });
+  
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.fabrics[index] = result; // 👈 update instead of push
+      }
+    });
   }
 
-  deleteCountry(country: any) {
-    //alert(`Deleting ${country.name}`);
+  deletefabric(fabric: any) {
+    //alert(`Deleting ${fabric.name}`);
   }
 
   openAddForm() {
@@ -42,19 +54,19 @@ export class FabricComponent {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        this.countries.push(result);  // add new country
+        this.fabrics.push(result);  // add new fabric
       }
     });
   }
 
   // Toggle all checkboxes
   checkUncheckAll() {
-    this.countries.forEach(country => country.isSelected = this.masterSelected);
+    this.fabrics.forEach(fabric => fabric.isSelected = this.masterSelected);
   }
 
   // If all rows checked, master should be checked
   isAllSelected() {
-    this.masterSelected = this.countries.every(country => country.isSelected);
+    this.masterSelected = this.fabrics.every(fabric => fabric.isSelected);
   }
 
 }

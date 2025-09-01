@@ -1,7 +1,8 @@
 import { Component,Inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MATERIAL_IMPORTS } from '../../../../material.import';
-import { MatDialogRef } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA,MatDialogRef } from '@angular/material/dialog';
+
 
 @Component({
   selector: 'app-careform',
@@ -16,13 +17,21 @@ export class CareformComponent {
 
   constructor(
     private fb: FormBuilder,
+    @Inject(MAT_DIALOG_DATA) public data: any,
     private dialogRef: MatDialogRef<CareformComponent>
-  ) {
+  ) {}
+
+  ngOnInit(): void {
     this.dynamicForm = this.fb.group({
       name: ['', Validators.required],
       name_ar: ['', Validators.required],
       status: ['Active', Validators.required]
     });
+
+    // Prefill if editing
+    if (this.data?.care) {
+      this.dynamicForm.patchValue(this.data.care);
+    }
   }
 
   save() {

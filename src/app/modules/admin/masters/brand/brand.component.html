@@ -17,7 +17,7 @@
       </div>
     </div>
   
-    <!-- 📊 Country Table --><div class="tableparent">
+    <!-- 📊 brand Table --><div class="tableparent">
     <table class="table table-striped table-bordered align-middle text-center">
       <thead class="table-light">
         <tr>
@@ -33,22 +33,22 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let country of filteredData()">
+        <tr *ngFor="let brand of filteredData()">
           <td>
             <label class="customcheckbox">
-                <input type="checkbox" [(ngModel)]="country.isSelected"  (change)="isAllSelected()">
+                <input type="checkbox" [(ngModel)]="brand.isSelected"  (change)="isAllSelected()">
                 <span class="checkmark"></span>
               </label>
           </td>
-          <td>{{ country.id }}</td>
-          <td>{{ country.name }}</td>    
-          <td>{{ country.description }}</td> 
+          <td>{{ brand.id }}</td>
+          <td>{{ brand.name }}</td>    
+          <td>{{ brand.description }}</td> 
           <td>Active</td>                
           <td>
-            <button class="btn btn-sm me-2" (click)="editCountry(country)">
+            <button class="btn btn-sm me-2" (click)="editbrand(brand)">
               <img src="/images/icon/edit-2.svg" alt="">
             </button>
-            <button class="btn btn-sm " (click)="deleteCountry(country)">
+            <button class="btn btn-sm " (click)="deletebrand(brand)">
               <i class="bi bi-trash"></i>
                <img src="/images/icon/delete.svg" alt="">
             </button>

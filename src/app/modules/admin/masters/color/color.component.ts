@@ -15,23 +15,36 @@ export class ColorComponent {
   masterSelected: boolean = false;
 
   constructor(private dialog: MatDialog) {}
-  countries = [
+  colors = [
     { id: 1, name: 'Pink',isSelected: false},
     { id: 2, name: 'Blue' ,isSelected: false}
   ];
 
   filteredData() {
-    return this.countries.filter(c =>
+    return this.colors.filter(c =>
       c.name.toLowerCase().includes(this.searchText.toLowerCase())
     );
   }
 
-  editCountry(country: any) {
-    //alert(`Editing ${country.name}`);
+  editcolor(color: any, index: number) {
+
+    //alert(banner.id);
+    const dialogRef = this.dialog.open(ColorformComponent, {
+      width: '500px',
+      disableClose: true,
+      data: { color }   // 👈 pass existing banner to dialog
+    });
+  
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.colors[index] = result; // 👈 update instead of push
+      }
+    });
   }
 
-  deleteCountry(country: any) {
-    //alert(`Deleting ${country.name}`);
+
+  deletecolor(color: any) {
+    //alert(`Deleting ${color.name}`);
   }
 
   openAddForm() {
@@ -42,19 +55,19 @@ export class ColorComponent {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        this.countries.push(result);  // add new country
+        this.colors.push(result);  // add new color
       }
     });
   }
 
   // Toggle all checkboxes
   checkUncheckAll() {
-    this.countries.forEach(country => country.isSelected = this.masterSelected);
+    this.colors.forEach(color => color.isSelected = this.masterSelected);
   }
 
   // If all rows checked, master should be checked
   isAllSelected() {
-    this.masterSelected = this.countries.every(country => country.isSelected);
+    this.masterSelected = this.colors.every(color => color.isSelected);
   }
 
 }
