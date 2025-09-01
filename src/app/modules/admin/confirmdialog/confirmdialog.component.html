@@ -1,17 +1,14 @@
-<!-- confirmation-dialog.component.html -->
-<div class="trash-componets">
-    <div class="dialog-content" mat-dialog-content>
-      <div class="dialog-icon">
-        <span class="nim-close"></span>
-      </div>
-      <div class="dialog-message">
-        <div class="qp">Are you sure , you want to delete the selected data</div>
-        <div class="ap">This action cannot be undone</div>
-      </div>
-    </div>
-    
-    <div class="dialog-footer" mat-dialog-actions>
-      <button class="btn btn-danger" (click)="onYesClick()">Yes, delete</button>
-      <button class="btn btn-default-outline" (click)="onNoClick()">No, go back</button>
-    </div>
-    </div>
+<div class="dialog-container">
+  <mat-icon class="dialog-icon" color="warn">warning</mat-icon>
+  <h2>Are you sure you want to delete?</h2>
+  <p class="subtitle">This action cannot be undone</p>
+
+  <div class="dialog-actions">
+    <button mat-raised-button color="warn" (click)="onConfirm()">
+      <mat-icon>delete</mat-icon> Yes, delete
+    </button>
+    <button mat-stroked-button color="primary" (click)="onCancel()">
+      <mat-icon>arrow_back</mat-icon> No, go back
+    </button>
+  </div>
+</div>

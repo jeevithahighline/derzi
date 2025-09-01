@@ -49,7 +49,8 @@ export class BannersComponent {
     //console.log('deleteselectedData', this.selectedIds);
   
     const dialogRef = this.dialog.open(ConfirmdialogComponent, {
-      width: '500px',
+      width: '450px',
+      height: '250px',
       disableClose: true,
     });
   

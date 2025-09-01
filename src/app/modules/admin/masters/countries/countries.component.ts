@@ -2,6 +2,7 @@ import { Component, ViewChild, AfterViewInit } from '@angular/core';
 import { MATERIAL_IMPORTS } from '../../../material.import';
 import { CountryformComponent } from './countryform/countryform.component';
 import { MatDialog } from '@angular/material/dialog';
+import { ConfirmdialogComponent } from '../../confirmdialog/confirmdialog.component';
 
 
 @Component({
@@ -43,8 +44,20 @@ export class CountriesComponent {
   }
   
 
-  deleteCountry(country: any) {
+  deleteCountry(index: any) {
     //alert(`Deleting ${country.name}`);
+
+    const dialogRef = this.dialog.open(ConfirmdialogComponent, {
+      width: '450px',
+      height: '250px',
+      disableClose: true,
+    });
+  
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.countries[index] = result; // 👈 update instead of push
+      }
+    });
   }
 
   openAddCountry() {

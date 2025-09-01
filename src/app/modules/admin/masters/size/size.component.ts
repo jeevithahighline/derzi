@@ -2,6 +2,7 @@ import { Component, ViewChild, AfterViewInit } from '@angular/core';
 import { MATERIAL_IMPORTS } from '../../../material.import';
 import { MatDialog } from '@angular/material/dialog';
 import { SizeformComponent } from './sizeform/sizeform.component';
+import { ConfirmdialogComponent } from '../../confirmdialog/confirmdialog.component';
 
 @Component({
   selector: 'app-size',

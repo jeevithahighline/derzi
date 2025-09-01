@@ -1,11 +1,14 @@
 // confirmdialog.component.ts
 import { Component, Inject } from '@angular/core';
+import { MATERIAL_IMPORTS } from '../../material.import';
+
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-confirmdialog',
   templateUrl: './confirmdialog.component.html',
-  styleUrls: ['./confirmdialog.component.scss']
+  styleUrls: ['./confirmdialog.component.scss'],
+  imports: [MATERIAL_IMPORTS]   // ✅ just one line
 })
 export class ConfirmdialogComponent {
   constructor(
@@ -15,6 +18,10 @@ export class ConfirmdialogComponent {
 
   onNoClick(): void {
     this.dialogRef.close(false);
+  }
+
+  onConfirm() {
+    this.dialogRef.close(true);
   }
 
   onYesClick(): void {

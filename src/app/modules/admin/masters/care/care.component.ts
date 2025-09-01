@@ -2,6 +2,9 @@ import { Component, ViewChild, AfterViewInit } from '@angular/core';
 import { MATERIAL_IMPORTS } from '../../../material.import';
 import { MatDialog } from '@angular/material/dialog';
 import { CareformComponent } from './careform/careform.component';
+import { ConfirmdialogComponent } from '../../confirmdialog/confirmdialog.component';
+
+
 @Component({
   selector: 'app-care',
   imports: [MATERIAL_IMPORTS],   // ✅ just one line

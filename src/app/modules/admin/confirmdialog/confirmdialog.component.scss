@@ -17,3 +17,35 @@
         font-size: .87rem;
     }
 }
+
+.mat-icon.mat-warn{
+  color: #802012 !important;;
+}
+
+.mat-icon.mat-primary{
+  color: #802012 !important;;
+}
+
+.dialog-container {
+    text-align: center;
+    padding: 24px;
+    max-width: 400px;
+  }
+  .dialog-icon {
+    font-size: 48px;
+    margin-bottom: 12px;
+  }
+  h2 {
+    margin: 0 0 8px;
+  }
+  .subtitle {
+    color: gray;
+    font-size: 14px;
+    margin-bottom: 24px;
+  }
+  .dialog-actions {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    flex-wrap: wrap;
+  }

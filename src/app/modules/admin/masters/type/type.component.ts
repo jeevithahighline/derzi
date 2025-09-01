@@ -2,6 +2,7 @@ import { Component, ViewChild, AfterViewInit } from '@angular/core';
 import { MATERIAL_IMPORTS } from '../../../material.import';
 import { TypeformComponent } from './typeform/typeform.component';
 import { MatDialog } from '@angular/material/dialog';
+import { ConfirmdialogComponent } from '../../confirmdialog/confirmdialog.component';
 
 @Component({
   selector: 'app-type',
@@ -40,8 +41,20 @@ export class TypeComponent {
     });
   }
   
-  deletetype(type: any) {
+  deletetype(index: any) {
     //alert(`Deleting ${type.name}`);
+
+    const dialogRef = this.dialog.open(ConfirmdialogComponent, {
+      width: '450px',
+      height: '250px',
+      disableClose: true,
+    });
+  
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.types[index] = result; // 👈 update instead of push
+      }
+    });
   }
 
   openAddForm() {

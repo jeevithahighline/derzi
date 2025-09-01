@@ -2,6 +2,9 @@ import { Component,Inject } from '@angular/core';
 import { MATERIAL_IMPORTS } from '../../../material.import';
 import { MatDialog } from '@angular/material/dialog';
 import { ColorformComponent } from './colorform/colorform.component';
+import { ConfirmdialogComponent } from '../../confirmdialog/confirmdialog.component';
+
+
 @Component({
   selector: 'app-color',
   imports: [MATERIAL_IMPORTS],   // ✅ just one line
