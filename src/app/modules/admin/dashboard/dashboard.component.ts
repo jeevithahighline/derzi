@@ -32,7 +32,7 @@ export class DashboardComponent {
     ];
   
     // Pie Chart (Sales by Product)
-    pieChartLabels = ['Product A', 'Product B', 'Product C'];
+    pieChartLabels = ['Male', 'Female', 'Unknown'];
     pieChartData = [300, 500, 100];
     pieChartType: ChartType = 'pie';
   
