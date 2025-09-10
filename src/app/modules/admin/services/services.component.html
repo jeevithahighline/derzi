@@ -27,9 +27,7 @@
               </label></th>
           <th scope="col">ID</th>
           <th scope="col">Service name</th>
-          <th scope="col">Category</th>
           <th scope="col">Description</th>
-          <th scope="col">Duration</th>
           <th scope="col">Status</th>
           <th scope="col">Action</th>
         </tr>
@@ -44,9 +42,7 @@
           </td>
           <td>{{ service.id }}</td>
           <td>{{ service.name }}</td> 
-          <td>{{ service.category }}</td> 
-          <td>{{ service.description }}</td> 
-          <td>{{ service.duration }}</td> 
+          <td>{{ service.description }}</td>     
           <td>Active</td>                     
           <td>
             <button class="btn btn-sm me-2" (click)="editservice(service)">

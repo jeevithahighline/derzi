@@ -46,17 +46,7 @@
           </mat-form-field>
         </div>
       </div>
-
-      <!-- Category -->
-      <mat-form-field class="w-full">
-        <mat-label>Category</mat-label>
-        <mat-select formControlName="category" multiple>
-          <mat-option *ngFor="let cat of categories" [value]="cat">{{ cat }}</mat-option>
-        </mat-select>
-        <!-- <mat-error *ngIf="f['category'].hasError('required')">
-          Category is required
-        </mat-error> -->
-      </mat-form-field>
+      
 
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
 
@@ -84,14 +74,14 @@
       </mat-form-field>
 
       </div>
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <!-- <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div class="w-full">
           <mat-form-field class="w-full">
             <mat-label>Price</mat-label>
             <input matInput type="number" formControlName="price" placeholder="Enter price" />
-            <!-- <mat-error *ngIf="f['price'].hasError('required')">
+            <mat-error *ngIf="f['price'].hasError('required')">
               Price is required
-            </mat-error> -->
+            </mat-error>
             <mat-error *ngIf="f['price'].hasError('min')">
               Price must be greater than 0
             </mat-error>
@@ -101,28 +91,28 @@
           <mat-form-field class="w-full">
             <mat-label>Duration (in days)</mat-label>
             <input matInput type="number" formControlName="duration" placeholder="Enter duration" />
-            <!-- <mat-error *ngIf="f['duration'].hasError('required')">
+            <mat-error *ngIf="f['duration'].hasError('required')">
               Duration is required
-            </mat-error> -->
+            </mat-error>
             <mat-error *ngIf="f['duration'].hasError('min')">
               Duration must be at least 1
             </mat-error>
           </mat-form-field>
         </div>
       </div>
-     
+      -->
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
 
         <!-- Fabric Provided By -->
-        <mat-form-field class="w-full">
+        <!-- <mat-form-field class="w-full">
           <mat-label>Fabric Provided By</mat-label>
           <mat-select formControlName="fabricProvidedBy" multiple>
             <mat-option *ngFor="let fabric of fabrics" [value]="fabric">{{ fabric }}</mat-option>
           </mat-select>
-          <!-- <mat-error *ngIf="f['fabricProvidedBy'].hasError('required')">
+          <mat-error *ngIf="f['fabricProvidedBy'].hasError('required')">
             Please select who provides fabric
-          </mat-error> -->
-        </mat-form-field>
+          </mat-error>
+        </mat-form-field> -->
 
         <mat-form-field class="w-full">
           <mat-label>Status</mat-label>

@@ -23,6 +23,8 @@ export class CategoryformComponent {
     this.dynamicForm = this.fb.group({
       name: ['', Validators.required],
       name_ar: ['', Validators.required],
+      cat_images: [null],
+      cat_ar_images: [null],
       status: ['Active', Validators.required]
     });
 
@@ -40,7 +42,15 @@ export class CategoryformComponent {
     this.dialogRef.close(this.dynamicForm.value);
   }
   
-
+  selectedFileNames: string[] = []; // store filenames for UI
+  onFileSelected(event: Event) {
+    const file = (event.target as HTMLInputElement).files?.[0];
+    if (file) {
+      this.dynamicForm.patchValue({ cat_images: file });
+      this.dynamicForm.get('cat_images')?.updateValueAndValidity();
+    }
+  }
+  
   close() {
     this.dialogRef.close();
   }

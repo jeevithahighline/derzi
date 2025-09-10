@@ -29,7 +29,6 @@
           <th scope="col">Privilege name</th>
           <th scope="col">Description</th>
           <th scope="col">Role Name</th>
-          <th scope="col">Group Name</th>
           <th scope="col">Status</th>
           <th scope="col">Action</th>
         </tr>
@@ -46,7 +45,6 @@
           <td>{{ privilege.name }}</td>    
           <td>{{ privilege.description }}</td> 
           <td>{{ privilege.rolename }}</td> 
-          <td>{{ privilege.groupname }}</td> 
           <td>Active</td>                
           <td>
             <button class="btn btn-sm me-2" (click)="editprivilege(privilege)">

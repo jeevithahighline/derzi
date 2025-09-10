@@ -16,7 +16,7 @@ export class ServicesComponent {
   totalItems = 2;
   masterSelected: boolean = false;
   services = [
-    { id: 1, name: 'Shirt Stitching',name_ar:'مجموعة الصيف',category:'Stitching',description:'details of what’s included',duration:'2 days',isSelected: false},
+    { id: 1, name: 'Embroidery',name_ar:'مجموعة الصيف',category:'Stitching',description:'details of what’s included',duration:'2 days',isSelected: false},
     { id: 2, name: 'Blouse Design',name_ar:'مجموعة الصيف' ,category:'Embroidery',description:'details of what’s included',duration:'2 weeks',isSelected: false}
   ];
 

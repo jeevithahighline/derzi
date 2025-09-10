@@ -26,7 +26,66 @@
     Category name in Arabic is required
     </mat-error> -->
   </mat-form-field>
+  <!-- Category Image -->
+  <mat-form-field appearance="outline" class="w-full">
+    <mat-label>Category Image</mat-label>
+  
+    <input
+      type="file"
+      class="hidden"
+      #fileInput
+      (change)="onFileSelected($event)"
+      formControlName="cat_images"
+    />
+  
+    <!-- fake text input to show file name -->
+    <input
+      matInput
+      placeholder="Choose file"
+      [value]="selectedFileNames"
+      readonly
+      (click)="fileInput.click()"
+    />
+  
+    <button mat-icon-button matSuffix (click)="fileInput.click()" type="button">
+      <mat-icon>upload</mat-icon>
+    </button>
+  
+    <mat-error *ngIf="dynamicForm.get('cat_images')?.hasError('required') && dynamicForm.get('cat_images')?.touched">
+      Image is required
+    </mat-error>
+  </mat-form-field>
 
+  <!-- Category Image (Arabic) -->
+
+  <mat-form-field appearance="outline" class="w-full">
+    <mat-label>Category Image - Arabic</mat-label>
+  
+    <input
+      type="file"
+      class="hidden"
+      #fileInput
+      (change)="onFileSelected($event)"
+      formControlName="cat_ar_images"
+    />
+  
+    <!-- fake text input to show file name -->
+    <input
+      matInput
+      placeholder="Choose file"
+      [value]="selectedFileNames"
+      readonly
+      (click)="fileInput.click()"
+    />
+  
+    <button mat-icon-button matSuffix (click)="fileInput.click()" type="button">
+      <mat-icon>upload</mat-icon>
+    </button>
+  
+    <mat-error *ngIf="dynamicForm.get('cat_ar_images')?.hasError('required') && dynamicForm.get('cat_ar_images')?.touched">
+      Image is required
+    </mat-error>
+  </mat-form-field> 
   <!-- Status -->
   <mat-form-field appearance="outline">
     <mat-label>Status</mat-label>

@@ -129,7 +129,7 @@ const menuConfig: Record<string, { id: string; icon: string }> = {
         type: 'collapsable',
         children: [
           { title: 'Roles', type: 'basic', link: '/roles' },
-          { title: 'Groups', type: 'basic', link: '/groups' },
+          //{ title: 'Groups', type: 'basic', link: '/groups' },
           { title: 'Privilege Management', type: 'basic', link: '/privileges' },
         ],
     },
@@ -150,7 +150,7 @@ const menuConfig: Record<string, { id: string; icon: string }> = {
       children: [      
         { title: 'Payment Method', type: 'basic', link: '/paymentmethod' },
         { title: 'Email Templates', type: 'basic', link: '/emailtemplates' },
-        { title: 'SMS Templates', type: 'basic', link: '/smstemplates' },
+        //{ title: 'SMS Templates', type: 'basic', link: '/smstemplates' },
       ],
   },
     { 
