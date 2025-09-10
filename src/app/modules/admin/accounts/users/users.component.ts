@@ -1,6 +1,8 @@
 import { Component,Inject } from '@angular/core';
 import { MATERIAL_IMPORTS } from '../../../material.import';
 import { Router,ActivatedRoute  } from '@angular/router';
+import { MatDialog } from '@angular/material/dialog';
+import { ConfirmdialogComponent } from '../../confirmdialog/confirmdialog.component';
 
 @Component({
   selector: 'app-users',
@@ -13,28 +15,66 @@ export class UsersComponent {
   searchText = '';
   totalItems = 2;
   masterSelected: boolean = false;
-  constructor(private _router: Router) {}
-  
-  countries = [
-    { id: 1, first_name: 'Ahmed',last_name:'Khan',email:'test@gmail.com',status: 'Inactive',
-    isSelected: false},
-    { id: 2, first_name: 'Salman',last_name:'Khan',email:'test@gmail.com',status: 'Inactive',
-    isSelected: false}
+  constructor(private _router: Router,private dialog: MatDialog) {}
+
+  users = [
+    {
+      "id":1,
+      "firstname": "Ahmed",
+      "lastname": "Khan",
+      "email": "ahmed@example.com",
+      "mobilenumber": "9876543210",
+      "username": "johndriver",
+      "password": "StrongPass123",
+      "location": "New York",
+      "status": "Active",
+      isSelected: false
+    }, 
+    {
+      id:2,
+      "firstname": "Salman",
+      "lastname": "Doe",
+      "email": "salman@example.com",
+      "mobilenumber": "9876543210",
+      "username": "samdriver",
+      "password": "StrongPass123",
+      "location": "New York",
+      "status": "Active",
+      isSelected: false
+    }
   ];
 
   filteredData() {
-    return this.countries.filter(c =>
-      c.first_name.toLowerCase().includes(this.searchText.toLowerCase())
+    return this.users.filter(c =>
+      c.firstname.toLowerCase().includes(this.searchText.toLowerCase())
     );
   }
 
-  editCountry(country: any) {
-    //alert(`Editing ${country.name}`);
+  
+
+  editUser(user: any, index: number) {
+    //alert(banner.id);
+    this._router.navigate(['/adduser', user.id]);   
   }
 
-  deleteCountry(country: any) {
-    //alert(`Deleting ${country.name}`);
+  public deleteUser(index: number): void {
+    //console.log('deleteselectedData', this.selectedIds);
+  
+    const dialogRef = this.dialog.open(ConfirmdialogComponent, {
+      width: '450px',
+      height: '250px',
+      disableClose: true,
+    });
+  
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.users[index] = result; // 👈 update instead of push
+      }
+    });
+    
   }
+
+  
 
   addForm(){
     this._router.navigate(['/adduser']);
@@ -42,12 +82,12 @@ export class UsersComponent {
 
   // Toggle all checkboxes
   checkUncheckAll() {
-    this.countries.forEach(country => country.isSelected = this.masterSelected);
+    this.users.forEach(User => User.isSelected = this.masterSelected);
   }
 
   // If all rows checked, master should be checked
   isAllSelected() {
-    this.masterSelected = this.countries.every(country => country.isSelected);
+    this.masterSelected = this.users.every(User => User.isSelected);
   }
 
 }

@@ -1,6 +1,8 @@
 import { Component, ViewChild, AfterViewInit } from '@angular/core';
 import { MATERIAL_IMPORTS } from '../../../material.import';
 import { Router,ActivatedRoute  } from '@angular/router';
+import { MatDialog } from '@angular/material/dialog';
+import { ConfirmdialogComponent } from '../../confirmdialog/confirmdialog.component';
 
 @Component({
   selector: 'app-drivers',
@@ -14,41 +16,62 @@ export class DriversComponent {
   totalItems = 2;
   masterSelected: boolean = false;
 
-  constructor(private _router: Router) {}
+  constructor(private _router: Router,private dialog: MatDialog) {}
   
-  countries = [
+  drivers = [
     {
-      id:'1',
-      driver_name: 'Ahmed',
-      contact_email: 'ahmed@gmail.com',
-      phone: '+91-9876543210',
-      location: 'Mumbai, India',
-      status: 'Active',
+      "id":1,
+      "firstname": "John",
+      "lastname": "Doe",
+      "email": "johndoe@example.com",
+      "mobilenumber": "9876543210",
+      "username": "johndriver",
+      "password": "StrongPass123",
+      "location": "New York",
+      "status": "Active",
       isSelected: false
-    },
+    }, 
     {
-      id:'2',
-      driver_name: 'Sameem',
-      contact_email: 'sameem@gmail.com',
-      phone: '+91-9123456780',
-      location: 'Bangalore, India',
-      status: 'Inactive',
+      id:2,
+      "firstname": "Sameem",
+      "lastname": "Doe",
+      "email": "sameem@example.com",
+      "mobilenumber": "9876543210",
+      "username": "samdriver",
+      "password": "StrongPass123",
+      "location": "New York",
+      "status": "Active",
       isSelected: false
     }
   ];
 
   filtereddrivers() {
-    return this.countries.filter(c =>
-      c.driver_name.toLowerCase().includes(this.searchText.toLowerCase())
+    return this.drivers.filter(c =>
+      c.firstname.toLowerCase().includes(this.searchText.toLowerCase())
     );
   }
 
-  editCountry(country: any) {
-    //alert(`Editing ${country.name}`);
+ 
+  editdriver(driver: any, index: number) {
+    //alert(banner.id);
+    this._router.navigate(['/adddriver', driver.id]);   
   }
 
-  deleteCountry(country: any) {
-    //alert(`Deleting ${country.name}`);
+  public deletedriver(index: number): void {
+    //console.log('deleteselectedData', this.selectedIds);
+  
+    const dialogRef = this.dialog.open(ConfirmdialogComponent, {
+      width: '450px',
+      height: '250px',
+      disableClose: true,
+    });
+  
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.drivers[index] = result; // 👈 update instead of push
+      }
+    });
+    
   }
 
   addForm(){
@@ -57,12 +80,12 @@ export class DriversComponent {
 
   // Toggle all checkboxes
   checkUncheckAll() {
-    this.countries.forEach(country => country.isSelected = this.masterSelected);
+    this.drivers.forEach(driver => driver.isSelected = this.masterSelected);
   }
 
   // If all rows checked, master should be checked
   isAllSelected() {
-    this.masterSelected = this.countries.every(country => country.isSelected);
+    this.masterSelected = this.drivers.every(driver => driver.isSelected);
   }
 
 

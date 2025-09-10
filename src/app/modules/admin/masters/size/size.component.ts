@@ -44,8 +44,18 @@ export class SizeComponent {
     });
   }
 
-  deletesize(size: any) {
-    //alert(`Deleting ${size.name}`);
+  deletesize(index: any) {
+    const dialogRef = this.dialog.open(ConfirmdialogComponent, {
+      width: '450px',
+      height: '250px',
+      disableClose: true,
+    });
+  
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.sizes[index] = result; // 👈 update instead of push
+      }
+    });
   }
 
   openAddForm() {

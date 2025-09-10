@@ -2,6 +2,7 @@ import { Component, ViewChild, AfterViewInit } from '@angular/core';
 import { MATERIAL_IMPORTS } from '../../../material.import';
 import { RoleformComponent } from './roleform/roleform.component';
 import { MatDialog } from '@angular/material/dialog';
+import { ConfirmdialogComponent } from '../../confirmdialog/confirmdialog.component';
 
 
 @Component({
@@ -16,24 +17,46 @@ export class RolesComponent {
   masterSelected: boolean = false;
   constructor(private dialog: MatDialog) {}
   
-  countries = [
+  roles = [
     { id: 1, name: 'Super Admin', description:"Lorem ipsum",isSelected: false},
     { id: 2, name: 'Staff' , description:"Lorem ipsum",isSelected: false},
     { id: 3, name: 'Management' , description:"Lorem ipsum",isSelected: false}
   ];
 
   filteredData() {
-    return this.countries.filter(c =>
+    return this.roles.filter(c =>
       c.name.toLowerCase().includes(this.searchText.toLowerCase())
     );
   }
 
-  editCountry(country: any) {
-    //alert(`Editing ${country.name}`);
+  editrole(role: any, index: number) {
+    const dialogRef = this.dialog.open(RoleformComponent, {
+      width: '500px',
+      disableClose: true,
+      data: { role }   // 👈 pass existing currency to dialog
+    });
+  
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.roles[index] = result; // 👈 update instead of push
+      }
+    });
   }
 
-  deleteCountry(country: any) {
-    //alert(`Deleting ${country.name}`);
+  
+
+  deleterole(index: any) {
+    const dialogRef = this.dialog.open(ConfirmdialogComponent, {
+      width: '450px',
+      height: '250px',
+      disableClose: true,
+    });
+  
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.roles[index] = result; // 👈 update instead of push
+      }
+    });
   }
 
   openAddForm() {
@@ -44,19 +67,19 @@ export class RolesComponent {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        this.countries.push(result);  // add new country
+        this.roles.push(result);  // add new role
       }
     });
   }
 
   // Toggle all checkboxes
   checkUncheckAll() {
-    this.countries.forEach(country => country.isSelected = this.masterSelected);
+    this.roles.forEach(role => role.isSelected = this.masterSelected);
   }
 
   // If all rows checked, master should be checked
   isAllSelected() {
-    this.masterSelected = this.countries.every(country => country.isSelected);
+    this.masterSelected = this.roles.every(role => role.isSelected);
   }
 
 }

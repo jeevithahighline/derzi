@@ -22,7 +22,6 @@ export class CurrencyformComponent {
   ngOnInit(): void {
     this.dynamicForm = this.fb.group({
       name: ['', Validators.required],
-      name_ar: ['', Validators.required],
       status: ['Active', Validators.required]
     });
 

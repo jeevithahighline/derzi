@@ -2,6 +2,7 @@ import { Component, ViewChild, AfterViewInit } from '@angular/core';
 import { MATERIAL_IMPORTS } from '../../../material.import';
 import { MatDialog } from '@angular/material/dialog';
 import { CurrencyformComponent } from './currencyform/currencyform.component';
+import { ConfirmdialogComponent } from '../../confirmdialog/confirmdialog.component';
 
 @Component({
   selector: 'app-currency',
@@ -40,8 +41,18 @@ export class CurrencyComponent {
     });
   }
   
-  deletecurrency(currency: any) {
-    //alert(`Deleting ${currency.name}`);
+  deletecurrency(index: any) {
+    const dialogRef = this.dialog.open(ConfirmdialogComponent, {
+      width: '450px',
+      height: '250px',
+      disableClose: true,
+    });
+  
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.currencies[index] = result; // 👈 update instead of push
+      }
+    });
   }
 
   openAddForm() {

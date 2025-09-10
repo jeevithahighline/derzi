@@ -11,11 +11,44 @@ import { Router,ActivatedRoute  } from '@angular/router';
 })
 export class ServicesformComponent {
   serviceForm: FormGroup;
+  editMode = false;   // ✅ track add/edit
+  serviceId: number | null = null;
 
   categories = ['Stitching', 'Alteration', 'Dry Cleaning', 'Embroidery'];
   fabrics = ['Customer', 'Shop'];
 
-  constructor(private _router: Router,private fb: FormBuilder) {
+  constructor(private _router: Router,private fb: FormBuilder,private route: ActivatedRoute) {}
+
+  services = [
+    { 
+      id: 1, 
+      name: 'Shirt Stitching',
+      category: ['Stitching'],  // array since mat-select multiple
+      description: 'details of what’s included',
+      name_ar: 'قميص',
+      description_ar: 'لوريم إيبسوم',
+      price: 100,               // number only
+      duration: 2,              // number only
+      isSelected: false,
+      fabricProvidedBy:["Customer"] 
+    },
+    { 
+      id: 2, 
+      name: 'Blouse Design',
+      category: ['Embroidery'],
+      description: 'details of what’s included',
+      name_ar: 'قميص',
+      description_ar: 'لوريم إيبسوم',
+      price: 100,
+      duration: 14,             // 2 weeks = 14 days
+      isSelected: false,
+      fabricProvidedBy:["Shop"]  
+    }
+  ];
+  
+
+  ngOnInit(): void {
+
     this.serviceForm = this.fb.group({
       name: ['', [Validators.required, Validators.minLength(3)]],
       name_ar: ['', [Validators.required, Validators.minLength(3)]],
@@ -27,13 +60,31 @@ export class ServicesformComponent {
       fabricProvidedBy: ['', Validators.required],
       status: ['Active']
     });
+    // ✅ get id from route
+    this.route.paramMap.subscribe(params => {
+      const id = params.get('id');
+      if (id) {
+        this.editMode = true;
+        this.serviceId = +id;
+        this.loadServiceData(this.serviceId);
+      }
+    });
+   
   }
 
   onSubmit() {
     if (this.serviceForm.valid) {
       console.log('✅ Form Data:', this.serviceForm.value);
+      this._router.navigate(['/services']);
     } else {
       this.serviceForm.markAllAsTouched();
+    }
+  }
+
+  loadServiceData(id: number){
+    const service = this.services.find(b => b.id === id);
+    if (service) {
+      this.serviceForm.patchValue(service);
     }
   }
 

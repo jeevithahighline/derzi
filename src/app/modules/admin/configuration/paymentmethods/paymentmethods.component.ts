@@ -2,6 +2,7 @@ import { Component, ViewChild, AfterViewInit } from '@angular/core';
 import { MATERIAL_IMPORTS } from '../../../material.import';
 import { MatDialog } from '@angular/material/dialog';
 import { PaymentmethodformComponent } from './paymentmethodform/paymentmethodform.component';
+import { ConfirmdialogComponent } from '../../confirmdialog/confirmdialog.component';
 
 @Component({
   selector: 'app-paymentmethods',
@@ -41,8 +42,18 @@ export class PaymentmethodsComponent {
     });
   }
   
-  deletepayment(payment: any) {
-    //alert(`Deleting ${payment.name}`);
+  deletepayment(index: any) {
+    const dialogRef = this.dialog.open(ConfirmdialogComponent, {
+      width: '450px',
+      height: '250px',
+      disableClose: true,
+    });
+  
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.payments[index] = result; // 👈 update instead of push
+      }
+    });
   }
 
   openAddForm() {

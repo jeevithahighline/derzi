@@ -2,6 +2,9 @@ import { Component, ViewChild, AfterViewInit } from '@angular/core';
 import { MATERIAL_IMPORTS } from '../../../material.import';
 import { CategoryformComponent } from './categoryform/categoryform.component';
 import { MatDialog } from '@angular/material/dialog';
+import { ConfirmdialogComponent } from '../../confirmdialog/confirmdialog.component';
+
+
 @Component({
   selector: 'app-categories',
   imports: [MATERIAL_IMPORTS],   // ✅ just one line
@@ -15,23 +18,44 @@ export class CategoriesComponent {
   masterSelected: boolean = false;
   constructor(private dialog: MatDialog) {}
 
-  countries = [
+  categories = [
     { id: 1, name: 'Men',isSelected: false},
     { id: 2, name: 'Women',isSelected: false }
   ];
 
   filteredData() {
-    return this.countries.filter(c =>
+    return this.categories.filter(c =>
       c.name.toLowerCase().includes(this.searchText.toLowerCase())
     );
   }
 
-  editCountry(country: any) {
-    //alert(`Editing ${country.name}`);
+  editcategory(category: any, index: number) {
+     //alert(banner.id);
+     const dialogRef = this.dialog.open(CategoryformComponent, {
+      width: '500px',
+      disableClose: true,
+      data: { category }   // 👈 pass existing banner to dialog
+    });
+  
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.categories[index] = result; // 👈 update instead of push
+      }
+    });
   }
 
-  deleteCountry(country: any) {
-    //alert(`Deleting ${country.name}`);
+  deletecategory(index: any) {
+    const dialogRef = this.dialog.open(ConfirmdialogComponent, {
+      width: '450px',
+      height: '250px',
+      disableClose: true,
+    });
+  
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.categories[index] = result; // 👈 update instead of push
+      }
+    });
   }
 
   openAddForm() {
@@ -42,19 +66,19 @@ export class CategoriesComponent {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        this.countries.push(result);  // add new country
+        this.categories.push(result);  // add new category
       }
     });
   }
 
   // Toggle all checkboxes
   checkUncheckAll() {
-    this.countries.forEach(country => country.isSelected = this.masterSelected);
+    this.categories.forEach(category => category.isSelected = this.masterSelected);
   }
 
   // If all rows checked, master should be checked
   isAllSelected() {
-    this.masterSelected = this.countries.every(country => country.isSelected);
+    this.masterSelected = this.categories.every(category => category.isSelected);
   }
 
 }

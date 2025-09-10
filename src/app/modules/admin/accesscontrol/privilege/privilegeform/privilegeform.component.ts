@@ -16,7 +16,7 @@ export class PrivilegeformComponent implements OnInit {
   // Example dropdown data
   roles: string[] = ['Admin', 'Manager', 'Staff', 'Viewer'];
   groups: string[] = ['Group A', 'Group B', 'Group C'];
-  merchants: string[] = ['Merchant 1', 'Merchant 2', 'Merchant 3'];
+  merchants: string[] = ['Derzi User1', 'Derzi User2', 'Derzi User3'];
 
   // ✅ Permissions grouped into modules (so HTML *ngFor works)
   modules = [
@@ -36,9 +36,11 @@ export class PrivilegeformComponent implements OnInit {
     this.privilegeform = this.fb.group({
       privilegename: ['', [Validators.required, Validators.minLength(3)]],
       description: ['', [Validators.required, Validators.maxLength(250)]],
-      rolename: [[]],   // Multi-select dropdown
-      groupname: [[]],  // Multi-select dropdown
-      merchantname: [[]], // Multi-select dropdown
+      
+      // Multi-select dropdowns with required validation
+      rolename: [[], Validators.required],
+      groupname: [[], Validators.required],
+      merchantname: [[], Validators.required],
       permissions: this.fb.group({})  // placeholder, we'll manage dynamically
     });
 

@@ -1,9 +1,9 @@
 import { Component, ViewChild, AfterViewInit } from '@angular/core';
 import { MATERIAL_IMPORTS } from '../../../material.import';
 import { MatDialog } from '@angular/material/dialog';
-import { BannersformComponent } from './bannersform/bannersform.component';
 import { ToastService } from '../../../toastr.service';
 import { ConfirmdialogComponent } from '../../confirmdialog/confirmdialog.component';
+import { Router,ActivatedRoute  } from '@angular/router';
 
 @Component({
   selector: 'app-banners',
@@ -17,7 +17,7 @@ export class BannersComponent {
   masterSelected: boolean = false;
   selectedIds: string[] = []; // Store selected IDs
   isDeleteTriggered:boolean;
-  constructor(private dialog: MatDialog,private _toastrService: ToastService) {}
+  constructor(private dialog: MatDialog,private _toastrService: ToastService,private _router: Router) {}
   banners = [
     { id: 1, name: 'Fashion', description:"Lorem ipsum",isSelected: false},
     { id: 2, name: 'Clothing' , description:"Lorem ipsum",isSelected: false}
@@ -32,17 +32,9 @@ export class BannersComponent {
   editbanner(banner: any, index: number) {
 
     //alert(banner.id);
-    const dialogRef = this.dialog.open(BannersformComponent, {
-      width: '500px',
-      disableClose: true,
-      data: { banner }   // 👈 pass existing banner to dialog
-    });
-  
-    dialogRef.afterClosed().subscribe(result => {
-      if (result) {
-        this.banners[index] = result; // 👈 update instead of push
-      }
-    });
+    this._router.navigate(['/addbanner', banner.id]);
+
+   
   }
 
   public deletebanner(index: number): void {
@@ -64,16 +56,7 @@ export class BannersComponent {
  
 
   openAddForm() {
-    const dialogRef = this.dialog.open(BannersformComponent, {
-      width: '500px',
-      disableClose: true
-    });
-
-    dialogRef.afterClosed().subscribe(result => {
-      if (result) {
-        this.banners.push(result);  // add new banner
-      }
-    });
+    this._router.navigate(['/addbanner']);
   }
 
   // Toggle all checkboxes

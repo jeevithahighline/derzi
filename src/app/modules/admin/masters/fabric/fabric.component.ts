@@ -45,8 +45,18 @@ export class FabricComponent {
     });
   }
 
-  deletefabric(fabric: any) {
-    //alert(`Deleting ${fabric.name}`);
+  deletefabric(index: any) {
+    const dialogRef = this.dialog.open(ConfirmdialogComponent, {
+      width: '450px',
+      height: '250px',
+      disableClose: true,
+    });
+  
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.fabrics[index] = result; // 👈 update instead of push
+      }
+    });
   }
 
   openAddForm() {

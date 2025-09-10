@@ -3,11 +3,11 @@
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2">
       <div class="col-6">
         <div class="heading pt-2">
-            Add Faq
+          <h2>{{ editMode ? 'Edit FAQ' : 'Add FAQ' }}</h2>
         </div>
       </div>
       <div class="col-6 dflexmain">       
-        <button class="btn-add" (click)="savePage()"> Save</button>      
+        <button class="btn-add" (click)="saveFaq()"> Save</button>      
         <button class="btn-cancel" (click)="onCancel()">  Cancel</button>
       </div>
     </div>
@@ -15,8 +15,7 @@
     <div class="row">&nbsp;</div>
     <!---Form Section-->
     <div class="bg-white p-2 border rounded ">
-      <form [formGroup]="faqform" (ngSubmit)="onSubmit()" class="p-4 grid">
-        
+      <form [formGroup]="faqform" (ngSubmit)="onSubmit()" class="p-4 grid">      
         
   
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 ">

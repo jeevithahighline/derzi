@@ -3,7 +3,7 @@
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2">
       <div class="col-6">
         <div class="heading pt-2">
-            Add Email Templates
+            <h2>{{ editMode ? 'Edit Email Templates' : 'Add Email Templates' }}</h2>
         </div>
       </div>
       <div class="col-6 dflexmain">       
@@ -21,11 +21,11 @@
           <div class="w-full">
             <p> <label>Template name</label><span class="required-astreik">*</span></p>
             <mat-form-field class="w-full">
-              <input matInput formControlName="Templatename" class="w-full border rounded" placeholder="Enter Template name" />
+              <input matInput formControlName="templatename" class="w-full border rounded" placeholder="Enter Template name" />
               <!-- <mat-error *ngIf="f['name'].hasError('required')">
                 Service name is required
               </mat-error> -->
-              <mat-error *ngIf="f['Templatename'].hasError('minlength')">
+              <mat-error *ngIf="f['templatename'].hasError('minlength')">
                 Minimum 3 characters required
               </mat-error>
             </mat-form-field>

@@ -42,8 +42,18 @@ export class LengthComponent {
     });
   }
 
-  deletelength(length: any) {
-    //alert(`Deleting ${length.name}`);
+  deletelength(index: any) {
+    const dialogRef = this.dialog.open(ConfirmdialogComponent, {
+      width: '450px',
+      height: '250px',
+      disableClose: true,
+    });
+  
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.lengths[index] = result; // 👈 update instead of push
+      }
+    });
   }
 
   openAddForm() {

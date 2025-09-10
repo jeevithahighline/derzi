@@ -7,7 +7,7 @@
         </div>
       </div>
       <div class="col-6 dflexmain">
-        <button class="btn btn-sm ">
+        <button class="btn btn-sm" (click)="deletecolor(1)">
               <i class="bi bi-trash"></i>
                <img src="/images/icon/delete.svg" alt="">
             </button>      
@@ -46,7 +46,7 @@
             <button class="btn btn-sm me-2" (click)="editcolor(color)">
               <img src="/images/icon/edit-2.svg" alt="">
             </button>
-            <button class="btn btn-sm " (click)="deletecolor(color)">
+            <button class="btn btn-sm" (click)="deletecolor(color)">
               <i class="bi bi-trash"></i>
                <img src="/images/icon/delete.svg" alt="">
             </button>

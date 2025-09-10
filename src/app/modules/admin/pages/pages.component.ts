@@ -1,6 +1,8 @@
 import { Component, ViewChild, AfterViewInit } from '@angular/core';
 import { MATERIAL_IMPORTS } from '../../material.import';
 import { Router,ActivatedRoute  } from '@angular/router';
+import { MatDialog } from '@angular/material/dialog';
+import { ConfirmdialogComponent } from '../confirmdialog/confirmdialog.component';
 
 @Component({
   selector: 'app-pages',
@@ -13,24 +15,50 @@ export class PagesComponent {
   totalItems = 2;
   masterSelected: boolean = false;
 
-  constructor(private _router: Router) {}
+  constructor(private _router: Router,private dialog: MatDialog) {}
   pages = [
-    { id: 1, pagetitle: 'Home Page',pagecontent:'Lorem ipsum',isSelected: false},
-    { id: 2, pagetitle: 'About us Page',pagecontent:'Lorem ipsum' ,isSelected: false}
+    {
+      "id":1,
+      "title": "Summer Collection",
+      "title_ar": "مجموعة الصيف",
+      "description": "Discover our exclusive summer collection with fresh styles and vibrant colors.",
+      "description_ar": "اكتشف مجموعتنا الصيفية الحصرية مع أنماط جديدة وألوان زاهية. مثالية لهذا الموسم!",
+      "pagename": "Home Page",
+      "isSelected":false
+    }   
   ];
+
+  
 
   filteredpages() {
     return this.pages.filter(c =>
-      c.pagetitle.toLowerCase().includes(this.searchText.toLowerCase())
+      c.pagename.toLowerCase().includes(this.searchText.toLowerCase())
     );
   }
 
-  editCountry(country: any) {
-    //alert(`Editing ${country.name}`);
+ 
+
+  editPage(page: any, index: number) {
+    //alert(banner.id);
+    this._router.navigate(['/addPage', page.id]);   
   }
 
-  deleteCountry(country: any) {
-    //alert(`Deleting ${country.name}`);
+
+  public deletePage(index: number): void {
+    //console.log('deleteselectedData', this.selectedIds);
+  
+    const dialogRef = this.dialog.open(ConfirmdialogComponent, {
+      width: '450px',
+      height: '250px',
+      disableClose: true,
+    });
+  
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.pages[index] = result; // 👈 update instead of push
+      }
+    });
+    
   }
 
   addPages(){
@@ -39,12 +67,12 @@ export class PagesComponent {
 
    // Toggle all checkboxes
    checkUncheckAll() {
-    this.pages.forEach(country => country.isSelected = this.masterSelected);
+    this.pages.forEach(Page => Page.isSelected = this.masterSelected);
   }
 
   // If all rows checked, master should be checked
   isAllSelected() {
-    this.masterSelected = this.pages.every(country => country.isSelected);
+    this.masterSelected = this.pages.every(Page => Page.isSelected);
   }
 
 }

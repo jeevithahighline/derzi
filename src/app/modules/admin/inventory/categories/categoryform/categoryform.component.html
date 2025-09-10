@@ -1,4 +1,8 @@
-<h2 class="popuph2" mat-dialog-title>Add Category</h2>
+<h2 class="popuph2" mat-dialog-title>
+
+  {{ data?.category ? 'Edit Category' : 'Add Category' }}
+
+</h2>
 
 
 <form [formGroup]="dynamicForm" (ngSubmit)="save()" class="p-4 grid gap-1">

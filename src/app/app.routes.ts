@@ -72,6 +72,7 @@ import { EmailtemplatesformComponent } from './modules/admin/configuration/email
 import { SmstemplatesformComponent } from './modules/admin/configuration/smstemplates/smstemplatesform/smstemplatesform.component';
 import { PrivilegeformComponent } from './modules/admin/accesscontrol/privilege/privilegeform/privilegeform.component';
 import { ProfilesettingsComponent } from './modules/admin/settings/profilesettings/profilesettings.component';
+import { BannersformComponent } from './modules/admin/masters/banners/bannersform/bannersform.component';
 
 
 export const appRoutes: Route[] = [
@@ -166,6 +167,9 @@ export const appRoutes: Route[] = [
 
             {path: 'adduser', component: UsersformComponent},
             {path: 'adduser/:id', component: UsersformComponent},
+
+            {path: 'addbanner', component: BannersformComponent},
+            {path: 'addbanner/:id', component: BannersformComponent},
 
             {path: 'globalsettings', component: GlobalsettingsComponent},
 

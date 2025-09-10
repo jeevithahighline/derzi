@@ -3,7 +3,10 @@
     <!-- Header with Actions -->
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2">
       <div class="col-6">
-        <div class="heading pt-2">Add Product</div>
+        <div class="heading pt-2">
+
+          <h2>{{ editMode ? 'Edit Product' : 'Add Product' }}</h2>
+        </div>
       </div>
       <div class="col-6 dflexmain">
         <button class="btn-add" (click)="onSubmit()">
@@ -52,7 +55,7 @@
         <!-- Category -->
         <mat-form-field class="w-full">
           <mat-label>Category</mat-label>
-          <mat-select formControlName="category">
+          <mat-select formControlName="category" multiple>
             <mat-option *ngFor="let cat of categories" [value]="cat._id">{{ cat.name }}</mat-option>
           </mat-select>
           <!-- <mat-error *ngIf="f['category'].hasError('required')">Category is required</mat-error> -->
@@ -70,7 +73,7 @@
         <!-- Merchant -->
         <mat-form-field class="w-full">
           <mat-label>Merchant</mat-label>
-          <mat-select formControlName="merchant_id">
+          <mat-select formControlName="merchant_id" multiple>
             <mat-option *ngFor="let merchant of merchants" [value]="merchant._id">{{ merchant.name }}</mat-option>
           </mat-select>
           <!-- <mat-error *ngIf="f['merchant_id'].hasError('required')">Merchant is required</mat-error> -->
@@ -79,7 +82,7 @@
         <!-- Length -->
         <mat-form-field class="w-full">
           <mat-label>Length</mat-label>
-          <mat-select formControlName="length_id">
+          <mat-select formControlName="length_id" multiple>
             <mat-option *ngFor="let length of lengths" [value]="length._id">{{ length.name }}</mat-option>
           </mat-select>
         </mat-form-field>
@@ -89,7 +92,7 @@
         <!-- Fabric -->
         <mat-form-field class="w-full">
           <mat-label>Fabric</mat-label>
-          <mat-select formControlName="fabric_id">
+          <mat-select formControlName="fabric_id" multiple>
             <mat-option *ngFor="let fabric of fabrics" [value]="fabric._id">{{ fabric.name }}</mat-option>
           </mat-select>
         </mat-form-field>
@@ -97,7 +100,7 @@
         <!-- Type -->
         <mat-form-field class="w-full">
           <mat-label>Type</mat-label>
-          <mat-select formControlName="type_id">
+          <mat-select formControlName="type_id" multiple>
             <mat-option *ngFor="let type of types" [value]="type._id">{{ type.name }}</mat-option>
           </mat-select>
         </mat-form-field>
@@ -107,7 +110,7 @@
         <!-- Brand -->
         <mat-form-field class="w-full">
           <mat-label>Brand</mat-label>
-          <mat-select formControlName="brand_id">
+          <mat-select formControlName="brand_id" multiple>
             <mat-option *ngFor="let brand of brands" [value]="brand._id">{{ brand.name }}</mat-option>
           </mat-select>
         </mat-form-field>
@@ -115,7 +118,7 @@
         <!-- Size -->
         <mat-form-field class="w-full">
           <mat-label>Size</mat-label>
-          <mat-select formControlName="size_id">
+          <mat-select formControlName="size_id" multiple>
             <mat-option *ngFor="let size of sizes" [value]="size._id">{{ size.name }}</mat-option>
           </mat-select>
         </mat-form-field>
@@ -125,7 +128,7 @@
         <!-- Color -->
         <mat-form-field class="w-full">
           <mat-label>Color</mat-label>
-          <mat-select formControlName="color_id">
+          <mat-select formControlName="color_id" multiple>
             <mat-option *ngFor="let color of colors" [value]="color._id">{{ color.name }}</mat-option>
           </mat-select>
         </mat-form-field>
@@ -133,7 +136,7 @@
         <!-- Care -->
         <mat-form-field class="w-full">
           <mat-label>Care Instructions</mat-label>
-          <mat-select formControlName="care_id">
+          <mat-select formControlName="care_id" multiple>
             <mat-option *ngFor="let care of cares" [value]="care._id">{{ care.name }}</mat-option>
           </mat-select>
         </mat-form-field>
@@ -142,7 +145,7 @@
         <!-- Country -->
         <mat-form-field class="w-full">
           <mat-label>Country</mat-label>
-          <mat-select formControlName="country_id">
+          <mat-select formControlName="country_id" multiple>
             <mat-option *ngFor="let country of countries" [value]="country._id">{{ country.name }}</mat-option>
           </mat-select>
         </mat-form-field>
@@ -185,8 +188,8 @@
   
           <mat-form-field class="w-full">
             <mat-label>Currency</mat-label>
-            <mat-select formControlName="currency">
-              <mat-option *ngFor="let c of currencies" [value]="c.code">{{ c.name }} ({{ c.code }})</mat-option>
+            <mat-select formControlName="currency" multiple>
+              <mat-option *ngFor="let curr of currencies" [value]="curr._id">{{ curr.name }}</mat-option>
             </mat-select>
           </mat-form-field>
         </div>

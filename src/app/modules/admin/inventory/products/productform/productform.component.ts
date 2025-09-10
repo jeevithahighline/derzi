@@ -11,6 +11,61 @@ import { Router,ActivatedRoute  } from '@angular/router';
 })
 export class ProductformComponent {
   productForm: FormGroup;
+  editMode = false;   // ✅ track add/edit
+  productId: number | null = null;
+
+  products = [
+    {
+      id: 1,
+      name: 'Shirt',
+      name_ar: 'قميص',
+      description: 'Lorem ipsum',
+      description_ar: 'لوريم إيبسوم',
+      category: ['68ab18dc7376c157f8ef915f'],
+      quantity: 10,
+      merchant_id: ['68abdbe89f34784334b160e4'],
+      length_id: ['68aaec585d478029a87b69b6'],
+      fabric_id: ['68aaeeb1a3ad436d90c66593'],
+      type_id: ['68aad1d4b5044b32b0055164'],
+      brand_id: ['68aad9e400b3e53cf01f82a6'],
+      size_id: ['68aaf12c9a8582497c7ebefc'],
+      color_id: ['68aaf1a39a8582497c7ebf0a'],
+      care_id: ['68aaf3429a8582497c7ebf1e'],
+      country_id: ['68aaf3429a8582497c7ebf1e'],
+      price: 100,
+      currency: ['68aaf3429a8582497c7ebf1e'],
+      vatPercentage: 5,
+      status: 'Active',
+      userId: '123',
+      image: []
+    },
+    {
+      id: 2,
+      name: 'Salwar',
+      name_ar: 'قميص',
+      description: 'Lorem ipsum',
+      description_ar: 'لوريم إيبسوم',
+      category: ['68ab18dc7376c157f8ef915f'],
+      quantity: 10,
+      merchant_id: ['68abdbe89f34784334b160e4'],
+      length_id: ['68aaec585d478029a87b69b6'],
+      fabric_id: ['68aaeeb1a3ad436d90c66593'],
+      type_id: ['68aad1d4b5044b32b0055164'],
+      brand_id: ['68aad9e400b3e53cf01f82a6'],
+      size_id: ['68aaf12c9a8582497c7ebefc'],
+      color_id: ['68aaf1a39a8582497c7ebf0a'],
+      care_id: ['68aaf3429a8582497c7ebf1e'],
+      country_id: ['68aaf3429a8582497c7ebf1e'],
+      price: 100,
+      currency: ['68aaf3429a8582497c7ebf1e'],
+      vatPercentage: 5,
+      status: 'Active',
+      userId: '123',
+      image: []
+    }
+  ];
+  
+
 
   // 🔹 Static dropdown data for now
   merchants = [
@@ -63,9 +118,16 @@ export class ProductformComponent {
     { _id: '68aaf3429a8582497c7ebf20', name: 'India' }
   ];
 
-  currencies = ['BHD', 'USD', 'INR'];
+  currencies = [
+    { _id: '68aaf3429a8582497c7ebf1e', name: 'BHD' },
+    { _id: '68aaf3429a8582497c7ebf20', name: 'INR' }
+  ];
 
-  constructor(private _router: Router,private fb: FormBuilder) {
+  constructor(private _router: Router,private fb: FormBuilder,private route: ActivatedRoute) {}
+
+  ngOnInit(): void {
+
+    
     this.productForm = this.fb.group({
       name: ['', Validators.required],
       name_ar: ['', Validators.required],
@@ -87,13 +149,32 @@ export class ProductformComponent {
       vatPercentage: ['', Validators.required],
       status: ['Active'],
       userId: ['', Validators.required],
-      images: this.fb.array([])  // <-- FormArray for images
+      image: this.fb.array([])  // <-- FormArray for images
     });
+
+    // ✅ get id from route
+    this.route.paramMap.subscribe(params => {
+      const id = params.get('id');
+      if (id) {
+        this.editMode = true;
+        this.productId = +id;
+        this.loadProductData(this.productId);
+      }
+    });
+   
+  }
+
+  loadProductData(id: number){
+    const service = this.products.find(b => b.id === id);
+    if (service) {
+      this.productForm.patchValue(service);
+    }
   }
 
   onSubmit() {
     if (this.productForm.valid) {
       console.log('✅ Form Data:', this.productForm.value);
+      this._router.navigate(['/products']);
     } else {
       this.productForm.markAllAsTouched();
     }

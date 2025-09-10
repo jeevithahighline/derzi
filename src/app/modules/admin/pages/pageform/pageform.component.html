@@ -3,11 +3,11 @@
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2">
       <div class="col-6">
         <div class="heading pt-2">
-            Add Page
+          <h2>{{ editMode ? 'Edit Page' : 'Add Page' }}</h2>
         </div>
       </div>
       <div class="col-6 dflexmain">       
-        <button class="btn-add" (click)="savePage()"> Save</button>      
+        <button class="btn-add" (click)="onSubmit()"> Save</button>      
         <button class="btn-cancel" (click)="onCancel()">  Cancel</button>
       </div>
     </div>
@@ -64,35 +64,33 @@
           </div>
         </div>
   
-        <!-- Description -->
-        <mat-form-field class="w-full">
-          <mat-label>Description</mat-label>
-          <textarea matInput rows="3" formControlName="description"></textarea>
-          <!-- <mat-error *ngIf="f['description'].hasError('required')">
-            Description is required
-          </mat-error> -->
-          <mat-error *ngIf="f['description'].hasError('maxlength')">
-            Maximum 250 characters allowed
-          </mat-error>
-        </mat-form-field>
-  
-        <mat-form-field class="w-full">
-          <mat-label>Description - Arabic</mat-label>
-          <textarea matInput rows="3" formControlName="description_ar"></textarea>
-          <!-- <mat-error *ngIf="f['description_ar'].hasError('required')">
-            Description - Arabic is required
-          </mat-error> -->
-          <mat-error *ngIf="f['description_ar'].hasError('maxlength')">
-            Maximum 250 characters allowed
-          </mat-error>
-        </mat-form-field>
-  
-  
-       
-              
-      </form>
-  
-  
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 ">
+           <!-- Description -->
+            <mat-form-field class="w-full">
+              <mat-label>Description</mat-label>
+              <textarea matInput rows="3" formControlName="description"></textarea>
+              <!-- <mat-error *ngIf="f['description'].hasError('required')">
+                Description is required
+              </mat-error> -->
+              <mat-error *ngIf="f['description'].hasError('maxlength')">
+                Maximum 250 characters allowed
+              </mat-error>
+            </mat-form-field>
+      
+            <mat-form-field class="w-full">
+              <mat-label>Description - Arabic</mat-label>
+              <textarea matInput rows="3" formControlName="description_ar"></textarea>
+              <!-- <mat-error *ngIf="f['description_ar'].hasError('required')">
+                Description - Arabic is required
+              </mat-error> -->
+              <mat-error *ngIf="f['description_ar'].hasError('maxlength')">
+                Maximum 250 characters allowed
+              </mat-error>
+            </mat-form-field>
+
+        </div>
+                
+      </form> 
   
     </div>
   

@@ -12,8 +12,45 @@ import { Router,ActivatedRoute  } from '@angular/router';
 export class MerchantformComponent {
   merchantform: FormGroup;
   
+  editMode = false;   // ✅ track add/edit
+  merchantId: number | null = null;
 
-  constructor(private _router: Router,private fb: FormBuilder) {
+  merchants = [
+    {
+      "id":1,
+     "merchant_id": 'M002',
+      "merchant_name": 'Urban Style Hub',
+      "firstname": "Ahmed",
+      "lastname": "Khan",
+      "email": "ahmed@example.com",
+      "mobilenumber": "9876543210",
+      "username": "johndriver",
+      "password": "StrongPass123",
+      "location": "New York",
+      "status": "Active",
+      isSelected: false
+    }, 
+    {
+      id:2,
+      "merchant_id": 'M001',
+      "merchant_name": 'Trendy Threads',
+      "firstname": "Salman",
+      "lastname": "Doe",
+      "email": "salman@example.com",
+      "mobilenumber": "9876543210",
+      "username": "samdriver",
+      "password": "StrongPass123",
+      "location": "New York",
+      "status": "Active",
+      isSelected: false
+    }
+  ];
+
+
+  constructor(private _router: Router,private fb: FormBuilder,private route: ActivatedRoute) {}
+
+  ngOnInit(): void {
+
     this.merchantform = this.fb.group({
       firstname: ['', [Validators.required, Validators.minLength(3)]],
       lastname: ['', [Validators.required, Validators.minLength(3)]],   
@@ -27,11 +64,31 @@ export class MerchantformComponent {
       status: ['Active', Validators.required], 
 
     });
+
+    // ✅ get id from route
+    this.route.paramMap.subscribe(params => {
+      const id = params.get('id');
+      if (id) {
+        this.editMode = true;
+        this.merchantId = +id;
+        this.loadMerchantData(this.merchantId);
+      }
+    });
+
+  } 
+  
+  loadMerchantData(id: number){
+    const page = this.merchants.find(b => b.id === id);
+    if (page) {
+      this.merchantform.patchValue(page);
+    }
   }
+
 
   onSubmit() {
     if (this.merchantform.valid) {
       console.log('✅ Form Data:', this.merchantform.value);
+      this._router.navigate(['/merchants']);
     } else {
       this.merchantform.markAllAsTouched();
     }
@@ -42,17 +99,7 @@ export class MerchantformComponent {
     return this.merchantform.controls;
   }
 
-  saveMerchant(){
-
-    if (this.merchantform.invalid) {
-      this.merchantform.markAllAsTouched();  // ✅ show validation errors
-      return;
-    }
-  
-    console.log(this.merchantform.value); // ✅ form values when valid
-
-  }
-
+ 
   onCancel() {
     this.merchantform.reset({ status: 'Active' });
     this._router.navigate(['/merchants']);

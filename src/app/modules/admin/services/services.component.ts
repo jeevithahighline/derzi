@@ -1,6 +1,8 @@
 import { Component, ViewChild, AfterViewInit } from '@angular/core';
 import { MATERIAL_IMPORTS } from '../../material.import';
 import { Router,ActivatedRoute  } from '@angular/router';
+import { MatDialog } from '@angular/material/dialog';
+import { ConfirmdialogComponent } from '../confirmdialog/confirmdialog.component';
 
 @Component({
   selector: 'app-services',
@@ -13,25 +15,43 @@ export class ServicesComponent {
   searchText = '';
   totalItems = 2;
   masterSelected: boolean = false;
-  countries = [
-    { id: 1, name: 'Shirt Stitching',category:'Men',description:'details of what’s included',price:'100 BHD',duration:'2 days',isSelected: false},
-    { id: 2, name: 'Blouse Design' ,category:'Women',description:'details of what’s included',price:'100 BHD',duration:'2 weeks',isSelected: false}
+  services = [
+    { id: 1, name: 'Shirt Stitching',name_ar:'مجموعة الصيف',category:'Stitching',description:'details of what’s included',duration:'2 days',isSelected: false},
+    { id: 2, name: 'Blouse Design',name_ar:'مجموعة الصيف' ,category:'Embroidery',description:'details of what’s included',duration:'2 weeks',isSelected: false}
   ];
 
-  constructor(private _router: Router) {}
+  constructor(private _router: Router,private dialog: MatDialog,) {}
 
   filteredData() {
-    return this.countries.filter(c =>
+    return this.services.filter(c =>
       c.name.toLowerCase().includes(this.searchText.toLowerCase())
     );
   }
 
-  editCountry(country: any) {
-    //alert(`Editing ${country.name}`);
+ 
+  editservice(service: any, index: number) {
+
+    //alert(banner.id);
+    this._router.navigate(['/addservice', service.id]);
+
+   
   }
 
-  deleteCountry(country: any) {
-    //alert(`Deleting ${country.name}`);
+   public deleteservice(index: number): void {
+    //console.log('deleteselectedData', this.selectedIds);
+  
+    const dialogRef = this.dialog.open(ConfirmdialogComponent, {
+      width: '450px',
+      height: '250px',
+      disableClose: true,
+    });
+  
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.services[index] = result; // 👈 update instead of push
+      }
+    });
+    
   }
 
   addService(){
@@ -40,12 +60,12 @@ export class ServicesComponent {
 
   // Toggle all checkboxes
   checkUncheckAll() {
-    this.countries.forEach(country => country.isSelected = this.masterSelected);
+    this.services.forEach(service => service.isSelected = this.masterSelected);
   }
 
   // If all rows checked, master should be checked
   isAllSelected() {
-    this.masterSelected = this.countries.every(country => country.isSelected);
+    this.masterSelected = this.services.every(service => service.isSelected);
   }
   
 

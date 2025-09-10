@@ -1,7 +1,7 @@
 import { Component,Inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MATERIAL_IMPORTS } from '../../../../material.import';
-import { MatDialogRef } from '@angular/material/dialog';
+import { MatDialogRef,MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-categoryform',
@@ -15,14 +15,21 @@ export class CategoryformComponent {
   dynamicForm: FormGroup;
 
   constructor(
-    private fb: FormBuilder,
+    private fb: FormBuilder,@Inject(MAT_DIALOG_DATA) public data: any,
     private dialogRef: MatDialogRef<CategoryformComponent>
-  ) {
+  ) {}
+
+  ngOnInit(): void {
     this.dynamicForm = this.fb.group({
       name: ['', Validators.required],
       name_ar: ['', Validators.required],
       status: ['Active', Validators.required]
     });
+
+    // Prefill if editing
+    if (this.data?.category) {
+      this.dynamicForm.patchValue(this.data.category);
+    }
   }
 
   save() {

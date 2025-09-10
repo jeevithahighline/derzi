@@ -11,9 +11,41 @@ import { Router,ActivatedRoute  } from '@angular/router';
 })
 export class UsersformComponent {
   userform: FormGroup;
+
+  editMode = false;   // ✅ track add/edit
+  userId: number | null = null;
+
+  users = [
+    {
+      "id":1,
+      "firstname": "Ahmed",
+      "lastname": "Khan",
+      "email": "ahmed@example.com",
+      "mobilenumber": "9876543210",
+      "username": "johndriver",
+      "password": "StrongPass123",
+      "location": "New York",
+      "status": "Active",
+      isSelected: false
+    }, 
+    {
+      id:2,
+      "firstname": "Salman",
+      "lastname": "Doe",
+      "email": "salman@example.com",
+      "mobilenumber": "9876543210",
+      "username": "samdriver",
+      "password": "StrongPass123",
+      "location": "New York",
+      "status": "Active",
+      isSelected: false
+    }
+  ];
+  constructor(private _router: Router,private fb: FormBuilder,private route: ActivatedRoute) {}
   
 
-  constructor(private _router: Router,private fb: FormBuilder) {
+  ngOnInit(): void {
+
     this.userform = this.fb.group({
       firstname: ['', [Validators.required, Validators.minLength(3)]],
       lastname: ['', [Validators.required, Validators.minLength(3)]],   
@@ -24,11 +56,31 @@ export class UsersformComponent {
       status: ['Active', Validators.required], 
 
     });
+
+    // ✅ get id from route
+    this.route.paramMap.subscribe(params => {
+      const id = params.get('id');
+      if (id) {
+        this.editMode = true;
+        this.userId = +id;
+        this.loadUserData(this.userId);
+      }
+    });
+
+  } 
+  
+  loadUserData(id: number){
+    const page = this.users.find(b => b.id === id);
+    if (page) {
+      this.userform.patchValue(page);
+    }
   }
+  
 
   onSubmit() {
     if (this.userform.valid) {
       console.log('✅ Form Data:', this.userform.value);
+      this._router.navigate(['/users']);
     } else {
       this.userform.markAllAsTouched();
     }
@@ -39,16 +91,7 @@ export class UsersformComponent {
     return this.userform.controls;
   }
 
-  saveUser(){
-
-    if (this.userform.invalid) {
-      this.userform.markAllAsTouched();  // ✅ show validation errors
-      return;
-    }
   
-    console.log(this.userform.value); // ✅ form values when valid
-
-  }
 
   onCancel() {
     this.userform.reset({ status: 'Active' });

@@ -3,7 +3,9 @@
     <!-- Header with Actions -->
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2">
       <div class="col-6">
-        <div class="heading pt-2">Add User</div>
+        <div class="heading pt-2">
+          <h2>{{ editMode ? 'Edit User' : 'Add User' }}</h2>
+        </div>
       </div>
       <div class="col-6 dflexmain">
         <button class="btn-add" (click)="onSubmit()">

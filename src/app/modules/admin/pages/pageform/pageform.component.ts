@@ -11,21 +11,55 @@ import { Router,ActivatedRoute  } from '@angular/router';
 })
 export class PageformComponent {
   pageForm: FormGroup;
-  
+  editMode = false;   // ✅ track add/edit
+  pageId: number | null = null;
 
-  constructor(private _router: Router,private fb: FormBuilder) {
+  pages = [
+    {
+      "id":1,
+      "title": "Summer Collection",
+      "title_ar": "مجموعة الصيف",
+      "description": "Discover our exclusive summer collection with fresh styles and vibrant colors.",
+      "description_ar": "اكتشف مجموعتنا الصيفية الحصرية مع أنماط جديدة وألوان زاهية. مثالية لهذا الموسم!",
+      "pagename": "Home Page",
+      "isSelected":true
+    }   
+  ];
+
+  constructor(private _router: Router,private fb: FormBuilder,private route: ActivatedRoute) {}
+
+  ngOnInit(): void {
     this.pageForm = this.fb.group({
       title: ['', [Validators.required, Validators.minLength(3)]],
       title_ar: ['', [Validators.required, Validators.minLength(3)]],   
       description: ['', [Validators.required, Validators.maxLength(250)]],
       description_ar: ['', [Validators.required, Validators.maxLength(250)]],    
-      pagename: ['', Validators.required]
+      pagename: ['', Validators.required],
+      status: ['Active']
     });
+
+    // ✅ get id from route
+    this.route.paramMap.subscribe(params => {
+      const id = params.get('id');
+      if (id) {
+        this.editMode = true;
+        this.pageId = +id;
+        this.loadPageData(this.pageId);
+      }
+    });
+  }
+
+  loadPageData(id: number){
+    const page = this.pages.find(b => b.id === id);
+    if (page) {
+      this.pageForm.patchValue(page);
+    }
   }
 
   onSubmit() {
     if (this.pageForm.valid) {
       console.log('✅ Form Data:', this.pageForm.value);
+      this._router.navigate(['/pages']);
     } else {
       this.pageForm.markAllAsTouched();
     }
@@ -36,17 +70,7 @@ export class PageformComponent {
     return this.pageForm.controls;
   }
 
-  savePage(){
-
-    if (this.pageForm.invalid) {
-      this.pageForm.markAllAsTouched();  // ✅ show validation errors
-      return;
-    }
   
-    console.log(this.pageForm.value); // ✅ form values when valid
-
-  }
-
   onCancel() {
     this.pageForm.reset({ status: 'Active' });
     this._router.navigate(['/pages']);

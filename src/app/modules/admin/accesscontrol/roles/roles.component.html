@@ -7,7 +7,7 @@
         </div>
       </div>
       <div class="col-6 dflexmain">
-        <button class="btn btn-sm ">
+        <button class="btn btn-sm" (click)="deleterole(1)">
               <i class="bi bi-trash"></i>
                <img src="/images/icon/delete.svg" alt="">
             </button>      
@@ -17,7 +17,7 @@
       </div>
     </div>
   
-    <!-- 📊 Country Table --><div class="tableparent">
+    <!-- 📊 role Table --><div class="tableparent">
     <table class="table table-striped table-bordered align-middle text-center">
       <thead class="table-light">
         <tr>
@@ -33,22 +33,22 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let country of filteredData()">
+        <tr *ngFor="let role of filteredData()">
           <td>
             <label class="customcheckbox">
-                <input type="checkbox" [(ngModel)]="country.isSelected"  (change)="isAllSelected()">
+                <input type="checkbox" [(ngModel)]="role.isSelected"  (change)="isAllSelected()">
                 <span class="checkmark"></span>
               </label>
           </td>
-          <td>{{ country.id }}</td>
-          <td>{{ country.name }}</td>    
-          <td>{{ country.description }}</td> 
+          <td>{{ role.id }}</td>
+          <td>{{ role.name }}</td>    
+          <td>{{ role.description }}</td> 
           <td>Active</td>                
           <td>
-            <button class="btn btn-sm me-2" (click)="editCountry(country)">
+            <button class="btn btn-sm me-2" (click)="editrole(role)">
               <img src="/images/icon/edit-2.svg" alt="">
             </button>
-            <button class="btn btn-sm " (click)="deleteCountry(country)">
+            <button class="btn btn-sm " (click)="deleterole(role)">
               <i class="bi bi-trash"></i>
                <img src="/images/icon/delete.svg" alt="">
             </button>
