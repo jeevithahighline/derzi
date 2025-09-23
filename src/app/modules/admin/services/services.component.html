@@ -33,14 +33,14 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let service of filteredData()">
+        <tr *ngFor="let service of filteredData(); let i = index">
           <td>
             <label class="customcheckbox">
                 <input type="checkbox" [(ngModel)]="service.isSelected"  (change)="isAllSelected()">
                 <span class="checkmark"></span>
               </label>
           </td>
-          <td>{{ service.id }}</td>
+          <td>{{ (pageIndex * pageSize) + i + 1 }}</td>
           <td>{{ service.name }}</td> 
           <td>{{ service.description }}</td>     
           <td>Active</td>                     

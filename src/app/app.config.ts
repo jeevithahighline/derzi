@@ -17,6 +17,7 @@ import { provideIcons } from 'app/core/icons/icons.provider';
 import { MockApiService } from 'app/mock-api';
 import { firstValueFrom } from 'rxjs';
 import { TranslocoHttpLoader } from './core/transloco/transloco.http-loader';
+import { ConfigProvider } from './config.provider'; // ⬅️ your provider file
 
 export const appConfig: ApplicationConfig = {
     providers: [
@@ -121,5 +122,8 @@ export const appConfig: ApplicationConfig = {
                 ],
             },
         }),
+
+        // ✅ Config provider for config.json
+        ConfigProvider
     ],
 };

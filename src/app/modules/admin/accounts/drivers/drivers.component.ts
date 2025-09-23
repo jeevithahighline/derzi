@@ -1,8 +1,10 @@
-import { Component, ViewChild, AfterViewInit } from '@angular/core';
+import { Component,Inject } from '@angular/core';
 import { MATERIAL_IMPORTS } from '../../../material.import';
 import { Router,ActivatedRoute  } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmdialogComponent } from '../../confirmdialog/confirmdialog.component';
+import { DriverService } from '../../../../core/services/driver.service';
+import { ToastService } from '../../../../core/services/toastr.service';
 
 @Component({
   selector: 'app-drivers',
@@ -13,53 +15,55 @@ import { ConfirmdialogComponent } from '../../confirmdialog/confirmdialog.compon
 
 export class DriversComponent {
   searchText = '';
-  totalItems = 2;
+  totalItems = 0;
   masterSelected: boolean = false;
+  page = 1;
+  pageSize = 10;
+  pageIndex = 0;
+  usertoken:any;
+  selectedIds: string[] = [];
+  constructor(private _router: Router,private dialog: MatDialog,private _accountService: DriverService,private _toastrService: ToastService) {}
 
-  constructor(private _router: Router,private dialog: MatDialog) {}
+
+  drivers: any[] = [];
   
-  drivers = [
-    {
-      "id":1,
-      "firstname": "John",
-      "lastname": "Doe",
-      "email": "johndoe@example.com",
-      "mobilenumber": "9876543210",
-      "username": "johndriver",
-      "password": "StrongPass123",
-      "location": "New York",
-      "status": "Active",
-      isSelected: false
-    }, 
-    {
-      id:2,
-      "firstname": "Sameem",
-      "lastname": "Doe",
-      "email": "sameem@example.com",
-      "mobilenumber": "9876543210",
-      "username": "samdriver",
-      "password": "StrongPass123",
-      "location": "New York",
-      "status": "Active",
-      isSelected: false
-    }
-  ];
+  ngOnInit(): void {
+    this.loaddrivers();
+  }
 
-  filtereddrivers() {
+  loaddrivers(page: number = this.page, size: number = this.pageSize) {
+    const token = localStorage.getItem('usertoken'); 
+    if (token) {
+      this._accountService.getAllDriver(token, this.page, this.pageSize).subscribe({
+        next: (res: any) => {
+          this.drivers = res.data.docs || [];
+          this.totalItems = res.data.totalDocs || 0;  // backend must return total count
+          this.page = res.data.page || page;
+          this.pageSize = res.data.limit || size;
+        },
+        error: (err) => {
+          console.error('Error fetching drivers', err);
+        }
+      });
+    }
+  }
+
+  filteredData() {
     return this.drivers.filter(c =>
       c.firstname.toLowerCase().includes(this.searchText.toLowerCase())
     );
   }
 
- 
+  
+
   editdriver(driver: any, index: number) {
     //alert(banner.id);
     this._router.navigate(['/adddriver', driver.id]);   
   }
 
-  public deletedriver(index: number): void {
-    //console.log('deleteselectedData', this.selectedIds);
-  
+  deletedriver(data) {
+
+    this.selectedIds = data._id;
     const dialogRef = this.dialog.open(ConfirmdialogComponent, {
       width: '450px',
       height: '250px',
@@ -68,11 +72,23 @@ export class DriversComponent {
   
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        this.drivers[index] = result; // 👈 update instead of push
+        // ✅ Call delete API
+        this._accountService.deleteDriver(this.selectedIds,this.usertoken).subscribe({
+          next: () => {
+            this._toastrService.showSuccess("Deleted Successfully");
+            this.loaddrivers(); // refresh table
+          },
+          error: () => {
+            this._toastrService.showError("Deletion failed");
+          }
+        });
+      } else {
+        this._toastrService.showError("Deletion cancelled by driver");
       }
     });
-    
   }
+
+  
 
   addForm(){
     this._router.navigate(['/adddriver']);
@@ -88,6 +104,4 @@ export class DriversComponent {
     this.masterSelected = this.drivers.every(driver => driver.isSelected);
   }
 
-
 }
-

@@ -1,37 +1,74 @@
-import { Component,Inject } from '@angular/core';
+import { Component, ViewChild, AfterViewInit } from '@angular/core';
 import { MATERIAL_IMPORTS } from '../../../material.import';
+import { Router,ActivatedRoute  } from '@angular/router';
+import { MatDialog } from '@angular/material/dialog';
+import { OrderService } from '../../../../core/services/order.service';
+import { ToastService } from '../../../../core/services/toastr.service';
+
 @Component({
   selector: 'app-invoices',
   templateUrl: './invoices.component.html',
   styleUrls: ['./invoices.component.scss'],
   imports: [MATERIAL_IMPORTS]   // ✅ just one line
 })
+
 export class InvoicesComponent {
+  
   searchText: string = '';
   selectedStatus: string = '';
   amount: string = '';
   startDate: Date | null = null;
   endDate: Date | null = null;
   masterSelected: boolean = false;
-  totalItems = 2;
-  invoices = [
-    { invoiceNo: 'INV5001', orderId: 'ORD1001', customer: 'John Doe', date: '2025-08-18', total: 1200, status: 'Paid', isSelected: false },
-    { invoiceNo: 'INV5002', orderId: 'ORD1002', customer: 'Jane Smith', date: '2025-08-19', total: 2500, status: 'Unpaid', isSelected: false },
-  ];
+  totalItems = 0;
+  page = 1;
+  pageSize = 10;
+  pageIndex = 0;
+  usertoken:any;
+  selectedIds: string[] = [];
+
+
+  constructor(private _router: Router,private dialog: MatDialog,private _orderService: OrderService,private _toastrService: ToastService) {}
+
+  invoices: any[] = [];
+
+  ngOnInit(): void {
+    this.loadInvoices();
+  }
+
+  loadInvoices(page: number = this.page, size: number = this.pageSize) {
+    const token = localStorage.getItem('usertoken'); 
+    if (token) {
+      this._orderService.getAllInvoices(token, this.page, this.pageSize).subscribe({
+        next: (res: any) => {
+          this.invoices = res.data.docs || [];
+          this.totalItems = res.data.totalDocs || 0;  // backend must return total count
+          this.page = res.data.page || page;
+          this.pageSize = res.data.limit || size;
+        },
+        error: (err) => {
+          console.error('Error fetching invoices', err);
+        }
+      });
+    }
+  }
+
 
   filteredInvoices() {
-    return this.invoices.filter(i =>
-      i.customer.toLowerCase().includes(this.searchText.toLowerCase()) ||
-      i.invoiceNo.toLowerCase().includes(this.searchText.toLowerCase())
-    );
+    //console.log("sdsdsdsd",this.orders);
+    return this.invoices;
   }
 
-  viewInvoice(invoice: any) {
-    alert(`Viewing Invoice ${invoice.invoiceNo}`);
+  viewOrder(orderId: string) {
+    this._router.navigate(['/detailorder', orderId]);
   }
 
-  deleteInvoice(invoice: any) {
-    alert(`Deleting Invoice ${invoice.invoiceNo}`);
+  editOrder(order: any) {
+    alert(`Editing Order ${order.id}`);
+  }
+
+  deleteOrder(order: any) {
+    alert(`Deleting Order ${order.id}`);
   }
 
   applyFilters() {
@@ -55,13 +92,15 @@ export class InvoicesComponent {
   }
 
    // Toggle all checkboxes
-  checkUncheckAll() {
+   checkUncheckAll() {
     this.invoices.forEach(country => country.isSelected = this.masterSelected);
   }
 
   // If all rows checked, master should be checked
   isAllSelected() {
     this.masterSelected = this.invoices.every(country => country.isSelected);
-  } 
+  }
+
+
 }
 

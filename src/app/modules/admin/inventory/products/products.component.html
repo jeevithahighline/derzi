@@ -36,19 +36,21 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let product of filteredData()">
+        <tr *ngFor="let product of filteredData(); let i = index">
           <td>
             <label class="customcheckbox">
                 <input type="checkbox" [(ngModel)]="product.isSelected"  (change)="isAllSelected()">
                 <span class="checkmark"></span>
               </label>
           </td>
-          <td>{{ product.id }}</td>
+          <td>{{ (pageIndex * pageSize) + i + 1 }}</td>
           <td>{{ product.name }}</td> 
           <td>{{ product.description }}</td> 
-          <td><img src="/images/banner.jpeg" alt=""></td> 
-          <td>2 BHD</td>
-          <td>Active</td>                     
+          <td>
+            <img [src]="backendUrl + product.product_images[0]" alt="Product Image" width="50" height="50">
+          </td>          
+          <td>{{ product.price }} BHD</td> 
+          <td>{{ product.status ? 'Active' : 'Inactive' }}</td>                             
           <td>
             <button class="btn btn-sm me-2" (click)="editProduct(product)">
               <img src="/images/icon/edit-2.svg" alt="">
@@ -61,7 +63,7 @@
         </tr>
       </tbody>
     </table>
-    <mat-paginator [length]="totalItems"  [pageSize]="10" [pageSizeOptions]="[10,25,100]" ></mat-paginator>
+    <mat-paginator [length]="totalItems"  [pageSize]="10" [pageSizeOptions]="[10,25,100]" (page)="onPageChange($event)"></mat-paginator>
   
     </div>
   </div>

@@ -14,11 +14,11 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import { Router } from '@angular/router';
-import { UserService } from 'app/core/user/user.service';
-import { User } from 'app/core/user/user.types';
+import { UserService } from '../../../core/user/user.service';
+import { User } from '../../../core/user/user.types';
 import { Subject, takeUntil } from 'rxjs';
 import { FuseDrawerComponent,FuseDrawerService } from '@fuse/components/drawer';
-import { AuthService } from 'app/core/auth/auth.service';
+import { AuthService } from '../../../core/services/auth.service';
 
 import {
     FuseConfig,
@@ -77,15 +77,17 @@ export class UserComponent implements OnInit, OnDestroy {
      * On init
      */
     ngOnInit(): void {
-        // Subscribe to user changes
-        this._userService.user$
-            .pipe(takeUntil(this._unsubscribeAll))
-            .subscribe((user: User) => {
-                this.user = user;
-
-                // Mark for check
-                this._changeDetectorRef.markForCheck();
-            });
+                
+        this.showAvatar = true;
+        this.user = {
+            id: '1',
+            name: 'Derzi App',
+            avatar: 'http://157.241.107.221/images/avatars/brian-hughes.jpg',
+            email: 'derziapp@gmail.com',
+            status: 'online', // online | away | busy | not-visible
+          };
+          
+       
     }
 
     /**

@@ -3,7 +3,8 @@ import { MATERIAL_IMPORTS } from '../../../material.import';
 import { MatDialog } from '@angular/material/dialog';
 import { ColorformComponent } from './colorform/colorform.component';
 import { ConfirmdialogComponent } from '../../confirmdialog/confirmdialog.component';
-
+import { ColorService } from '../../../../core/services/color.service';
+import { ToastService } from '../../../../core/services/toastr.service';
 
 @Component({
   selector: 'app-color',
@@ -16,12 +17,35 @@ export class ColorComponent {
   searchText = '';
   totalItems = 2;
   masterSelected: boolean = false;
+  page = 1;
+  pageSize = 10;
+  pageIndex = 0;
+  usertoken:any;
+  selectedIds: string[] = [];
+  constructor(private dialog: MatDialog,private _masterservice: ColorService,private _toastrService: ToastService) {}
+  
+  colors: any[] = [];
 
-  constructor(private dialog: MatDialog) {}
-  colors = [
-    { id: 1, name: 'Pink',isSelected: false},
-    { id: 2, name: 'Blue' ,isSelected: false}
-  ];
+  ngOnInit(): void {
+    this.loadColor();
+  }
+
+  loadColor(page: number = this.page, size: number = this.pageSize) {
+    const token = localStorage.getItem('usertoken'); 
+    if (token) {
+      this._masterservice.getAllColor(token, this.page, this.pageSize).subscribe({
+        next: (res: any) => {
+          this.colors = res.data.docs || [];
+          this.totalItems = res.data.totalDocs || 0;  // backend must return total count
+          this.page = res.data.page || page;
+          this.pageSize = res.data.limit || size;
+        },
+        error: (err) => {
+          console.error('Error fetching brand', err);
+        }
+      });
+    }
+  }
 
   filteredData() {
     return this.colors.filter(c =>
@@ -40,26 +64,11 @@ export class ColorComponent {
   
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        this.colors[index] = result; // 👈 update instead of push
+        this.loadColor();
       }
     });
   }
-
-
-  deletecolor(index: any) {
-    const dialogRef = this.dialog.open(ConfirmdialogComponent, {
-      width: '450px',
-      height: '250px',
-      disableClose: true,
-    });
   
-    dialogRef.afterClosed().subscribe(result => {
-      if (result) {
-        this.colors[index] = result; // 👈 update instead of push
-      }
-    });
-  }
-
   openAddForm() {
     const dialogRef = this.dialog.open(ColorformComponent, {
       width: '500px',
@@ -68,7 +77,7 @@ export class ColorComponent {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        this.colors.push(result);  // add new color
+        this.loadColor();
       }
     });
   }
@@ -82,5 +91,38 @@ export class ColorComponent {
   isAllSelected() {
     this.masterSelected = this.colors.every(color => color.isSelected);
   }
+  
+  deletecolor(data) {
 
+    this.selectedIds = data._id;
+    const dialogRef = this.dialog.open(ConfirmdialogComponent, {
+      width: '450px',
+      height: '250px',
+      disableClose: true,
+    });
+  
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        // ✅ Call delete API
+        this._masterservice.deleteColor(this.selectedIds,this.usertoken).subscribe({
+          next: () => {
+            this._toastrService.showSuccess("Deleted Successfully");
+            this.loadColor(); // refresh table
+          },
+          error: () => {
+            this._toastrService.showError("Deletion failed");
+          }
+        });
+      } else {
+        this._toastrService.showError("Deletion cancelled by user");
+      }
+    });
+  }
+
+  onPageChange(event: any) {
+    this.page = event.pageIndex + 1;
+    this.pageIndex = event.pageIndex;
+    this.pageSize = event.pageSize;
+    this.loadColor(this.page, this.pageSize);
+  }
 }

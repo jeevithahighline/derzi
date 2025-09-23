@@ -15,7 +15,7 @@
     <div class="row">&nbsp;</div>
     <!---Form Section-->
     <div class="bg-white p-2 border rounded ">
-      <form [formGroup]="faqform" (ngSubmit)="onSubmit()" class="p-4 grid">      
+      <form [formGroup]="faqForm" (ngSubmit)="saveFaq()" class="p-4 grid">      
         
   
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 ">
@@ -47,7 +47,7 @@
             </mat-form-field>
           </div>
         </div>
-  
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 ">
         <!-- Description -->
         <mat-form-field class="w-full" floatLabel="always">
           <mat-label>Answer</mat-label>
@@ -70,7 +70,20 @@
             Maximum 250 characters allowed
           </mat-error>
         </mat-form-field>
-       
+
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 ">
+          <mat-form-field appearance="outline">
+            <mat-label>Status</mat-label>
+            <mat-select formControlName="status">
+              <mat-option [value]="true">Active</mat-option>
+              <mat-option [value]="false">Inactive</mat-option>
+            </mat-select>
+            <!-- <mat-error *ngIf="dynamicForm.get('status')?.hasError('required')">
+              Status is required
+            </mat-error> -->
+          </mat-form-field>
+        </div>
               
       </form>
 

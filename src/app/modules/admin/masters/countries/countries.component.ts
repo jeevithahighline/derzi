@@ -3,6 +3,8 @@ import { MATERIAL_IMPORTS } from '../../../material.import';
 import { CountryformComponent } from './countryform/countryform.component';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmdialogComponent } from '../../confirmdialog/confirmdialog.component';
+import { CountryService } from '../../../../core/services/country.service';
+import { ToastService } from '../../../../core/services/toastr.service';
 
 
 @Component({
@@ -13,15 +15,39 @@ import { ConfirmdialogComponent } from '../../confirmdialog/confirmdialog.compon
 })
 export class CountriesComponent {
   searchText = '';
-  totalItems = 3;
+  totalItems =0;
   masterSelected: boolean = false;
-  constructor(private dialog: MatDialog) {}
+  constructor(private dialog: MatDialog,private _masterservice: CountryService,private _toastrService: ToastService) {}
+  countries: any[] = [];
+  selectedIds: string[] = [];
+  usertoken:any;
+  page = 1;
+  pageSize = 10;
+  pageIndex = 0;
 
-  countries = [
-    { id: 1, name: 'Bahrain',code:'BHD', flag: 'https://flagcdn.com/w20/bh.png',isSelected: false },
-    { id: 2, name: 'United Arab Emirates',code:'UAE', flag: 'https://flagcdn.com/w20/ae.png',isSelected: false },
-    { id: 3, name: 'United States', code:'US', flag: 'https://flagcdn.com/w20/us.png',isSelected: false }
-  ];
+  ngOnInit(): void {
+    //this._toastrService.showSuccess("hello");
+    this.usertoken = localStorage.getItem('usertoken'); 
+    this.loadCountries();
+  }
+
+  loadCountries(page: number = this.page, size: number = this.pageSize) {
+    const token = localStorage.getItem('usertoken'); 
+    if (token) {
+      this._masterservice.getAllCountry(token, this.page, this.pageSize).subscribe({
+        next: (res: any) => {
+          this.countries = res.data.docs || [];
+          this.totalItems = res.data.totalDocs || 0;  // backend must return total count
+          this.page = res.data.page || page;
+          this.pageSize = res.data.limit || size;
+        },
+        error: (err) => {
+          console.error('Error fetching countries', err);
+        }
+      });
+    }
+  }
+   
 
   filteredData() {
     return this.countries.filter(c =>
@@ -33,20 +59,24 @@ export class CountriesComponent {
     const dialogRef = this.dialog.open(CountryformComponent, {
       width: '500px',
       disableClose: true,
-      data: { country }   // 👈 pass existing country to dialog
+      data: { 
+        country, 
+        isEditMode: true   // 👈 flag for edit
+      }
     });
   
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        this.countries[index] = result; // 👈 update instead of push
+        this.loadCountries();
       }
     });
   }
   
+ 
 
-  deleteCountry(index: any) {
-    //alert(`Deleting ${country.name}`);
+  deleteCountry(data) {
 
+    this.selectedIds = data._id;
     const dialogRef = this.dialog.open(ConfirmdialogComponent, {
       width: '450px',
       height: '250px',
@@ -55,20 +85,32 @@ export class CountriesComponent {
   
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        this.countries[index] = result; // 👈 update instead of push
+        // ✅ Call delete API
+        this._masterservice.deleteCountry(this.selectedIds,this.usertoken).subscribe({
+          next: () => {
+            this._toastrService.showSuccess("Deleted Successfully");
+            this.loadCountries(); // refresh table
+          },
+          error: () => {
+            this._toastrService.showError("Deletion failed");
+          }
+        });
+      } else {
+        this._toastrService.showError("Deletion cancelled by user");
       }
     });
   }
-
+  
   openAddCountry() {
     const dialogRef = this.dialog.open(CountryformComponent, {
       width: '500px',
-      disableClose: true
+      disableClose: true,
+      data: { isEditMode: false }  // 👈 flag for add
     });
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        this.countries.push(result);  // add new country
+        this.loadCountries();
       }
     });
   }
@@ -83,5 +125,24 @@ export class CountriesComponent {
     this.masterSelected = this.countries.every(country => country.isSelected);
   }
 
+  deleteSelected(){
+    
+    const selectedIds = this.countries.filter(item => item.isSelected).map(item => item._id);
+
+    if (selectedIds.length === 0) {
+      this._toastrService.showError("Please select at least one record to delete.");
+      return;
+    }
+
+  }
+
+  onPageChange(event: any) {
+    this.page = event.pageIndex + 1;
+    this.pageIndex = event.pageIndex;
+    this.pageSize = event.pageSize;
+    this.loadCountries(this.page, this.pageSize);
+  }
+
+  
 }
 

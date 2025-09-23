@@ -68,13 +68,11 @@
                 <span class="checkmark"></span>
               </label>
             </th>
-            <th>Invoice No</th>
-            <th>Order ID</th>
-            <th>Customer</th>
+            <th>Transaction Id</th>
+            <th>Payment Method</th>
             <th>Date</th>
             <th>Total</th>
             <th>Status</th>
-            <th>Action</th>
           </tr>
         </thead>
         <tbody>
@@ -86,20 +84,12 @@
                 <span class="checkmark"></span>
               </label>
             </td>
-            <td>{{ invoice.invoiceNo }}</td>
-            <td>{{ invoice.orderId }}</td>
-            <td>{{ invoice.customer }}</td>
-            <td>{{ invoice.date | date:'dd/MM/yyyy' }}</td>
-            <td>{{ invoice.total  }} BHD</td>
+            <td>{{ invoice.transactionId }}</td>
+            <td>{{ invoice.paymentMethod }}</td>
+            <td>{{ invoice.createdAt | date:'dd/MM/yyyy' }}</td>
+            <td>{{ invoice.amount  }} BHD</td>
             <td>{{ invoice.status }}</td>
-            <td>
-              <button class="btn btn-sm me-2">
-                Download
-              </button>
-              <!-- <button class="btn btn-sm " (click)="deleteInvoice(invoice)">
-                <img src="/images/icon/delete.svg" alt="" />
-              </button> -->
-            </td>
+           
           </tr>
         </tbody>
       </table>

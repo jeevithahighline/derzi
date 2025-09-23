@@ -8,40 +8,27 @@
   <!-- Country Name -->
   <mat-form-field appearance="outline">
     <mat-label>Country Name</mat-label>
-    <input matInput formControlName="name" placeholder="Enter country name" />
-    <!-- <mat-error *ngIf="dynamicForm.get('name')?.hasError('required') && 
-    (dynamicForm.get('name')?.touched || dynamicForm.get('name')?.dirty)">
-      Country name is required
-    </mat-error> -->
+    <input matInput formControlName="name" placeholder="Enter country name" /> 
   </mat-form-field>
 
   <!-- Country Code -->
   <mat-form-field appearance="outline">
     <mat-label>Country Code</mat-label>
-    <input matInput formControlName="code" placeholder="E.g. IN, US" />
-    <!-- <mat-error *ngIf="dynamicForm.get('code')?.hasError('required') && 
-    (dynamicForm.get('code')?.touched || dynamicForm.get('code')?.dirty)">
-      Country code is required
-    </mat-error> -->
-  </mat-form-field>
-
-  <!-- Flag URL -->
-  <mat-form-field appearance="outline">
-    <mat-label>Flag URL</mat-label>
-    <input matInput formControlName="flag" placeholder="Enter flag image URL" />
+    <input matInput formControlName="code" placeholder="E.g. IN, US" />  
   </mat-form-field>
 
   <!-- Status -->
   <mat-form-field appearance="outline">
     <mat-label>Status</mat-label>
     <mat-select formControlName="status">
-      <mat-option value="Active">Active</mat-option>
-      <mat-option value="Inactive">Inactive</mat-option>
+      <mat-option [value]="true">Active</mat-option>
+      <mat-option [value]="false">Inactive</mat-option>
     </mat-select>
     <mat-error *ngIf="dynamicForm.get('status')?.hasError('required')">
       Status is required
     </mat-error>
   </mat-form-field>
+  
 
   <!-- Actions -->
   <div class="flex justify-end gap-3 mt-2">

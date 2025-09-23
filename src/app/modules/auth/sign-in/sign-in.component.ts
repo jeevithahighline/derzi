@@ -16,7 +16,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { fuseAnimations } from '@fuse/animations';
 import { FuseAlertComponent, FuseAlertType } from '@fuse/components/alert';
-import { AuthService } from 'app/core/auth/auth.service';
+import { AuthService } from '../../../core/services/auth.service';
 
 @Component({
     selector: 'auth-sign-in',
@@ -82,49 +82,54 @@ export class AuthSignInComponent implements OnInit {
     /**
      * Sign in
      */
-    signIn(): void {
-        // Return if the form is invalid
+     signIn(): void {
         if (this.signInForm.invalid) {
-            return;
+          return;
         }
-
-        // Disable the form
+      
         this.signInForm.disable();
-
-        // Hide the alert
         this.showAlert = false;
-
-        // Sign in
-        this._authService.signIn(this.signInForm.value).subscribe(
-            () => {
-                // Set the redirect url.
-                // The '/signed-in-redirect' is a dummy url to catch the request and redirect the user
-                // to the correct page after a successful sign in. This way, that url can be set via
-                // routing file and we don't have to touch here.
-                const redirectURL =
-                    this._activatedRoute.snapshot.queryParamMap.get(
-                        'redirectURL'
-                    ) || '/signed-in-redirect';
-
-                // Navigate to the redirect url
-                this._router.navigateByUrl(redirectURL);
-            },
-            (response) => {
-                // Re-enable the form
-                this.signInForm.enable();
-
-                // Reset the form
-                this.signInNgForm.resetForm();
-
-                // Set the alert
-                this.alert = {
-                    type: 'error',
-                    message: 'Wrong email or password',
-                };
-
-                // Show the alert
-                this.showAlert = true;
+      
+        const requestBody = {
+          email: this.signInForm.value.email,
+          password: this.signInForm.value.password,
+        };
+      
+        this._authService.postLoginInfo(requestBody).subscribe(
+          (response: any) => {
+            //console.log("loginresponse",response.data.token);
+            const bearerToken = '969F1505-A0F3-4D21-9C8E-671FD45B5D54';
+            // ✅ Save token using AuthService setter
+            if (response?.data?.token) {
+              //alert("here");
+              //console.log("match here")
+              //console.log(response.data);
+              localStorage.setItem('bearertoken', bearerToken);
+              localStorage.setItem('usertoken', response.data.token);
+              localStorage.setItem('userId', response.data._id);
+              localStorage.setItem('useremail', response.data.email);
+              localStorage.setItem('firstname', response.data.firstname);
             }
+      
+            // ✅ Redirect to original URL or dashboard
+            let redirectURL =
+            this._activatedRoute.snapshot.queryParamMap.get('redirectURL') || '/dashboard';
+
+            //console.log(redirectURL);           
+            this._router.navigateByUrl(redirectURL); 
+          },
+          (error) => {
+            this.signInForm.enable();
+            this.signInNgForm.resetForm();
+      
+            this.alert = {
+              type: 'error',
+              message: 'Wrong email or password',
+            };
+            this.showAlert = true;
+          }
         );
-    }
+      }
+      
+    
 }

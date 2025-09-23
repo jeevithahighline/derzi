@@ -1,9 +1,10 @@
 import { Component, ViewChild, AfterViewInit } from '@angular/core';
 import { MATERIAL_IMPORTS } from '../../../material.import';
 import { MatDialog } from '@angular/material/dialog';
-import { ToastService } from '../../../toastr.service';
+import { ToastService } from '../../../../core/services/toastr.service';
 import { ConfirmdialogComponent } from '../../confirmdialog/confirmdialog.component';
 import { Router,ActivatedRoute  } from '@angular/router';
+import { BannerService } from '../../../../core/services/banner.service';
 
 @Component({
   selector: 'app-banners',
@@ -13,33 +14,57 @@ import { Router,ActivatedRoute  } from '@angular/router';
 })
 export class BannersComponent {
   searchText = '';
-  totalItems = 2;
+  totalItems = 0;
   masterSelected: boolean = false;
-  selectedIds: string[] = []; // Store selected IDs
+  page = 1;
+  pageSize = 10;
+  pageIndex = 0;
+  usertoken:any;
+  selectedIds: string[] = [];
   isDeleteTriggered:boolean;
-  constructor(private dialog: MatDialog,private _toastrService: ToastService,private _router: Router) {}
-  banners = [
-    { id: 1, name: 'Fashion', description:"Lorem ipsum",isSelected: false},
-    { id: 2, name: 'Clothing' , description:"Lorem ipsum",isSelected: false}
-  ];
+  constructor(private dialog: MatDialog,private _toastrService: ToastService,private _router: Router,private _masterservice: BannerService) {}
+  
+
+  banners: any[] = [];
+
+  ngOnInit(): void {
+    this.loadBanners();
+  }
+
+  loadBanners(page: number = this.page, size: number = this.pageSize) {
+    const token = localStorage.getItem('usertoken'); 
+    if (token) {
+      this._masterservice.getAllBanner(token, this.page, this.pageSize).subscribe({
+        next: (res: any) => {
+          this.banners = res.data.docs || [];
+          this.totalItems = res.data.totalDocs || 0;  // backend must return total count
+          this.page = res.data.page || page;
+          this.pageSize = res.data.limit || size;
+        },
+        error: (err) => {
+          console.error('Error fetching banners', err);
+        }
+      });
+    }
+  }
 
   filteredData() {
     return this.banners.filter(c =>
-      c.name.toLowerCase().includes(this.searchText.toLowerCase())
+      c.title.toLowerCase().includes(this.searchText.toLowerCase())
     );
   }
 
   editbanner(banner: any, index: number) {
 
     //alert(banner.id);
-    this._router.navigate(['/addbanner', banner.id]);
+    this._router.navigate(['/addbanner', banner._id]);
 
    
   }
 
-  public deletebanner(index: number): void {
-    //console.log('deleteselectedData', this.selectedIds);
-  
+  deletebanner(data) {
+
+    this.selectedIds = data._id;
     const dialogRef = this.dialog.open(ConfirmdialogComponent, {
       width: '450px',
       height: '250px',
@@ -48,10 +73,20 @@ export class BannersComponent {
   
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        this.banners[index] = result; // 👈 update instead of push
+        // ✅ Call delete API
+        this._masterservice.deleteBanner(this.selectedIds,this.usertoken).subscribe({
+          next: () => {
+            this._toastrService.showSuccess("Deleted Successfully");
+            this.loadBanners(); // refresh table
+          },
+          error: () => {
+            this._toastrService.showError("Deletion failed");
+          }
+        });
+      } else {
+        this._toastrService.showError("Deletion cancelled by user");
       }
     });
-    
   }
  
 
@@ -67,6 +102,13 @@ export class BannersComponent {
   // If all rows checked, master should be checked
   isAllSelected() {
     this.masterSelected = this.banners.every(banner => banner.isSelected);
+  }
+
+  onPageChange(event: any) {
+    this.page = event.pageIndex + 1;
+    this.pageIndex = event.pageIndex;
+    this.pageSize = event.pageSize;
+    this.loadBanners(this.page, this.pageSize);
   }
 
 }

@@ -23,6 +23,7 @@ const menuConfig: Record<string, { id: string; icon: string }> = {
     Merchants: { id: 'merchants', icon: 'heroicons_outline:building-storefront' },
     Users: { id: 'users', icon: 'heroicons_outline:user' },
     Drivers: { id: 'drivers', icon: 'heroicons_outline:truck' },
+    Derziusers: { id: 'derziuser', icon: 'heroicons_outline:user' },
   
     'Access Control': { id: 'access-control', icon: 'heroicons_outline:lock-closed' },
     Roles: { id: 'roles', icon: 'heroicons_outline:key' },
@@ -122,6 +123,7 @@ const menuConfig: Record<string, { id: string; icon: string }> = {
           { title: 'Merchants', type: 'basic', link: '/merchants' },
           { title: 'Users', type: 'basic', link: '/users' },
           { title: 'Drivers', type: 'basic', link: '/drivers' },
+          { title: 'Derzi Users', type: 'basic', link: '/derziuser' },
         ],
     },
     {
@@ -230,6 +232,7 @@ const menuConfig: Record<string, { id: string; icon: string }> = {
           { title: 'Merchants', type: 'basic', link: '/merchants' },
           { title: 'Users', type: 'basic', link: '/users' },
           { title: 'Drivers', type: 'basic', link: '/drivers' },
+          { title: 'Derzi Users', type: 'basic', link: '/derziuser' },
         ],
     },
     {

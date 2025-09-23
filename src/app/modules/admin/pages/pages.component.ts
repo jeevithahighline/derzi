@@ -3,6 +3,8 @@ import { MATERIAL_IMPORTS } from '../../material.import';
 import { Router,ActivatedRoute  } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmdialogComponent } from '../confirmdialog/confirmdialog.component';
+import { PageService } from '../../../core/services/page.service';
+import { ToastService } from '../../../core/services/toastr.service';
 
 @Component({
   selector: 'app-pages',
@@ -12,27 +14,41 @@ import { ConfirmdialogComponent } from '../confirmdialog/confirmdialog.component
 })
 export class PagesComponent {
   searchText = '';
-  totalItems = 2;
+  totalItems = 0;
   masterSelected: boolean = false;
+  page = 1;
+  pageSize = 10;
+  pageIndex = 0;
+  usertoken:any;
+  selectedIds: string[] = [];
 
-  constructor(private _router: Router,private dialog: MatDialog) {}
-  pages = [
-    {
-      "id":1,
-      "title": "Summer Collection",
-      "title_ar": "مجموعة الصيف",
-      "description": "Discover our exclusive summer collection with fresh styles and vibrant colors.",
-      "description_ar": "اكتشف مجموعتنا الصيفية الحصرية مع أنماط جديدة وألوان زاهية. مثالية لهذا الموسم!",
-      "pagename": "Home Page",
-      "isSelected":false
-    }   
-  ];
+  constructor(private _router: Router,private dialog: MatDialog,private _pageService: PageService,private _toastrService: ToastService) {}
+  pages: any[] = [];
 
-  
+  ngOnInit(): void {
+    this.loadPages();
+  }
+
+  loadPages(page: number = this.page, size: number = this.pageSize) {
+    const token = localStorage.getItem('usertoken'); 
+    if (token) {
+      this._pageService.getAllPage(token, this.page, this.pageSize).subscribe({
+        next: (res: any) => {
+          this.pages = res.data.docs || [];
+          this.totalItems = res.data.totalDocs || 0;  // backend must return total count
+          this.page = res.data.page || page;
+          this.pageSize = res.data.limit || size;
+        },
+        error: (err) => {
+          console.error('Error fetching banners', err);
+        }
+      });
+    }
+  }
 
   filteredpages() {
     return this.pages.filter(c =>
-      c.pagename.toLowerCase().includes(this.searchText.toLowerCase())
+      c.title.toLowerCase().includes(this.searchText.toLowerCase())
     );
   }
 
@@ -40,13 +56,13 @@ export class PagesComponent {
 
   editPage(page: any, index: number) {
     //alert(banner.id);
-    this._router.navigate(['/addPage', page.id]);   
+    this._router.navigate(['/addPage', page._id]);   
   }
 
 
-  public deletePage(index: number): void {
-    //console.log('deleteselectedData', this.selectedIds);
-  
+  deletePage(data) {
+
+    this.selectedIds = data._id;
     const dialogRef = this.dialog.open(ConfirmdialogComponent, {
       width: '450px',
       height: '250px',
@@ -55,10 +71,20 @@ export class PagesComponent {
   
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        this.pages[index] = result; // 👈 update instead of push
+        // ✅ Call delete API
+        this._pageService.deletePage(this.selectedIds,this.usertoken).subscribe({
+          next: () => {
+            this._toastrService.showSuccess("Deleted Successfully");
+            this.loadPages(); // refresh table
+          },
+          error: () => {
+            this._toastrService.showError("Deletion failed");
+          }
+        });
+      } else {
+        this._toastrService.showError("Deletion cancelled by user");
       }
     });
-    
   }
 
   addPages(){
@@ -73,6 +99,13 @@ export class PagesComponent {
   // If all rows checked, master should be checked
   isAllSelected() {
     this.masterSelected = this.pages.every(Page => Page.isSelected);
+  }
+
+  onPageChange(event: any) {
+    this.page = event.pageIndex + 1;
+    this.pageIndex = event.pageIndex;
+    this.pageSize = event.pageSize;
+    this.loadPages(this.page, this.pageSize);
   }
 
 }

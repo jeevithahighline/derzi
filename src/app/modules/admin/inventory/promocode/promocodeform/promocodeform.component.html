@@ -4,7 +4,7 @@
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2">
       <div class="col-6">
         <div class="heading pt-2">
-          <h2>{{ editMode ? 'Edit Promocode' : 'Add Promocode' }}</h2>
+          <h2>{{ promoId ? 'Edit Promocode' : 'Add Promocode' }}</h2>
         </div>
       </div>
       <div class="col-6 dflexmain">
@@ -21,35 +21,54 @@
     <div class="bg-white p-2 border rounded">
       <form [formGroup]="promocodeForm" class="p-4 grid gap-4">
 
-        <!-- Code -->
+        <!-- Promo Code -->
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <mat-form-field class="w-full">
-          <mat-label>Promo Code</mat-label>
-          <input matInput formControlName="code" placeholder="Enter promo code" />
-          <!-- <mat-error *ngIf="promocodeForm.get('code')?.hasError('required')">Code is required</mat-error> -->
-        </mat-form-field>
-
-        <mat-form-field class="w-full">
-          <mat-label>Product</mat-label>
-          <mat-select formControlName="productId">
-            <mat-option *ngFor="let p of products" [value]="p._id">{{ p.name }}</mat-option>
-          </mat-select>
-        </mat-form-field>
-  
+          <mat-form-field class="w-full">
+            <mat-label>Promo Code</mat-label>
+            <input matInput formControlName="code" placeholder="Enter promo code" />
+          </mat-form-field>
+      
+          <!-- Global Promo Checkbox -->
+          <mat-checkbox formControlName="isGlobal">Apply to All (Global)</mat-checkbox>
         </div>
+      
+        <!-- Target Products, Categories, Merchants -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <mat-form-field class="w-full">
+            <mat-label>Products</mat-label>
+            <mat-select formControlName="productIds" multiple>
+              <mat-option *ngFor="let p of products" [value]="p._id">{{ p.name }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+      
+          <mat-form-field class="w-full">
+            <mat-label>Categories</mat-label>
+            <mat-select formControlName="categoryIds" multiple>
+              <mat-option *ngFor="let c of categories" [value]="c._id">{{ c.name }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+      
+          <mat-form-field class="w-full">
+            <mat-label>Merchants</mat-label>
+            <mat-select formControlName="merchantIds" multiple>
+              <mat-option *ngFor="let m of merchants" [value]="m._id">{{ m.merchant_name }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      
         <!-- Discount Type & Value -->
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
           <mat-form-field class="w-full">
             <mat-label>Discount Type</mat-label>
             <mat-select formControlName="discountType">
-              <mat-option value="Flat">Flat</mat-option>
-              <mat-option value="Percentage">Percentage</mat-option>
+              <mat-option value="percentage">Percentage</mat-option>
+              <mat-option value="fixed">Fixed</mat-option>
             </mat-select>
           </mat-form-field>
       
           <mat-form-field class="w-full">
             <mat-label>Discount Value</mat-label>
-            <input matInput type="number" formControlName="discountValue" />
+            <input matInput type="number" formControlName="amount" />
           </mat-form-field>
         </div>
       
@@ -64,39 +83,25 @@
       
           <mat-form-field class="w-full">
             <mat-label>Expiry Date</mat-label>
-            <input matInput [matDatepicker]="expiryPicker" formControlName="expiryDate" />
+            <input matInput [matDatepicker]="expiryPicker" formControlName="endDate" />
             <mat-datepicker-toggle matSuffix [for]="expiryPicker"></mat-datepicker-toggle>
             <mat-datepicker #expiryPicker></mat-datepicker>
           </mat-form-field>
         </div>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">          
-          <!-- Description -->
-          <mat-form-field class="w-full">
-            <mat-label>Description</mat-label>
-            <textarea matInput rows="3" formControlName="description"></textarea>
-            <!-- <mat-error *ngIf="promocodeForm.get('description')?.hasError('required')">Description is required</mat-error> -->
-          </mat-form-field>
-        
-          <!-- Status -->
-          <mat-form-field class="w-full">
-            <mat-label>Description - Ar</mat-label>
-            <textarea matInput rows="3" formControlName="description_ar"></textarea>
-            <!-- <mat-error *ngIf="promocodeForm.get('description')?.hasError('required')">Description is required</mat-error> -->
-          </mat-form-field>
-      
-        </div>
       
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+
           <mat-form-field class="w-full">
             <mat-label>Status</mat-label>
             <mat-select formControlName="status">
-              <mat-option value="Active">Active</mat-option>
-              <mat-option value="Inactive">Inactive</mat-option>
+              <mat-option [value]="true">Active</mat-option>
+              <mat-option [value]="false">Inactive</mat-option>
             </mat-select>
           </mat-form-field>
+
         </div>
         
-      </form>
+      </form>    
       
     </div>
   </div>

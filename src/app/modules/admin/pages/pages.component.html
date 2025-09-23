@@ -33,16 +33,16 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let pages of filteredpages()">
+        <tr *ngFor="let pages of filteredpages(); let i = index">
           <td>
             <label class="customcheckbox">
               <input type="checkbox" [(ngModel)]="pages.isSelected"  (change)="isAllSelected()">
               <span class="checkmark"></span>
             </label>
           </td>
-          <td>{{ pages.id }}</td>
-          <td>{{ pages.pagename }}</td>  
-          <td>{{ pages.description }}</td>  
+          <td>{{ (pageIndex * pageSize) + i + 1 }}</td>
+          <td>{{ pages.title }}</td>  
+          <td>{{ pages.content }}</td>  
           <td>Active</td>         
           <td>
             <button class="btn btn-sm me-2" (click)="editPage(pages)">
@@ -57,7 +57,7 @@
       </tbody>
     </table>
     
-    <mat-paginator [length]="totalItems"  [pageSize]="10" [pageSizeOptions]="[10,25,100]" ></mat-paginator>
+    <mat-paginator [length]="totalItems"  [pageSize]="10" [pageSizeOptions]="[10,25,100]" (page)="onPageChange($event)"></mat-paginator>
     </div>
   </div>
   

@@ -33,14 +33,14 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let faq of filteredData()">
+        <tr *ngFor="let faq of filteredData();let i = index">
           <td>
             <label class="customcheckbox">
                 <input type="checkbox" [(ngModel)]="faq.isSelected"  (change)="isAllSelected()">
                 <span class="checkmark"></span>
               </label>
           </td>
-          <td>{{ faq.id }}</td>
+          <td>{{ (pageIndex * pageSize) + i + 1 }}</td>
           <td>{{ faq.question }}</td>  
           <td>{{ faq.answer }}</td>  
           <td>Active</td>         

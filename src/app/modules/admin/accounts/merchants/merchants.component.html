@@ -1,67 +1,67 @@
 <div class="container p-4">
-    <!-- 🔎 Search -->
-    <div class="row">
-      <div class="col-6">
-        <div class="heading">
-             Merchants
-        </div>
-      </div>
-      <div class="col-6 dflexmain">
-        <button class="btn btn-sm" (click)="deleteMerchant(1)">
-              <i class="bi bi-trash"></i>
-               <img src="/images/icon/delete.svg" alt="">
-            </button>      
-        <input type="text" class="form-control searchinput" placeholder="Search Merchant" [(ngModel)]="searchText" />
-        <button class="btn-add" (click)="addForm()"> <img src="/images/icon/add-btn.svg" alt=""> Add Merchant</button>
-        
+  <!-- 🔎 Search -->
+  <div class="row">
+    <div class="col-6">
+      <div class="heading">
+           MerchantApp - Users
       </div>
     </div>
-  
-    <!-- 📊 merchant Table --><div class="tableparent">
-    <table class="table table-striped table-bordered align-middle text-center">
-      <thead class="table-light">
-        <tr>
-          <th><label class="customcheckbox">
-            <input type="checkbox" [(ngModel)]="masterSelected" (change)="checkUncheckAll()">
-            <span class="checkmark"></span>
-          </label></th>
-          <th>Merchant ID</th>
-          <th>Merchant Name</th>
-          <th>Email</th>
-          <th>Phone</th>
-          <th>Location</th>
-          <th>Status</th>
-          <th>Action</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let merchant of filteredMerchants()">
-          <td>
-            <label class="customcheckbox">
-                <input type="checkbox" [(ngModel)]="merchant.isSelected"  (change)="isAllSelected()">
-                <span class="checkmark"></span>
-              </label>
-          </td>
-          <td>{{ merchant.merchant_id }}</td>
-          <td>{{ merchant.merchant_name }}</td>
-          <td>{{ merchant.email }}</td>
-          <td>{{ merchant.mobilenumber }}</td>
-          <td>{{ merchant.location }}</td>
-          <td>Active</td>                     
-          <td>
-            <button class="btn btn-sm me-2" (click)="editMerchant(merchant)">
-              <img src="/images/icon/edit-2.svg" alt="">
-            </button>
-            <button class="btn btn-sm " (click)="deleteMerchant(merchant)">
-              <i class="bi bi-trash"></i>
-               <img src="/images/icon/delete.svg" alt="">
-            </button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-    
-    <mat-paginator [length]="totalItems"  [pageSize]="10" [pageSizeOptions]="[10,25,100]" ></mat-paginator>
+    <div class="col-6 dflexmain">
+      <button class="btn btn-sm" (click)="deletemerchant(1)">
+            <i class="bi bi-trash"></i>
+             <img src="/images/icon/delete.svg" alt="">
+          </button>      
+      <input type="text" class="form-control searchinput" placeholder="Search merchant" [(ngModel)]="searchText" />
+      <button class="btn-add" (click)="addForm()"> <img src="/images/icon/add-btn.svg" alt=""> Add Merchant</button>
+      
     </div>
   </div>
+
+  <!-- 📊 merchant Table --><div class="tableparent">
+  <table class="table table-striped table-bordered align-middle text-center">
+    <thead class="table-light">
+      <tr>
+         <th><label class="customcheckbox">
+              <input type="checkbox" [(ngModel)]="masterSelected" (change)="checkUncheckAll()">
+              <span class="checkmark"></span>
+            </label></th>
+        <th scope="col">ID</th>
+        <th scope="col">Merchant name</th>
+        <th scope="col">First name</th>
+        <th scope="col">Last name</th>
+        <th scope="col">Email</th>
+        <th scope="col">Status</th>
+        <th scope="col">Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let merchant of filteredData();let i = index">
+        <td>
+          <label class="customcheckbox">
+              <input type="checkbox" [(ngModel)]="merchant.isSelected"  (change)="isAllSelected()">
+              <span class="checkmark"></span>
+            </label>
+        </td>
+        <td>{{ (pageIndex * pageSize) + i + 1 }}</td>
+        <td>{{ merchant.merchant_name }}</td> 
+        <td>{{ merchant.firstname }}</td> 
+        <td>{{ merchant.lastname }}</td> 
+        <td>{{ merchant.email }}</td> 
+        <td>Active</td>                     
+        <td>
+          <button class="btn btn-sm me-2" (click)="editmerchant(merchant)">
+            <img src="/images/icon/edit-2.svg" alt="">
+          </button>
+          <button class="btn btn-sm " (click)="deletemerchant(merchant)">
+            <i class="bi bi-trash"></i>
+             <img src="/images/icon/delete.svg" alt="">
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
   
+  <mat-paginator [length]="totalItems"  [pageSize]="10" [pageSizeOptions]="[10,25,100]" ></mat-paginator>
+  </div>
+</div>
+

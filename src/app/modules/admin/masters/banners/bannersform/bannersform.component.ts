@@ -1,8 +1,12 @@
-import { Component,Inject,OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Router, ActivatedRoute } from '@angular/router';
+import { BannerService } from '../../../../../core/services/banner.service';
+import { ToastService } from '../../../../../core/services/toastr.service';
+import { Observable, throwError } from 'rxjs';
+import { catchError, tap } from 'rxjs/operators';
 import { MATERIAL_IMPORTS } from '../../../../material.import';
-import { MAT_DIALOG_DATA,MatDialogRef } from '@angular/material/dialog';
-import { Router,ActivatedRoute  } from '@angular/router';
+
 
 @Component({
   selector: 'app-bannersform',
@@ -11,138 +15,217 @@ import { Router,ActivatedRoute  } from '@angular/router';
   templateUrl: './bannersform.component.html',
   styleUrl: './bannersform.component.scss'
 })
-export class BannersformComponent {
+export class BannersformComponent implements OnInit {
   dynamicForm: FormGroup;
   selectedFileName = '';
   selectedBannerType: string = '';
-  entityOptions: { id: string; name: string }[] = [];  // holds dynamic options
-  editMode = false;   // ✅ track add/edit
-  bannerId: number | null = null;
+  entityOptions: { id: string; name: string }[] = [];
+  editMode = false;
+  bannerId: string;
+  editId: string | null;
+  usertoken: any;
+  bannerDetails: any;
+  previewUrl: string | ArrayBuffer | null = null;
 
-  // dummy data for demo — later replace with API call
-  banners = [
-    { id: 1, name: 'Fashion', name_ar: 'موضة', description: "Lorem ipsum", description_ar: "لوريم إيبسوم", status: 'Active', bannerType: 'page', entityId: '1' },
-    { id: 2, name: 'Clothing', name_ar: 'ملابس', description: "Dolor sit", description_ar: "دولور سيت", status: 'Inactive', bannerType: 'merchant', entityId: '101' }
-  ];
-
-  constructor(private _router: Router,private fb: FormBuilder,private route: ActivatedRoute) {}
+  constructor(
+    private _router: Router,
+    private fb: FormBuilder,
+    private route: ActivatedRoute,
+    private _masterservice: BannerService,
+    private _toastrService: ToastService
+  ) {}
 
   ngOnInit(): void {
+    this.bannerId = this.route.snapshot.paramMap.get('id') || '';
+    console.log('Banner ID:', this.bannerId);
 
     this.dynamicForm = this.fb.group({
-      name: ['', Validators.required],
-      name_ar: ['', Validators.required],
-      description: ['', Validators.required],
-      description_ar: ['', Validators.required],
+      title: ['', [Validators.required, Validators.minLength(3)]],
+      title_ar: ['', [Validators.required, Validators.minLength(3)]],
+      description: ['', [Validators.required, Validators.maxLength(250)]],
+      description_ar: ['', [Validators.required, Validators.maxLength(250)]],
       image: [null, Validators.required],
-      status: ['Active', Validators.required],
-      bannerType: ['', Validators.required],  // ✅ new field
-      entityId: ['', Validators.required]      // ✅ linked to banner type
+      status: [true, Validators.required],
+      bannerType: ['', Validators.required],
+      entityId: ['', Validators.required]
     });
- 
-    // ✅ get id from route
-    this.route.paramMap.subscribe(params => {
-      const id = params.get('id');
-      if (id) {
-        this.editMode = true;
-        this.bannerId = +id;
-        this.loadBannerData(this.bannerId);
-      }
-    });
-   
-  }
 
-  // ✅ load values (replace with service API call in real app)
-  loadBannerData(id: number) {
-    const banner = this.banners.find(b => b.id === id);
-    if (banner) {
-      this.dynamicForm.patchValue(banner);
-      this.onBannerTypeChange(banner.bannerType); // prefill entity options
+    if (this.bannerId) {
+      this.editMode = true;
+      this.editId = this.bannerId;
+
+      this._masterservice.getSpecificBanner(this.bannerId, this.usertoken).subscribe({
+        next: (res) => {
+          this.bannerDetails = res.data;
+          console.log('Banner details:', this.bannerDetails);
+
+          if (this.bannerDetails) {
+            this.dynamicForm.patchValue({
+              title: this.bannerDetails.title || '',
+              title_ar: this.bannerDetails.title_ar || '',
+              description: this.bannerDetails.description || '',
+              description_ar: this.bannerDetails.description_ar || '',
+              status: this.bannerDetails.status,
+              bannerType: this.bannerDetails.bannertype
+            });
+
+            // Load dropdown options and patch entityId after options load
+            this.onBannerTypeChange(this.bannerDetails.bannertype, this.bannerDetails.referenceId);
+
+            // Image preview for edit mode
+            if (this.bannerDetails.images && this.bannerDetails.images.length > 0) {
+              const fullImagePath = this.bannerDetails.images[0];
+              this.selectedFileName = fullImagePath.split('/').pop() || '';
+              this.previewUrl = fullImagePath;
+
+              // PATCH placeholder to make required validator pass
+              this.dynamicForm.patchValue({ image: 'existing' });
+              this.dynamicForm.get('image')?.updateValueAndValidity();
+            }
+          }
+        },
+        error: (err) => console.error('Error fetching banner details', err)
+      });
     }
   }
 
-  onSubmit() {
+  onBannerTypeChange(type: string, selectedEntityId?: string) {
+    this.selectedBannerType = type;
+    this.entityOptions = [];
+    this.dynamicForm.patchValue({ entityId: '' });
+
+    const patchEntity = (id: string) => {
+      this.dynamicForm.patchValue({ entityId: id });
+    };
+
+    const handleResponse = (list: any[], idField: string, nameField: string) => {
+      this.entityOptions = list.map(item => ({
+        id: item[idField],
+        name: item[nameField]
+      }));
+      if (selectedEntityId) patchEntity(selectedEntityId);
+    };
+
+    switch (type) {
+      case 'page':
+        this._masterservice.getPageList(this.usertoken).subscribe(res => {
+          handleResponse(res.data?.docs || [], '_id', 'title');
+        });
+        break;
+      case 'merchant':
+        this._masterservice.getMerchantList(this.usertoken).subscribe(res => {
+          handleResponse(res.data?.docs || [], '_id', 'title');
+        });
+        break;
+      case 'category':
+        this._masterservice.getCategoryList(this.usertoken).subscribe(res => {
+          handleResponse(res.data?.docs || [], '_id', 'name');
+        });
+        break;
+      case 'product':
+        this._masterservice.getProductList(this.usertoken).subscribe(res => {
+          handleResponse(res.data?.products || [], '_id', 'name');
+        });
+        break;
+    }
+  }
+
+  get f() {
+    return this.dynamicForm.controls;
+  }
+
+  onFileSelected(event: Event) {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files.length > 0) {
+      const file = input.files[0];
+      this.selectedFileName = file.name;
+
+      // Patch file into form control
+      this.dynamicForm.patchValue({ image: file });
+      this.dynamicForm.get('image')?.updateValueAndValidity();
+
+      // Generate preview
+      const reader = new FileReader();
+      reader.onload = () => (this.previewUrl = reader.result);
+      reader.readAsDataURL(file);
+    }
+  }
+
+  saveBanner() {
     if (this.dynamicForm.invalid) {
       this.dynamicForm.markAllAsTouched();
       return;
     }
 
-    if (this.editMode) {
-      console.log('🔄 Update banner:', this.dynamicForm.value);
-      // call update API here
+    const payload = { ...this.dynamicForm.value };
+
+    if (this.editId) {
+      this.updateData(payload, this.editId).subscribe();
     } else {
-      console.log('➕ Create new banner:', this.dynamicForm.value);
-      // call create API here
+      this.saveData(payload).subscribe();
     }
-
-    this._router.navigate(['/banners']);
   }
 
-  // ✅ Handle Banner Type change
-  onBannerTypeChange(type: string) {
-    this.selectedBannerType = type;
-    this.entityOptions = [];  // reset options
-    this.dynamicForm.patchValue({ entityId: '' });
+  saveData(data: any): Observable<any> {
+    const formData = new FormData();
+    formData.append('title', data.title || '');
+    formData.append('title_ar', data.title_ar || '');
+    formData.append('description', data.description || '');
+    formData.append('description_ar', data.description_ar || '');
+    formData.append('bannertype', data.bannerType || '');
+    formData.append('referenceId', data.entityId || '');
+    formData.append('status', data.status ? 'true' : 'false');
+    formData.append('userId', localStorage.getItem('userId') || '');
 
-    // Example: Replace with API calls
-    switch (type) {
-      case 'page':
-        this.entityOptions = [
-          { id: '1', name: 'Home Page' },
-          { id: '2', name: 'Offers Page' }
-        ];
-        break;
-
-      case 'merchant':
-        this.entityOptions = [
-          { id: '101', name: 'Amazon' },
-          { id: '102', name: 'Flipkart' }
-        ];
-        break;
-
-      case 'category':
-        this.entityOptions = [
-          { id: '201', name: 'Electronics' },
-          { id: '202', name: 'Fashion' }
-        ];
-        break;
-
-      case 'product':
-        this.entityOptions = [
-          { id: '301', name: 'iPhone 15' },
-          { id: '302', name: 'Samsung TV' }
-        ];
-        break;
+    const fileControl = this.dynamicForm.get('image')?.value;
+    if (fileControl instanceof File) {
+      formData.append('images', fileControl, fileControl.name);
     }
 
-  } 
-
-  // helper for template
-  get f() {
-    return this.dynamicForm.controls;
+    return this._masterservice.createBanner(formData, this.usertoken).pipe(
+      tap(res => {
+        this._toastrService.showSuccess('Banner created successfully');
+        this._router.navigate(['/banners']);
+      }),
+      catchError(err => {
+        const message = err?.error?.message || err?.message;
+        this._toastrService.showError(message || 'Banner creation failed');
+        return throwError(() => err);
+      })
+    );
   }
 
-  saveBanner(){
+  updateData(data: any, editId: any): Observable<any> {
+    const formData = new FormData();
+    formData.append('title', data.title || '');
+    formData.append('title_ar', data.title_ar || '');
+    formData.append('description', data.description || '');
+    formData.append('description_ar', data.description_ar || '');
+    formData.append('bannertype', data.bannerType || '');
+    formData.append('referenceId', data.entityId || '');
+    formData.append('status', data.status ? 'true' : 'false');
+    formData.append('userId', localStorage.getItem('userId') || '');
 
-    if (this.dynamicForm.invalid) {
-      this.dynamicForm.markAllAsTouched();  // ✅ show validation errors
-      return;
+    const fileControl = this.dynamicForm.get('image')?.value;
+    if (fileControl instanceof File) {
+      formData.append('images', fileControl, fileControl.name);
     }
-  
-    console.log(this.dynamicForm.value); // ✅ form values when valid
 
-  }
-
-  onFileSelected(event: Event) {
-    const file = (event.target as HTMLInputElement).files?.[0];
-    if (file) {
-      this.dynamicForm.patchValue({ image: file });
-      this.dynamicForm.get('image')?.updateValueAndValidity();
-    }
+    return this._masterservice.updateBanner(editId, formData, this.usertoken).pipe(
+      tap(res => {
+        this._toastrService.showSuccess('Banner updated successfully');
+        this._router.navigate(['/banners']);
+      }),
+      catchError(err => {
+        this._toastrService.showError('Banner update failed');
+        return throwError(() => err);
+      })
+    );
   }
 
   onCancel() {
-    this.dynamicForm.reset({ status: 'Active' });
+    this.dynamicForm.reset({ status: true });
     this._router.navigate(['/banners']);
-  }  
+  }
 }
+

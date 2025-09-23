@@ -3,6 +3,8 @@ import { MATERIAL_IMPORTS } from '../../../material.import';
 import { Router,ActivatedRoute  } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmdialogComponent } from '../../confirmdialog/confirmdialog.component';
+import { UserService } from '../../../../core/services/user.service';
+import { ToastService } from '../../../../core/services/toastr.service';
 
 @Component({
   selector: 'app-users',
@@ -13,36 +15,38 @@ import { ConfirmdialogComponent } from '../../confirmdialog/confirmdialog.compon
 
 export class UsersComponent {
   searchText = '';
-  totalItems = 2;
+  totalItems = 0;
   masterSelected: boolean = false;
-  constructor(private _router: Router,private dialog: MatDialog) {}
+  page = 1;
+  pageSize = 10;
+  pageIndex = 0;
+  usertoken:any;
+  selectedIds: string[] = [];
+  constructor(private _router: Router,private dialog: MatDialog,private _accountService: UserService,private _toastrService: ToastService) {}
 
-  users = [
-    {
-      "id":1,
-      "firstname": "Ahmed",
-      "lastname": "Khan",
-      "email": "ahmed@example.com",
-      "mobilenumber": "9876543210",
-      "username": "johndriver",
-      "password": "StrongPass123",
-      "location": "New York",
-      "status": "Active",
-      isSelected: false
-    }, 
-    {
-      id:2,
-      "firstname": "Salman",
-      "lastname": "Doe",
-      "email": "salman@example.com",
-      "mobilenumber": "9876543210",
-      "username": "samdriver",
-      "password": "StrongPass123",
-      "location": "New York",
-      "status": "Active",
-      isSelected: false
+
+  users: any[] = [];
+  
+  ngOnInit(): void {
+    this.loadUsers();
+  }
+
+  loadUsers(page: number = this.page, size: number = this.pageSize) {
+    const token = localStorage.getItem('usertoken'); 
+    if (token) {
+      this._accountService.getAllUsers(token, this.page, this.pageSize).subscribe({
+        next: (res: any) => {
+          this.users = res.data.docs || [];
+          this.totalItems = res.data.totalDocs || 0;  // backend must return total count
+          this.page = res.data.page || page;
+          this.pageSize = res.data.limit || size;
+        },
+        error: (err) => {
+          console.error('Error fetching users', err);
+        }
+      });
     }
-  ];
+  }
 
   filteredData() {
     return this.users.filter(c =>
@@ -57,9 +61,9 @@ export class UsersComponent {
     this._router.navigate(['/adduser', user.id]);   
   }
 
-  public deleteUser(index: number): void {
-    //console.log('deleteselectedData', this.selectedIds);
-  
+  deleteUser(data) {
+
+    this.selectedIds = data._id;
     const dialogRef = this.dialog.open(ConfirmdialogComponent, {
       width: '450px',
       height: '250px',
@@ -68,10 +72,20 @@ export class UsersComponent {
   
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        this.users[index] = result; // 👈 update instead of push
+        // ✅ Call delete API
+        this._accountService.deleteUser(this.selectedIds,this.usertoken).subscribe({
+          next: () => {
+            this._toastrService.showSuccess("Deleted Successfully");
+            this.loadUsers(); // refresh table
+          },
+          error: () => {
+            this._toastrService.showError("Deletion failed");
+          }
+        });
+      } else {
+        this._toastrService.showError("Deletion cancelled by user");
       }
     });
-    
   }
 
   

@@ -7,7 +7,7 @@
       </div>
     </div>
     <div class="col-6 dflexmain">
-      <button class="btn btn-sm" (click)="deleteCountry(1)">
+      <button class="btn btn-sm" (click)="deleteSelected()">
             <i class="bi bi-trash"></i>
              <img src="/images/icon/delete.svg" alt="">
           </button>      
@@ -16,7 +16,6 @@
       
     </div>
   </div>
-
   <!-- 📊 Country Table --><div class="tableparent">
   <table class="table table-striped table-bordered align-middle text-center">
     <thead class="table-light">
@@ -27,38 +26,37 @@
               </label></th>
         <th scope="col">ID</th>
         <th scope="col">Country</th>
-        <th scope="col">Flag</th>
+        <th scope="col">Code</th>
         <th scope="col">Status</th>
         <th scope="col">Action</th>
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let country of filteredData()">
+      <tr *ngFor="let country of filteredData(); let i = index">
         <td>
           <label class="customcheckbox">
-                <input type="checkbox" [(ngModel)]="country.isSelected"  (change)="isAllSelected()">
-                <span class="checkmark"></span>
-              </label>
+            <input type="checkbox" [(ngModel)]="country.isSelected" (change)="isAllSelected()">
+            <span class="checkmark"></span>
+          </label>
         </td>
-        <td>{{ country.id }}</td>
-        <td>{{ country.name }}</td>
-        <td>
-          <img [src]="country.flag" [alt]="country.name" width="40" height="25" class="border rounded" />
-        </td>
-        <td><span class="status_active">Active</span></td> 
+        <td>{{ (pageIndex * pageSize) + i + 1 }}</td>
+        <td>{{ country.name }}</td>   
+        <td>{{ country.code }}</td>     
+        <td>{{ country.status ? 'Active' : 'Inactive' }}</td>        
         <td>
           <button class="btn btn-sm me-2" (click)="editCountry(country)">
             <img src="/images/icon/edit-2.svg" alt="">
           </button>
           <button class="btn btn-sm" (click)="deleteCountry(country)">
             <i class="bi bi-trash"></i>
-             <img src="/images/icon/delete.svg" alt="">
+            <img src="/images/icon/delete.svg" alt="">
           </button>
         </td>
       </tr>
     </tbody>
+    
   </table>
-  <mat-paginator [length]="totalItems"  [pageSize]="10" [pageSizeOptions]="[10,25,100]" ></mat-paginator>
+  <mat-paginator [length]="totalItems"  [pageSize]="10" [pageSizeOptions]="[10,25,100]" (page)="onPageChange($event)"></mat-paginator>
 
 
   </div>

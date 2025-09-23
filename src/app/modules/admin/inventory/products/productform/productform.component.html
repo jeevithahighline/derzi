@@ -5,11 +5,11 @@
       <div class="col-6">
         <div class="heading pt-2">
 
-          <h2>{{ editMode ? 'Edit Product' : 'Add Product' }}</h2>
+          <h2>{{ productId ? 'Edit Product' : 'Add Product' }}</h2>
         </div>
       </div>
       <div class="col-6 dflexmain">
-        <button class="btn-add" (click)="onSubmit()">
+        <button class="btn-add" (click)="save()">
          Save
         </button>
         <button class="btn-cancel" (click)="onCancel()">Cancel</button>
@@ -20,7 +20,7 @@
   
     <!-- Form Section -->
     <div class="bg-white p-2 border rounded">
-      <form [formGroup]="productForm" class="p-4 grid">
+      <form [formGroup]="productForm" class="p-4 grid" (ngSubmit)="save()">
   
         <!-- Name & Name (Arabic) -->
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -74,7 +74,7 @@
         <mat-form-field class="w-full">
           <mat-label>Merchant</mat-label>
           <mat-select formControlName="merchant_id" multiple>
-            <mat-option *ngFor="let merchant of merchants" [value]="merchant._id">{{ merchant.name }}</mat-option>
+            <mat-option *ngFor="let merchant of merchants" [value]="merchant._id">{{ merchant.merchant_name }}</mat-option>
           </mat-select>
           <!-- <mat-error *ngIf="f['merchant_id'].hasError('required')">Merchant is required</mat-error> -->
         </mat-form-field>
@@ -141,44 +141,7 @@
           </mat-select>
         </mat-form-field>
         </div>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <!-- Country -->
-        <mat-form-field class="w-full">
-          <mat-label>Country</mat-label>
-          <mat-select formControlName="country_id" multiple>
-            <mat-option *ngFor="let country of countries" [value]="country._id">{{ country.name }}</mat-option>
-          </mat-select>
-        </mat-form-field>
-
-        <mat-form-field appearance="outline" class="w-full">
-            <mat-label>Image</mat-label>
-          
-            <input
-              type="file"
-              class="hidden"
-              #fileInput
-              (change)="onFileSelected($event)"
-              formControlName="image"
-            />
-          
-            <!-- fake text input to show file name -->
-            <input
-              matInput
-              placeholder="Choose file"
-              [value]="selectedFileNames"
-              readonly
-              (click)="fileInput.click()"
-            />
-          
-            <button mat-icon-button matSuffix (click)="fileInput.click()" type="button">
-              <mat-icon>upload</mat-icon>
-            </button>
-          
-            <mat-error *ngIf="productForm.get('image')?.hasError('required') && productForm.get('image')?.touched">
-              Image is required
-            </mat-error>
-        </mat-form-field>
-         </div>
+        
         <!-- Price & Currency -->
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
           <mat-form-field class="w-full">
@@ -188,9 +151,60 @@
   
           <mat-form-field class="w-full">
             <mat-label>Currency</mat-label>
-            <mat-select formControlName="currency" multiple>
-              <mat-option *ngFor="let curr of currencies" [value]="curr._id">{{ curr.name }}</mat-option>
+            <mat-select formControlName="currency">
+              <mat-option *ngFor="let curr of currencies" [value]="curr._id">{{ curr.currency }}</mat-option>
             </mat-select>
+          </mat-form-field>
+        </div>
+
+        <!-- Product Images -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <!-- English Images -->
+          <mat-form-field class="w-full">
+            <mat-label>Product Image</mat-label>
+          
+            <!-- ✅ Show existing preview -->
+            <div *ngIf="previewUrls.product_images" class="mb-2">
+              <img [src]="previewUrls.product_images" alt="Product Image" class="w-[50px] h-[50px] object-cover"/>
+            </div>
+          
+            <input type="file" class="hidden" #catFileInput (change)="onFileSelected($event, 'product_images')" />
+          
+            <input
+              matInput
+              placeholder="Choose file"
+              [value]="selectedFileNames.product_images || ''"
+              readonly
+              (click)="catFileInput.click()"
+            />
+          
+            <button mat-icon-button matSuffix (click)="catFileInput.click()" type="button">
+              <mat-icon>upload</mat-icon>
+            </button>
+          </mat-form-field>
+          
+          <!-- Product Image (Arabic) -->
+          <mat-form-field class="w-full">
+            <mat-label>Product Image - Arabic</mat-label>
+          
+            <!-- ✅ Show existing preview -->
+            <div *ngIf="previewUrls.product_ar_images" class="mb-2">
+              <img [src]="previewUrls.product_ar_images" alt="Product Arabic Image" class="w-[50px] h-[50px] object-cover" />
+            </div>
+          
+            <input type="file" class="hidden" #catArFileInput (change)="onFileSelected($event, 'product_ar_images')" />
+          
+            <input
+              matInput
+              placeholder="Choose file"
+              [value]="selectedFileNames.product_ar_images || ''"
+              readonly
+              (click)="catArFileInput.click()"
+            />
+          
+            <button mat-icon-button matSuffix (click)="catArFileInput.click()" type="button">
+              <mat-icon>upload</mat-icon>
+            </button>
           </mat-form-field>
         </div>
 
@@ -201,19 +215,27 @@
           <input matInput type="number" formControlName="vatPercentage" />
         </mat-form-field>
   
-        <!-- Status -->
         <mat-form-field class="w-full">
-          <mat-label>Status</mat-label>
-          <mat-select formControlName="status">
-            <mat-option value="Active">Active</mat-option>
-            <mat-option value="Inactive">Inactive</mat-option>
-          </mat-select>
+          <mat-label>Price with VAT</mat-label>
+          <input matInput type="number" formControlName="priceWithVAT" />
         </mat-form-field>
 
         
         </div>
   
-   
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          
+          <!-- Status -->
+          <mat-form-field class="w-full">
+            <mat-label>Status</mat-label>
+            <mat-select formControlName="status">
+              <mat-option [value]="true">Active</mat-option>
+              <mat-option [value]="false">Inactive</mat-option>
+            </mat-select>
+          </mat-form-field>
+  
+          
+          </div>
   
         
       </form>

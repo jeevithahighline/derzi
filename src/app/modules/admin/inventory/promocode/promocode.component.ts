@@ -4,7 +4,8 @@ import { FormBuilder, FormGroup, Validators,FormArray } from '@angular/forms';
 import { Router,ActivatedRoute  } from '@angular/router';
 import { ConfirmdialogComponent } from '../../confirmdialog/confirmdialog.component';
 import { MatDialog } from '@angular/material/dialog';
-
+import { PromocodeService } from '../../../../core/services/promocode.service';
+import { ToastService } from '../../../../core/services/toastr.service';
 @Component({
   selector: 'app-promocode',
   imports: [MATERIAL_IMPORTS],   // ✅ just one line
@@ -16,37 +17,37 @@ export class PromocodeComponent {
   searchText = '';
   totalItems = 2;
   masterSelected: boolean = false;
-  constructor(private _router: Router,private route: ActivatedRoute,private fb: FormBuilder,private dialog: MatDialog) {}
+  page = 1;
+  pageSize = 10;
+  pageIndex = 0;
+  usertoken:any;
+  selectedIds: string[] = [];
+  constructor(private _router: Router,private route: ActivatedRoute,private fb: FormBuilder,private dialog: MatDialog,private _promocodeservice:PromocodeService,private _toastrService: ToastService) {}
 
-  promocode = [
-    {
-      id: 1,
-      code: 'SAVE10',
-      productId: '68abdbe89f34784334b160e4', // must match one of your products._id
-      discountType: 'Percentage',
-      discountValue: 10,
-      startDate: new Date('2025-09-01'),
-      expiryDate: new Date('2025-09-30'),
-      description: 'Get 10% off on selected products',
-      description_ar: 'احصل على خصم 10٪ على المنتجات المختارة',
-      status: 'Active',
-      isSelected: false
-    },
-    {
-      id: 2,
-      code: 'FLAT50',
-      productId: '68abdbe89f34784334b160e5',
-      discountType: 'Flat',
-      discountValue: 50,
-      startDate: new Date('2025-08-15'),
-      expiryDate: new Date('2025-12-31'),
-      description: 'Flat 50 BHD off on Jeans',
-      description_ar: 'خصم ثابت 50 دينار بحريني على الجينز',
-      status: 'Inactive',
-      isSelected: false
+
+
+  promocode: any[] = [];
+
+  ngOnInit(): void {
+    this.loadPromocode();
+  }
+
+  loadPromocode(page: number = this.page, size: number = this.pageSize) {
+    const token = localStorage.getItem('usertoken'); 
+    if (token) {
+      this._promocodeservice.getAllPromocode(token, this.page, this.pageSize).subscribe({
+        next: (res: any) => {
+          this.promocode = res.data.docs || [];
+          this.totalItems = res.data.totalDocs || 0;  // backend must return total count
+          this.page = res.data.page || page;
+          this.pageSize = res.data.limit || size;
+        },
+        error: (err) => {
+          console.error('Error fetching brand', err);
+        }
+      });
     }
-  ];
-  
+  }
 
   filteredData() {
     return this.promocode.filter(c =>
@@ -55,22 +56,9 @@ export class PromocodeComponent {
   }
 
   editpromocode(promocode: any, index: number) {
-    this._router.navigate(['/addpromocode', promocode.id]);
+    this._router.navigate(['/addpromocode', promocode._id]);
   }
 
-  deletepromocode(index: number) {
-    const dialogRef = this.dialog.open(ConfirmdialogComponent, {
-      width: '450px',
-      height: '250px',
-      disableClose: true,
-    });
-  
-    dialogRef.afterClosed().subscribe(result => {
-      if (result) {
-        this.promocode[index] = result; // 👈 update instead of push
-      }
-    });
-  }
 
   addPromocode(){
     this._router.navigate(['/addpromocode']);
@@ -84,6 +72,40 @@ export class PromocodeComponent {
   // If all rows checked, master should be checked
   isAllSelected() {
     this.masterSelected = this.promocode.every(promocode => promocode.isSelected);
+  }
+
+  deletepromocode(data) {
+
+    this.selectedIds = data._id;
+    const dialogRef = this.dialog.open(ConfirmdialogComponent, {
+      width: '450px',
+      height: '250px',
+      disableClose: true,
+    });
+  
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        // ✅ Call delete API
+        this._promocodeservice.deletePromocode(this.selectedIds,this.usertoken).subscribe({
+          next: () => {
+            this._toastrService.showSuccess("Deleted Successfully");
+            this.loadPromocode(); // refresh table
+          },
+          error: () => {
+            this._toastrService.showError("Deletion failed");
+          }
+        });
+      } else {
+        this._toastrService.showError("Deletion cancelled by user");
+      }
+    });
+  }
+
+  onPageChange(event: any) {
+    this.page = event.pageIndex + 1;
+    this.pageIndex = event.pageIndex;
+    this.pageSize = event.pageSize;
+    this.loadPromocode(this.page, this.pageSize);
   }
 
 }

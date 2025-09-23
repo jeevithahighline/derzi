@@ -1,62 +1,58 @@
 import {
-    HttpErrorResponse,
-    HttpEvent,
-    HttpHandlerFn,
-    HttpRequest,
+  HttpEvent,
+  HttpErrorResponse,
+  HttpRequest,
+  HttpHandlerFn,
 } from '@angular/common/http';
 import { inject } from '@angular/core';
-import { AuthService } from 'app/core/auth/auth.service';
-import { AuthUtils } from 'app/core/auth/auth.utils';
-import { Observable, catchError, throwError } from 'rxjs';
+import { Observable, throwError } from 'rxjs';
+import { catchError } from 'rxjs/operators';
+import { AuthService } from '../services/auth.service';
+import { AuthUtils } from './auth.utils';
+import { Router } from '@angular/router';
 
-/**
- * Intercept
- *
- * @param req
- * @param next
- */
 export const authInterceptor = (
-    req: HttpRequest<unknown>,
-    next: HttpHandlerFn
+  req: HttpRequest<unknown>,
+  next: HttpHandlerFn
 ): Observable<HttpEvent<unknown>> => {
-    const authService = inject(AuthService);
+  const authService = inject(AuthService);
+  const router = inject(Router);
+  let newReq = req.clone();
 
-    // Clone the request object
-    let newReq = req.clone();
+  // Add Authorization header if token exists & is valid
+  if (
+    authService.accessToken &&
+    !AuthUtils.isTokenExpired(authService.accessToken)
+  ) {
+    newReq = req.clone({
+      setHeaders: {
+        Authorization: `Bearer ${authService.accessToken}`,
+      },
+    });
+  }
 
-    // Request
-    //
-    // If the access token didn't expire, add the Authorization header.
-    // We won't add the Authorization header if the access token expired.
-    // This will force the server to return a "401 Unauthorized" response
-    // for the protected API routes which our response interceptor will
-    // catch and delete the access token from the local storage while logging
-    // the user out from the app.
-    if (
-        authService.accessToken &&
-        !AuthUtils.isTokenExpired(authService.accessToken)
-    ) {
-        newReq = req.clone({
-            headers: req.headers.set(
-                'Authorization',
-                'Bearer ' + authService.accessToken
-            ),
-        });
-    }
+  return next(newReq).pipe(
+    catchError((error) => {
+      if (error instanceof HttpErrorResponse) {
+        // 🚨 Case 1: Server unreachable (connection refused, CORS fail, etc.)
+        if (error.status === 0) {
+          console.error('Server unreachable:', error.message);
+          authService.logout?.();
+          localStorage.removeItem('accessToken');
+          // Redirect to login (instead of reload)
+          router.navigate(['/sign-in']);
+        }
 
-    // Response
-    return next(newReq).pipe(
-        catchError((error) => {
-            // Catch "401 Unauthorized" responses
-            if (error instanceof HttpErrorResponse && error.status === 401) {
-                // Sign out
-                authService.signOut();
+        // 🚨 Case 2: Unauthorized
+        if (error.status === 401) {
+          authService.logout?.();
+          localStorage.removeItem('accessToken');
+          // Redirect to login
+          router.navigate(['/sign-in']);
+        }
+      }
 
-                // Reload the app
-                location.reload();
-            }
-
-            return throwError(error);
-        })
-    );
+      return throwError(() => error);
+    })
+  );
 };

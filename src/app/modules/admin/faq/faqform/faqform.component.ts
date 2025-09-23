@@ -1,7 +1,11 @@
-import { Component,Inject } from '@angular/core';
-import { MATERIAL_IMPORTS } from '../../../material.import';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Router,ActivatedRoute  } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
+import { FaqService } from '../../../../core/services/faq.service';
+import { ToastService } from '../../../../core/services/toastr.service';
+import { Observable, throwError } from 'rxjs';
+import { catchError, tap } from 'rxjs/operators';
+import { MATERIAL_IMPORTS } from '../../../material.import';
 
 @Component({
   selector: 'app-faqform',
@@ -10,112 +14,155 @@ import { Router,ActivatedRoute  } from '@angular/router';
   styleUrl: './faqform.component.scss'
 })
 export class FaqformComponent {
-  faqform: FormGroup;
+
+  faqForm: FormGroup;
   editMode = false;   // ✅ track add/edit
-  faqId: number | null = null;
+  faqId: string;
+  editId: string | null;
+  usertoken: any;
+  faqDetails: any;
 
-  constructor(private _router: Router,private fb: FormBuilder,private route: ActivatedRoute) {}
+  constructor(private _router: Router,private fb: FormBuilder,private route: ActivatedRoute,private _masterservice: FaqService,private _toastrService: ToastService) {}
 
-  faqs = [
-    {
-      id: 1,
-      question: 'How do I find my size in different size standards?',
-      question_ar: 'كيف أجد مقاسي في معايير المقاسات المختلفة؟',
-      answer: 'You can find the size details in the product description under the size chart.',
-      answer_ar: 'يمكنك العثور على تفاصيل المقاس في وصف المنتج ضمن جدول المقاسات.',
-      isSelected: false
-    },
-    {
-      id: 2,
-      question: 'How can I track my order?',
-      question_ar: 'كيف يمكنني تتبع طلبي؟',
-      answer: 'You can track your order from the "My Orders" section in your account.',
-      answer_ar: 'يمكنك تتبع طلبك من قسم "طلباتي" في حسابك.',
-      isSelected: false
-    },
-    {
-      id: 3,
-      question: 'What payment methods are accepted?',
-      question_ar: 'ما هي طرق الدفع المقبولة؟',
-      answer: 'We accept credit/debit cards, PayPal, and cash on delivery.',
-      answer_ar: 'نقبل بطاقات الائتمان/الخصم، باي بال، والدفع عند الاستلام.',
-      isSelected: false
-    },
-    {
-      id: 4,
-      question: 'Can I return or exchange a product?',
-      question_ar: 'هل يمكنني إرجاع أو استبدال المنتج؟',
-      answer: 'Yes, returns and exchanges are allowed within 14 days of delivery.',
-      answer_ar: 'نعم، يُسمح بالإرجاع والاستبدال خلال 14 يومًا من التسليم.',
-      isSelected: false
-    },
-    {
-      id: 5,
-      question: 'Do you offer international shipping?',
-      question_ar: 'هل تقدمون الشحن الدولي؟',
-      answer: 'Yes, we deliver to most countries worldwide. Shipping costs may vary.',
-      answer_ar: 'نعم، نقوم بالتوصيل إلى معظم الدول حول العالم. قد تختلف تكاليف الشحن.',
-      isSelected: false
-    }
-  ];
+ 
   
 
   ngOnInit(): void {
+
+    this.faqId = this.route.snapshot.paramMap.get('id') || '';
+    console.log('page ID:', this.faqId);
     
-    this.faqform = this.fb.group({
+    this.faqForm = this.fb.group({
       question: ['', [Validators.required, Validators.minLength(3)]],
       question_ar: ['', [Validators.required, Validators.minLength(3)]],   
       answer: ['', [Validators.required, Validators.maxLength(250)]],
-      answer_ar: ['', [Validators.required, Validators.maxLength(250)]]    
+      answer_ar: ['', [Validators.required, Validators.maxLength(250)]],
+      status: [true, Validators.required]    
     });
 
-    // ✅ get id from route
-    this.route.paramMap.subscribe(params => {
-      const id = params.get('id');
-      if (id) {
-        this.editMode = true;
-        this.faqId = +id;
-        this.loadFaqData(this.faqId);
-      }
-    });
-   
-  }
+     // ✅ get id from route
+    if (this.faqId) {
+      this.editMode = true;
+      this.editId = this.faqId;
 
-  loadFaqData(id: number){
-    const service = this.faqs.find(b => b.id === id);
-    if (service) {
-      this.faqform.patchValue(service);
-    }
+      this._masterservice.getSpecificFaq(this.faqId, this.usertoken).subscribe({
+        next: (res) => {
+          this.faqDetails = res.data;
+          console.log('Page details:', this.faqDetails);
+
+          if (this.faqDetails) {
+            this.faqForm.patchValue({
+              question: this.faqDetails.question || '',
+              question_ar: this.faqDetails.question_ar || '',
+              answer: this.faqDetails.answer || '',
+              answer_ar: this.faqDetails.answer_ar || '',
+              status: this.faqDetails.status
+            });            
+          }
+        },
+        error: (err) => console.error('Error fetching page details', err)
+      });
+    }  
   }
 
  
 
-  onSubmit() {
-    if (this.faqform.valid) {
-      console.log('✅ Form Data:', this.faqform.value);
-    } else {
-      this.faqform.markAllAsTouched();
+ 
+
+  saveFaq() {
+    
+    if (this.faqForm.invalid) {
+      this.faqForm.markAllAsTouched();
+      return;
     }
+
+    const payload = { ...this.faqForm.value };
+
+    if (this.editId) {
+      this.updateData(payload, this.editId).subscribe();
+    } else {
+      this.saveData(payload).subscribe();
+    }
+  }
+
+  public saveData(data: any): Observable<any> {
+
+    const insertData = {
+      question: data.question,
+       question_ar: data.question_ar,
+       answer:data.answer,
+       answer_ar:data.answer,
+       status: data.status,
+       page_name:data.page_name,
+       userId:localStorage.getItem('userId') 
+     };
+    
+     return this._masterservice.createFaq(insertData, this.usertoken).pipe(
+       tap(res => this.handleApiResponse(res, 'Page created successfully', 'Type creation failed')),
+       catchError(error => this.handleError(error, 'Page is not created. Please contact administrator'))
+     );   
+     
+   }
+   
+   public updateData(data: any, editId: any): Observable<any> {    
+   
+    
+     const updatedInfo = {
+       question: data.question,
+       question_ar: data.question_ar,
+       answer:data.answer,
+       answer_ar:data.answer,
+       status: data.status,
+       page_name:data.page_name,
+       userId:localStorage.getItem('userId') 
+     };
+    
+     return this._masterservice.updateFaq(this.editId,updatedInfo,this.usertoken).pipe(
+       tap(res => this.handleApiResponse(res, 'Page updated successfully', 'Type updation failed')),
+       catchError(error => this.handleError(error, 'Page is not created. Please contact administrator'))
+     );   
+     
+   }
+
+    // APIs for save,update,delete and multi delte
+
+  private handleApiResponse(res: any, successMessage: string, failureMessage: string): void {
+    //console.log("API Response:", res);
+  
+    if (res.status === true) {
+      // ✅ success
+      this._toastrService.showSuccess(res.msg || successMessage);
+      this._router.navigate(['/faq']);
+     
+    } else {
+      // fallback (in case API returns custom fail format)
+      this._toastrService.showError(res.msg || failureMessage);
+    }
+  }
+  
+  
+  private handleError(error: any, fallbackMessage: string): Observable<any> {
+    console.error("API Error:", error);
+  
+    const message =
+      error?.error?.message ||   // backend-provided message
+      error?.message ||          // Angular HttpErrorResponse message
+      fallbackMessage;           // fallback
+  
+    this._toastrService.showError(message);
+  
+    return throwError(() => error);
   }
 
   // helper for template
   get f() {
-    return this.faqform.controls;
+    return this.faqForm.controls;
   }
 
-  saveFaq(){
-
-    if (this.faqform.invalid) {
-      this.faqform.markAllAsTouched();  // ✅ show validation errors
-      return;
-    }
   
-    console.log(this.faqform.value); // ✅ form values when valid
-    this._router.navigate(['/faq']);
-  }
 
   onCancel() {
-    this.faqform.reset({ status: 'Active' });
+    this.faqForm.reset({ status: 'Active' });
     this._router.navigate(['/faq']);
   }  
 }

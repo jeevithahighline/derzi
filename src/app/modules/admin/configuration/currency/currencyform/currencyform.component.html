@@ -9,7 +9,7 @@
     <!-- Country Name -->
     <mat-form-field appearance="outline">
       <mat-label>Name</mat-label>
-      <input matInput formControlName="name" placeholder="Enter currency" />
+      <input matInput formControlName="currency" placeholder="Enter currency" />
       <!-- <mat-error *ngIf="dynamicForm.get('name')?.hasError('required') && 
       (dynamicForm.get('name')?.touched || dynamicForm.get('name')?.dirty)">
         Type is required
@@ -22,14 +22,14 @@
     <mat-form-field appearance="outline">
       <mat-label>Status</mat-label>
       <mat-select formControlName="status">
-        <mat-option value="Active">Active</mat-option>
-        <mat-option value="Inactive">Inactive</mat-option>
+        <mat-option [value]="true">Active</mat-option>
+        <mat-option [value]="false">Inactive</mat-option>
       </mat-select>
-      <mat-error *ngIf="dynamicForm.get('status')?.hasError('required')">
+      <!-- <mat-error *ngIf="dynamicForm.get('status')?.hasError('required')">
         Status is required
-      </mat-error>
+      </mat-error> -->
     </mat-form-field>
-  
+    
     <!-- Actions -->
     <div class="flex justify-end gap-3 mt-2">
       <button mat-stroked-button type="button" (click)="close()">Cancel</button>

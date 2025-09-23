@@ -1,7 +1,13 @@
 import { Component,Inject } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MATERIAL_IMPORTS } from '../../../../material.import';
-import { FormBuilder, FormGroup, Validators,FormArray } from '@angular/forms';
-import { Router,ActivatedRoute  } from '@angular/router';
+import { MatDialogRef,MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { ProductService } from '../../../../../core/services/product.service';
+import { Router, ActivatedRoute } from '@angular/router';
+import { ToastService } from '../../../../../core/services/toastr.service';
+import { Observable, throwError } from 'rxjs';
+import { catchError, tap } from 'rxjs/operators';
+import { environment } from '../../../../../../environments/environment';
 
 @Component({
   selector: 'app-productform',
@@ -11,123 +17,46 @@ import { Router,ActivatedRoute  } from '@angular/router';
 })
 export class ProductformComponent {
   productForm: FormGroup;
-  editMode = false;   // ✅ track add/edit
-  productId: number | null = null;
+  editId: string | null;
+  editMode: string;
+ 
+  backendUrl = environment.backendurlImages;
+  usertoken: any;
+  merchants: any[] = [];
+  categories: any[] = [];
+  lengths: any[] = [];
+  fabrics: any[] = [];
+  types: any[] = [];
+  brands: any[] = [];
+  sizes: any[] = [];
+  colors: any[] = [];
+  cares: any[] = [];
+  currencies: any[] = [];
+  productDetails: any;
+  productId: any;
+    // ✅ Add this line
 
-  products = [
-    {
-      id: 1,
-      name: 'Shirt',
-      name_ar: 'قميص',
-      description: 'Lorem ipsum',
-      description_ar: 'لوريم إيبسوم',
-      category: ['68ab18dc7376c157f8ef915f'],
-      quantity: 10,
-      merchant_id: ['68abdbe89f34784334b160e4'],
-      length_id: ['68aaec585d478029a87b69b6'],
-      fabric_id: ['68aaeeb1a3ad436d90c66593'],
-      type_id: ['68aad1d4b5044b32b0055164'],
-      brand_id: ['68aad9e400b3e53cf01f82a6'],
-      size_id: ['68aaf12c9a8582497c7ebefc'],
-      color_id: ['68aaf1a39a8582497c7ebf0a'],
-      care_id: ['68aaf3429a8582497c7ebf1e'],
-      country_id: ['68aaf3429a8582497c7ebf1e'],
-      price: 100,
-      currency: ['68aaf3429a8582497c7ebf1e'],
-      vatPercentage: 5,
-      status: 'Active',
-      userId: '123',
-      image: []
-    },
-    {
-      id: 2,
-      name: 'Salwar',
-      name_ar: 'قميص',
-      description: 'Lorem ipsum',
-      description_ar: 'لوريم إيبسوم',
-      category: ['68ab18dc7376c157f8ef915f'],
-      quantity: 10,
-      merchant_id: ['68abdbe89f34784334b160e4'],
-      length_id: ['68aaec585d478029a87b69b6'],
-      fabric_id: ['68aaeeb1a3ad436d90c66593'],
-      type_id: ['68aad1d4b5044b32b0055164'],
-      brand_id: ['68aad9e400b3e53cf01f82a6'],
-      size_id: ['68aaf12c9a8582497c7ebefc'],
-      color_id: ['68aaf1a39a8582497c7ebf0a'],
-      care_id: ['68aaf3429a8582497c7ebf1e'],
-      country_id: ['68aaf3429a8582497c7ebf1e'],
-      price: 100,
-      currency: ['68aaf3429a8582497c7ebf1e'],
-      vatPercentage: 5,
-      status: 'Active',
-      userId: '123',
-      image: []
-    }
-  ];
+  // Track multiple file names for each control
+  selectedFileNames: { [key: string]: string[] } = {};
+
+  // Track multiple previews for each control
+  previewUrls: { [key: string]: string[] } = {};
   
-
-
-  // 🔹 Static dropdown data for now
-  merchants = [
-    { _id: '68abdbe89f34784334b160e4', name: 'Merchant A' },
-    { _id: '68abdbe89f34784334b160e5', name: 'Merchant B' }
-  ];
-
-  categories = [
-    { _id: '68ab18dc7376c157f8ef915f', name: 'T-Shirts' },
-    { _id: '68ab18dc7376c157f8ef9160', name: 'Jeans' }
-  ];
-
-  lengths = [
-    { _id: '68aaec585d478029a87b69b6', name: 'Short' },
-    { _id: '68aaec585d478029a87b69b7', name: 'Long' }
-  ];
-
-  fabrics = [
-    { _id: '68aaeeb1a3ad436d90c66593', name: 'Cotton' },
-    { _id: '68aaeeb1a3ad436d90c66594', name: 'Silk' }
-  ];
-
-  types = [
-    { _id: '68aad1d4b5044b32b0055164', name: 'Casual' },
-    { _id: '68aad1d4b5044b32b0055165', name: 'Formal' }
-  ];
-
-  brands = [
-    { _id: '68aad9e400b3e53cf01f82a6', name: 'BrandX' },
-    { _id: '68aad9e400b3e53cf01f82a7', name: 'BrandY' }
-  ];
-
-  sizes = [
-    { _id: '68aaf12c9a8582497c7ebefc', name: 'M' },
-    { _id: '68aaf12c9a8582497c7ebefd', name: 'L' }
-  ];
-
-  colors = [
-    { _id: '68aaf1a39a8582497c7ebf0a', name: 'Red' },
-    { _id: '68aaf1a39a8582497c7ebf0b', name: 'Blue' }
-  ];
-
-  cares = [
-    { _id: '68aaf3429a8582497c7ebf1e', name: 'Dry Clean' },
-    { _id: '68aaf3429a8582497c7ebf1f', name: 'Machine Wash' }
-  ];
-
-  countries = [
-    { _id: '68aaf3429a8582497c7ebf1e', name: 'Bahrain' },
-    { _id: '68aaf3429a8582497c7ebf20', name: 'India' }
-  ];
-
-  currencies = [
-    { _id: '68aaf3429a8582497c7ebf1e', name: 'BHD' },
-    { _id: '68aaf3429a8582497c7ebf20', name: 'INR' }
-  ];
-
-  constructor(private _router: Router,private fb: FormBuilder,private route: ActivatedRoute) {}
+ 
+  constructor(
+    private _router: Router,
+    private fb: FormBuilder,
+    private route: ActivatedRoute,
+    private _productservice: ProductService,
+    private _toastrService: ToastService
+  ) {}
 
   ngOnInit(): void {
+    this.usertoken = localStorage.getItem('usertoken');
+    this.loadDropdownData();
 
-    
+    this.productId = this.route.snapshot.paramMap.get('id') || '';
+
     this.productForm = this.fb.group({
       name: ['', Validators.required],
       name_ar: ['', Validators.required],
@@ -135,87 +64,205 @@ export class ProductformComponent {
       description_ar: ['', Validators.required],
       category: ['', Validators.required],
       quantity: ['', Validators.required],
-      merchant_id: ['', Validators.required],
-      length_id: ['', Validators.required],
-      fabric_id:  ['', Validators.required],
-      type_id:  ['', Validators.required],
-      brand_id: ['', Validators.required],
-      size_id:  ['', Validators.required],
-      color_id:  ['', Validators.required],
-      care_id:  ['', Validators.required],
-      country_id: ['', Validators.required],
+      merchant_id: [[]],
+      length_id: [[]],
+      fabric_id: [[]],
+      type_id: [[]],
+      brand_id: [[]],
+      size_id: [[]],
+      color_id: [[]],
+      care_id: [[]],
+      priceWithVAT: ['', Validators.required],
       price: ['', Validators.required],
       currency: ['', Validators.required],
       vatPercentage: ['', Validators.required],
-      status: ['Active'],
-      userId: ['', Validators.required],
-      image: this.fb.array([])  // <-- FormArray for images
+      status: [null, Validators.required],
+      product_images: [[]],         // 👈 must start as empty array
+      product_ar_images: [[]],      // 👈 must start as empty array
     });
 
-    // ✅ get id from route
-    this.route.paramMap.subscribe(params => {
-      const id = params.get('id');
-      if (id) {
-        this.editMode = true;
-        this.productId = +id;
-        this.loadProductData(this.productId);
-      }
-    });
-   
-  }
+    if (this.productId) {
+      this.editId = this.productId;
+      this._productservice.getSpecificProduct(this.productId, this.usertoken).subscribe({
+        next: (res) => {
+          this.productDetails = res.data;
 
-  loadProductData(id: number){
-    const service = this.products.find(b => b.id === id);
-    if (service) {
-      this.productForm.patchValue(service);
+          console.log(this.productDetails);
+
+          if (this.productDetails) {
+
+            // Preview URLs          
+
+            this.previewUrls['product_images'] = (this.productDetails.product_images || []).map(
+              (img: string) => this.backendUrl + img
+            );
+            
+            this.previewUrls['product_ar_images'] = (this.productDetails.product_ar_images || []).map(
+              (img: string) => this.backendUrl + img
+            );
+            
+
+            console.log(this.previewUrls['product_images']);
+
+            // For display purposes
+            this.selectedFileNames['product_images'] = this.productDetails.product_images?.map((p: string) => p.split('/').pop()) || [];
+            this.selectedFileNames['product_ar_images'] = this.productDetails.product_ar_images?.map((p: string) => p.split('/').pop()) || [];
+
+            this.productForm.patchValue({
+              name: this.productDetails.name || '',
+              name_ar: this.productDetails.name_ar || '',
+              description: this.productDetails.description || '',
+              description_ar: this.productDetails.description_ar || '',
+              price: +this.productDetails.price || 0,
+              priceWithVAT: +this.productDetails.priceWithVAT || 0,
+              vatPercentage: +this.productDetails.vatPercentage || 0,
+              quantity: +this.productDetails.quantity || 0,
+              currency: this.productDetails.currency || '',
+              status: this.productDetails.status ?? true,
+              category: this.productDetails.categories?.map((c: any) => c.id) || [],
+              merchant_id: this.productDetails.merchant?.map((m: any) => m.id) || [],
+              length_id: this.productDetails.lengths?.map((l: any) => l.id) || [],
+              fabric_id: this.productDetails.fabrics?.map((f: any) => f.id) || [],
+              type_id: this.productDetails.types?.map((t: any) => t.id) || [],
+              brand_id: this.productDetails.brands?.map((b: any) => b.id) || [],
+              size_id: this.productDetails.sizes?.map((s: any) => s.id) || [],
+              color_id: this.productDetails.colors?.map((c: any) => c.id) || [],
+              care_id: this.productDetails.cares?.map((c: any) => c.id) || [],
+              product_images: [],        // will be filled when user selects new files
+              product_ar_images: []
+            });
+            
+          }
+        },
+        error: (err) => console.error('Error fetching product details', err)
+      });
     }
   }
 
-  onSubmit() {
-    if (this.productForm.valid) {
-      console.log('✅ Form Data:', this.productForm.value);
-      this._router.navigate(['/products']);
-    } else {
-      this.productForm.markAllAsTouched();
-    }
+  loadDropdownData(): void {
+    this._productservice.getAllMerchants(this.usertoken).subscribe(res => this.merchants = res.data.docs);
+    this._productservice.getAllCategories(this.usertoken).subscribe(res => this.categories = res.data.docs);
+    this._productservice.getAllLength(this.usertoken).subscribe(res => this.lengths = res.data.docs);
+    this._productservice.getAllFabrics(this.usertoken).subscribe(res => this.fabrics = res.data.docs);
+    this._productservice.getAllTypes(this.usertoken).subscribe(res => this.types = res.data.docs);
+    this._productservice.getAllBrands(this.usertoken).subscribe(res => this.brands = res.data.docs);
+    this._productservice.getAllSizes(this.usertoken).subscribe(res => this.sizes = res.data.docs);
+    this._productservice.getAllColors(this.usertoken).subscribe(res => this.colors = res.data.docs);
+    this._productservice.getAllCares(this.usertoken).subscribe(res => this.cares = res.data.docs);
+    this._productservice.getAllCurrency(this.usertoken).subscribe(res => this.currencies = res.data.docs);
   }
 
-  // helper for template
   get f() {
     return this.productForm.controls;
   }
 
-  saveService(){
-
+  save() {
     if (this.productForm.invalid) {
-      this.productForm.markAllAsTouched();  // ✅ show validation errors
+      this.productForm.markAllAsTouched();
       return;
     }
-  
-    console.log(this.productForm.value); // ✅ form values when valid
+    const payload = { ...this.productForm.value };
 
+    if (this.editId) {
+      this.updateData(payload, this.editId).subscribe();
+    } else {
+      this.saveData(payload).subscribe();
+    }
+  }
+
+  saveData(data: any): Observable<any> {
+    const formData = this.prepareFormData(data);
+    return this._productservice.createProduct(formData, this.usertoken).pipe(
+      tap(res => {
+        this._toastrService.showSuccess('Product created successfully');
+        this._router.navigate(['/products']);
+      }),
+      catchError(err => {
+        const message = err?.error?.message || err?.message;
+        this._toastrService.showError(message || 'Product creation failed');
+        return throwError(() => err);
+      })
+    );
+  }
+
+  updateData(data: any, editId: any): Observable<any> {
+    const formData = this.prepareFormData(data);
+    return this._productservice.updateProduct(editId, formData, this.usertoken).pipe(
+      tap(res => {
+        this._toastrService.showSuccess('Product updated successfully');
+        this._router.navigate(['/products']);
+      }),
+      catchError(err => {
+        this._toastrService.showError('Product update failed');
+        return throwError(() => err);
+      })
+    );
+  }
+
+  private prepareFormData(data: any): FormData {
+    const formData = new FormData();
+    formData.append('name', data.name || '');
+    formData.append('name_ar', data.name_ar || '');
+    formData.append('description', data.description || '');
+    formData.append('description_ar', data.description_ar || '');
+    formData.append('price', data.price?.toString() || '0');
+    formData.append('priceWithVAT', data.priceWithVAT?.toString() || '0');
+    formData.append('vatPercentage', data.vatPercentage?.toString() || '0');
+    formData.append('quantity', data.quantity || '');
+    formData.append('currency', data.currency || '');
+    formData.append('status', data.status ? 'true' : 'false');
+    formData.append('userId', localStorage.getItem('userId') || '');
+
+    // append array fields
+    const arrayFields = ['category', 'merchant_id', 'length_id', 'fabric_id', 'type_id', 'brand_id', 'size_id', 'color_id', 'care_id'];
+    arrayFields.forEach(field => {
+      if (data[field] && Array.isArray(data[field])) {
+        data[field].forEach((id: string) => formData.append(field, id));
+      }
+    });
+
+    // append multiple files
+    ['product_images', 'product_ar_images'].forEach(field => {
+      const files: File[] = data[field] || [];
+      if (Array.isArray(files)) {
+        files.forEach(file => {
+          if (file instanceof File) {
+            formData.append(field, file, file.name);
+          }
+        });
+      }
+    });
+
+    return formData;
   }
 
   onCancel() {
     this.productForm.reset({ status: 'Active' });
     this._router.navigate(['/products']);
-  }  
-
-  get images(): FormArray {
-    return this.productForm.get('images') as FormArray;
   }
+
+  onFileSelected(event: Event, controlName: string) {
+    const input = event.target as HTMLInputElement;
+    if (!input.files || input.files.length === 0) return;
   
-  selectedFileNames: string[] = []; // store filenames for UI
+    const files = Array.from(input.files); // always an array
   
+    // patch the form with an array of files
+    this.productForm.patchValue({ [controlName]: files });
+    this.productForm.get(controlName)?.updateValueAndValidity();
   
+    // save filenames for display
+    this.selectedFileNames[controlName] = files.map(f => f.name);
   
-  onFileSelected(event: Event) {
-    const file = (event.target as HTMLInputElement).files?.[0];
-    if (file) {
-      this.productForm.patchValue({ image: file });
-      this.productForm.get('image')?.updateValueAndValidity();
-    }
+    // generate previews
+    this.previewUrls[controlName] = [];
+    files.forEach(file => {
+      const reader = new FileReader();
+      reader.onload = () => this.previewUrls[controlName].push(reader.result as string);
+      reader.readAsDataURL(file);
+    });
   }
   
 }
+
 

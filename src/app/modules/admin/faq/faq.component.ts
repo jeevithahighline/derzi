@@ -3,6 +3,8 @@ import { MATERIAL_IMPORTS } from '../../material.import';
 import { Router,ActivatedRoute  } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmdialogComponent } from '../confirmdialog/confirmdialog.component';
+import { FaqService } from '../../../core/services/faq.service';
+import { ToastService } from '../../../core/services/toastr.service';
 
 
 @Component({
@@ -13,53 +15,37 @@ import { ConfirmdialogComponent } from '../confirmdialog/confirmdialog.component
 })
 export class FaqComponent {
   searchText = '';
-  totalItems = 2;
+  totalItems = 0;
   masterSelected: boolean = false;
-  constructor(private _router: Router,private dialog: MatDialog) {}
+  page = 1;
+  pageSize = 10;
+  pageIndex = 0;
+  usertoken:any;
+  selectedIds: string[] = [];
+  constructor(private _router: Router,private dialog: MatDialog,private _faqService: FaqService,private _toastrService: ToastService) {}
   
-  faqs = [
-    {
-      id: 1,
-      question: 'How do I find my size in different size standards?',
-      question_ar: 'كيف أجد مقاسي في معايير المقاسات المختلفة؟',
-      answer: 'You can find the size details in the product description under the size chart.',
-      answer_ar: 'يمكنك العثور على تفاصيل المقاس في وصف المنتج ضمن جدول المقاسات.',
-      isSelected: false
-    },
-    {
-      id: 2,
-      question: 'How can I track my order?',
-      question_ar: 'كيف يمكنني تتبع طلبي؟',
-      answer: 'You can track your order from the "My Orders" section in your account.',
-      answer_ar: 'يمكنك تتبع طلبك من قسم "طلباتي" في حسابك.',
-      isSelected: false
-    },
-    {
-      id: 3,
-      question: 'What payment methods are accepted?',
-      question_ar: 'ما هي طرق الدفع المقبولة؟',
-      answer: 'We accept credit/debit cards, PayPal, and cash on delivery.',
-      answer_ar: 'نقبل بطاقات الائتمان/الخصم، باي بال، والدفع عند الاستلام.',
-      isSelected: false
-    },
-    {
-      id: 4,
-      question: 'Can I return or exchange a product?',
-      question_ar: 'هل يمكنني إرجاع أو استبدال المنتج؟',
-      answer: 'Yes, returns and exchanges are allowed within 14 days of delivery.',
-      answer_ar: 'نعم، يُسمح بالإرجاع والاستبدال خلال 14 يومًا من التسليم.',
-      isSelected: false
-    },
-    {
-      id: 5,
-      question: 'Do you offer international shipping?',
-      question_ar: 'هل تقدمون الشحن الدولي؟',
-      answer: 'Yes, we deliver to most countries worldwide. Shipping costs may vary.',
-      answer_ar: 'نعم، نقوم بالتوصيل إلى معظم الدول حول العالم. قد تختلف تكاليف الشحن.',
-      isSelected: false
+  faqs: any[] = [];
+  
+  ngOnInit(): void {
+    this.loadFAQs();
+  }
+
+  loadFAQs(page: number = this.page, size: number = this.pageSize) {
+    const token = localStorage.getItem('usertoken'); 
+    if (token) {
+      this._faqService.getAllFaq(token, this.page, this.pageSize).subscribe({
+        next: (res: any) => {
+          this.faqs = res.data.docs || [];
+          this.totalItems = res.data.totalDocs || 0;  // backend must return total count
+          this.page = res.data.page || page;
+          this.pageSize = res.data.limit || size;
+        },
+        error: (err) => {
+          console.error('Error fetching faqs', err);
+        }
+      });
     }
-  ];
-  
+  }
 
   filteredData() {
     return this.faqs.filter(c =>
@@ -69,14 +55,12 @@ export class FaqComponent {
 
   editfaq(faq: any, index: number) {
     //alert(banner.id);
-    this._router.navigate(['/addfaq', faq.id]);   
+    this._router.navigate(['/addfaq', faq._id]);   
   }
 
+  deletefaq(data) {
 
-
-  public deletefaq(index: number): void {
-    //console.log('deleteselectedData', this.selectedIds);
-  
+    this.selectedIds = data._id;
     const dialogRef = this.dialog.open(ConfirmdialogComponent, {
       width: '450px',
       height: '250px',
@@ -85,10 +69,20 @@ export class FaqComponent {
   
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        this.faqs[index] = result; // 👈 update instead of push
+        // ✅ Call delete API
+        this._faqService.deleteFaq(this.selectedIds,this.usertoken).subscribe({
+          next: () => {
+            this._toastrService.showSuccess("Deleted Successfully");
+            this.loadFAQs(); // refresh table
+          },
+          error: () => {
+            this._toastrService.showError("Deletion failed");
+          }
+        });
+      } else {
+        this._toastrService.showError("Deletion cancelled by user");
       }
     });
-    
   }
 
   addfaq(){

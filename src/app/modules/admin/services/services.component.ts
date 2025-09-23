@@ -3,6 +3,8 @@ import { MATERIAL_IMPORTS } from '../../material.import';
 import { Router,ActivatedRoute  } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmdialogComponent } from '../confirmdialog/confirmdialog.component';
+import { TailoringService } from '../../../core/services/tailoringservice.service';
+import { ToastService } from '../../../core/services/toastr.service';
 
 @Component({
   selector: 'app-services',
@@ -13,16 +15,42 @@ import { ConfirmdialogComponent } from '../confirmdialog/confirmdialog.component
 
 export class ServicesComponent {
   searchText = '';
-  totalItems = 2;
+  totalItems = 0;
   masterSelected: boolean = false;
-  services = [
-    { id: 1, name: 'Embroidery',name_ar:'مجموعة الصيف',category:'Stitching',description:'details of what’s included',duration:'2 days',isSelected: false},
-    { id: 2, name: 'Blouse Design',name_ar:'مجموعة الصيف' ,category:'Embroidery',description:'details of what’s included',duration:'2 weeks',isSelected: false}
-  ];
+  page = 1;
+  pageSize = 10;
+  pageIndex = 0;
+  usertoken:any;
+  selectedIds: string[] = [];
+  
 
-  constructor(private _router: Router,private dialog: MatDialog,) {}
+  constructor(private _router: Router,private dialog: MatDialog,private _tailoringService: TailoringService,private _toastrService: ToastService) {}
+
+  services: any[] = [];
+
+  ngOnInit(): void {
+    this.loadServices();
+  }
+
+  loadServices(page: number = this.page, size: number = this.pageSize) {
+    const token = localStorage.getItem('usertoken'); 
+    if (token) {
+      this._tailoringService.getAlltailoringservice(token, this.page, this.pageSize).subscribe({
+        next: (res: any) => {
+          this.services = res.data.docs || [];
+          this.totalItems = res.data.totalDocs || 0;  // backend must return total count
+          this.page = res.data.page || page;
+          this.pageSize = res.data.limit || size;
+        },
+        error: (err) => {
+          console.error('Error fetching banners', err);
+        }
+      });
+    }
+  }
 
   filteredData() {
+    console.log("check hereeee")
     return this.services.filter(c =>
       c.name.toLowerCase().includes(this.searchText.toLowerCase())
     );
@@ -32,14 +60,14 @@ export class ServicesComponent {
   editservice(service: any, index: number) {
 
     //alert(banner.id);
-    this._router.navigate(['/addservice', service.id]);
+    this._router.navigate(['/addservice', service._id]);
 
    
   }
 
-   public deleteservice(index: number): void {
-    //console.log('deleteselectedData', this.selectedIds);
-  
+  deleteservice(data) {
+
+    this.selectedIds = data._id;
     const dialogRef = this.dialog.open(ConfirmdialogComponent, {
       width: '450px',
       height: '250px',
@@ -48,10 +76,20 @@ export class ServicesComponent {
   
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        this.services[index] = result; // 👈 update instead of push
+        // ✅ Call delete API
+        this._tailoringService.deletetailoringservice(this.selectedIds,this.usertoken).subscribe({
+          next: () => {
+            this._toastrService.showSuccess("Deleted Successfully");
+            this.loadServices(); // refresh table
+          },
+          error: () => {
+            this._toastrService.showError("Deletion failed");
+          }
+        });
+      } else {
+        this._toastrService.showError("Deletion cancelled by user");
       }
     });
-    
   }
 
   addService(){

@@ -1,7 +1,11 @@
-import { Component,Inject } from '@angular/core';
-import { MATERIAL_IMPORTS } from '../../../material.import';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Router,ActivatedRoute  } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
+import { PageService } from '../../../../core/services/page.service';
+import { ToastService } from '../../../../core/services/toastr.service';
+import { Observable, throwError } from 'rxjs';
+import { catchError, tap } from 'rxjs/operators';
+import { MATERIAL_IMPORTS } from '../../../material.import';
 
 @Component({
   selector: 'app-pageform',
@@ -12,57 +16,138 @@ import { Router,ActivatedRoute  } from '@angular/router';
 export class PageformComponent {
   pageForm: FormGroup;
   editMode = false;   // ✅ track add/edit
-  pageId: number | null = null;
+  pageId: string;
+  editId: string | null;
+  usertoken: any;
+  pageDetails: any;
+ 
 
-  pages = [
-    {
-      "id":1,
-      "title": "Summer Collection",
-      "title_ar": "مجموعة الصيف",
-      "description": "Discover our exclusive summer collection with fresh styles and vibrant colors.",
-      "description_ar": "اكتشف مجموعتنا الصيفية الحصرية مع أنماط جديدة وألوان زاهية. مثالية لهذا الموسم!",
-      "pagename": "Home Page",
-      "isSelected":true
-    }   
-  ];
-
-  constructor(private _router: Router,private fb: FormBuilder,private route: ActivatedRoute) {}
+  constructor(private _router: Router,private fb: FormBuilder,private route: ActivatedRoute,private _masterservice: PageService,private _toastrService: ToastService) {}
 
   ngOnInit(): void {
+
+    this.pageId = this.route.snapshot.paramMap.get('id') || '';
+    console.log('page ID:', this.pageId);
+
     this.pageForm = this.fb.group({
       title: ['', [Validators.required, Validators.minLength(3)]],
       title_ar: ['', [Validators.required, Validators.minLength(3)]],   
-      description: ['', [Validators.required, Validators.maxLength(250)]],
-      description_ar: ['', [Validators.required, Validators.maxLength(250)]],    
-      pagename: ['', Validators.required],
-      status: ['Active']
+      content: ['', [Validators.required, Validators.maxLength(250)]],
+      content_ar: ['', [Validators.required, Validators.maxLength(250)]],    
+      page_name: ['', Validators.required],
+      status: [true, Validators.required]
     });
 
     // ✅ get id from route
-    this.route.paramMap.subscribe(params => {
-      const id = params.get('id');
-      if (id) {
-        this.editMode = true;
-        this.pageId = +id;
-        this.loadPageData(this.pageId);
-      }
-    });
-  }
+    if (this.pageId) {
+      this.editMode = true;
+      this.editId = this.pageId;
 
-  loadPageData(id: number){
-    const page = this.pages.find(b => b.id === id);
-    if (page) {
-      this.pageForm.patchValue(page);
+      this._masterservice.getSpecificPage(this.pageId, this.usertoken).subscribe({
+        next: (res) => {
+          this.pageDetails = res.data;
+          console.log('Page details:', this.pageDetails);
+
+          if (this.pageDetails) {
+            this.pageForm.patchValue({
+              title: this.pageDetails.title || '',
+              title_ar: this.pageDetails.title_ar || '',
+              content: this.pageDetails.content || '',
+              content_ar: this.pageDetails.content_ar || '',
+              page_name: this.pageDetails.page_name,
+              status: this.pageDetails.status
+            });            
+          }
+        },
+        error: (err) => console.error('Error fetching page details', err)
+      });
     }
   }
+
 
   onSubmit() {
-    if (this.pageForm.valid) {
-      console.log('✅ Form Data:', this.pageForm.value);
-      this._router.navigate(['/pages']);
-    } else {
+    
+    if (this.pageForm.invalid) {
       this.pageForm.markAllAsTouched();
+      return;
     }
+
+    const payload = { ...this.pageForm.value };
+
+    if (this.editId) {
+      this.updateData(payload, this.editId).subscribe();
+    } else {
+      this.saveData(payload).subscribe();
+    }
+  }
+
+  public saveData(data: any): Observable<any> {
+
+    const insertData = {
+       title: data.title,
+       title_ar: data.title_ar,
+       content:data.content,
+       content_ar:data.content,
+       status: data.status,
+       page_name:data.page_name,
+       userId:localStorage.getItem('userId') 
+     };
+    
+     return this._masterservice.createPage(insertData, this.usertoken).pipe(
+       tap(res => this.handleApiResponse(res, 'Page created successfully', 'Type creation failed')),
+       catchError(error => this.handleError(error, 'Page is not created. Please contact administrator'))
+     );   
+     
+   }
+   
+   public updateData(data: any, editId: any): Observable<any> {    
+   
+    
+     const updatedInfo = {
+       title: data.title,
+       title_ar: data.title_ar,
+       content:data.content,
+       content_ar:data.content,
+       status: data.status,
+       page_name:data.page_name,
+      userId:localStorage.getItem('userId') 
+     };
+    
+     return this._masterservice.updatePage(this.editId,updatedInfo,this.usertoken).pipe(
+       tap(res => this.handleApiResponse(res, 'Page updated successfully', 'Type updation failed')),
+       catchError(error => this.handleError(error, 'Page is not created. Please contact administrator'))
+     );   
+     
+   }
+
+    // APIs for save,update,delete and multi delte
+
+  private handleApiResponse(res: any, successMessage: string, failureMessage: string): void {
+    //console.log("API Response:", res);
+  
+    if (res.status === true) {
+      // ✅ success
+      this._toastrService.showSuccess(res.msg || successMessage);
+      this._router.navigate(['/pages']);
+     
+    } else {
+      // fallback (in case API returns custom fail format)
+      this._toastrService.showError(res.msg || failureMessage);
+    }
+  }
+  
+  
+  private handleError(error: any, fallbackMessage: string): Observable<any> {
+    console.error("API Error:", error);
+  
+    const message =
+      error?.error?.message ||   // backend-provided message
+      error?.message ||          // Angular HttpErrorResponse message
+      fallbackMessage;           // fallback
+  
+    this._toastrService.showError(message);
+  
+    return throwError(() => error);
   }
 
   // helper for template

@@ -1,7 +1,7 @@
 import { Route } from '@angular/router';
+import { inject, NgModule } from '@angular/core';
+
 import { initialDataResolver } from 'app/app.resolvers';
-import { AuthGuard } from 'app/core/auth/guards/auth.guard';
-import { NoAuthGuard } from 'app/core/auth/guards/noAuth.guard';
 import { LayoutComponent } from 'app/layout/layout.component';
 import { DashboardComponent } from 'app/modules/admin/dashboard/dashboard.component';
 import { AuthForgotPasswordComponent } from 'app/modules/auth/forgot-password/forgot-password.component';
@@ -26,7 +26,6 @@ import { PromocodeComponent} from 'app/modules/admin/inventory/promocode/promoco
 import { PromocodeformComponent} from 'app/modules/admin/inventory/promocode/promocodeform/promocodeform.component';
 
 //Access Control
-import { GroupsComponent } from 'app/modules/admin/accesscontrol/groups/groups.component';
 import { PrivilegeComponent } from 'app/modules/admin/accesscontrol/privilege/privilege.component';
 import { RolesComponent} from 'app/modules/admin/accesscontrol/roles/roles.component';
 
@@ -34,12 +33,12 @@ import { RolesComponent} from 'app/modules/admin/accesscontrol/roles/roles.compo
 import { DriversComponent } from 'app/modules/admin/accounts/drivers/drivers.component';
 import { MerchantsComponent } from 'app/modules/admin/accounts/merchants/merchants.component';
 import { UsersComponent} from 'app/modules/admin/accounts/users/users.component';
+import { DerziuserComponent} from 'app/modules/admin/accounts/derziuser/derziuser.component';
 
 //Configuration
 import { CurrencyComponent } from 'app/modules/admin/configuration/currency/currency.component';
 import { EmailtemplatesComponent } from 'app/modules/admin/configuration/emailtemplates/emailtemplates.component';
 import { PaymentmethodsComponent } from 'app/modules/admin/configuration/paymentmethods/paymentmethods.component';
-import { SmstemplatesComponent} from 'app/modules/admin/configuration/smstemplates/smstemplates.component';
 
 import { PagesComponent} from 'app/modules/admin/pages/pages.component';
 import { FaqComponent} from 'app/modules/admin/faq/faq.component';
@@ -61,6 +60,8 @@ import { GlobalsettingsComponent } from 'app/modules/admin/settings/globalSettin
 import { AllordersComponent } from 'app/modules/admin/transactions/allorders/allorders.component';
 import { InvoicesComponent } from 'app/modules/admin/transactions/invoices/invoices.component';
 import { PaymenthistoryComponent} from 'app/modules/admin/transactions/paymenthistory/paymenthistory.component';
+import { DetailordersComponent} from 'app/modules/admin/transactions/detailorders/detailorders.component';
+
 import { UserreportComponent } from './modules/admin/reports/userreport/userreport.component';
 import { ProductformComponent } from './modules/admin/inventory/products/productform/productform.component';
 import { PageformComponent } from './modules/admin/pages/pageform/pageform.component';
@@ -69,16 +70,41 @@ import { DriversformComponent } from './modules/admin/accounts/drivers/driversfo
 import { MerchantformComponent } from './modules/admin/accounts/merchants/merchantform/merchantform.component';
 import { UsersformComponent } from './modules/admin/accounts/users/usersform/usersform.component';
 import { EmailtemplatesformComponent } from './modules/admin/configuration/emailtemplates/emailtemplatesform/emailtemplatesform.component';
-import { SmstemplatesformComponent } from './modules/admin/configuration/smstemplates/smstemplatesform/smstemplatesform.component';
 import { PrivilegeformComponent } from './modules/admin/accesscontrol/privilege/privilegeform/privilegeform.component';
 import { ProfilesettingsComponent } from './modules/admin/settings/profilesettings/profilesettings.component';
 import { BannersformComponent } from './modules/admin/masters/banners/bannersform/bannersform.component';
+import { AuthService } from './core/services/auth.service';
+import { Router, ActivatedRoute,Routes, RouterModule, CanActivateFn, UrlTree } from '@angular/router';
 
+const AuthGuard: CanActivateFn = () => {
+const { isAuthenticated, _router } = inject(AuthService)
+// return true
+// console.log('AuthGuard', isAuthenticated)
+// console.log('Stored token:', localStorage.getItem('accessToken'));
+
+return isAuthenticated ? true : _router.parseUrl('/sign-in')
+}
+
+const NoAuthGuard: CanActivateFn = () => {
+    const authService = inject(AuthService);
+    const router = inject(Router);
+  
+    if (authService.isAuthenticated) {
+      // Already logged in → send to dashboard
+      router.navigate(['/dashboard']);
+      return false;
+    }
+  
+    // Not logged in → allow access
+    return true;
+  };
+  
 
 export const appRoutes: Route[] = [
 
-    {path: '', pathMatch : 'full', redirectTo: 'dashboard'},
-    {path: 'signed-in-redirect', pathMatch : 'full', redirectTo: 'dashboard'},
+    { path: '', pathMatch: 'full', redirectTo: 'sign-in' },
+
+    {path: 'dashboard', pathMatch : 'full', redirectTo: 'dashboard'},
 
     // Auth routes for guests
     {
@@ -131,9 +157,9 @@ export const appRoutes: Route[] = [
             {path: 'merchants', component: MerchantsComponent},
             {path: 'users', component: UsersComponent},
             {path: 'drivers', component: DriversComponent},
+            {path: 'derziuser', component: DerziuserComponent},
 
             {path: 'roles', component: RolesComponent},
-            {path: 'groups', component: GroupsComponent},
 
             {path: 'driverreport', component: DriverreportComponent},
             {path: 'userreport', component: UserreportComponent},
@@ -168,6 +194,10 @@ export const appRoutes: Route[] = [
             {path: 'adduser', component: UsersformComponent},
             {path: 'adduser/:id', component: UsersformComponent},
 
+            {path: 'addderziuser', component: DerziuserComponent},
+            {path: 'addderziuser/:id', component: DerziuserComponent},
+
+
             {path: 'addbanner', component: BannersformComponent},
             {path: 'addbanner/:id', component: BannersformComponent},
 
@@ -177,8 +207,7 @@ export const appRoutes: Route[] = [
 
             {path: 'paymentmethod', component: PaymentmethodsComponent},
 
-            {path: 'smstemplates', component: SmstemplatesComponent},
-
+           
             {path: 'emailtemplates', component: EmailtemplatesComponent},
 
             {path: 'applicationnotification', component: ApplicationnotificationComponent},
@@ -186,13 +215,10 @@ export const appRoutes: Route[] = [
             {path: 'addemailtemplate', component: EmailtemplatesformComponent},
             {path: 'addemailtemplate/:id', component: EmailtemplatesformComponent},
 
-            {path: 'addsmstemplate', component: SmstemplatesformComponent},
-            {path: 'addsmstemplate/:id', component: SmstemplatesformComponent},
-
             {path: 'privileges', component: PrivilegeComponent},
             {path: 'addprivileges', component: PrivilegeformComponent},
             {path: 'addprivileges/:id', component: PrivilegeformComponent},
-
+            {path: 'detailorder/:id', component: DetailordersComponent},
             {path: 'profilesettings', component: ProfilesettingsComponent},
         ]
     }

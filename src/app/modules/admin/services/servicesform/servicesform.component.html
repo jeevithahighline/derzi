@@ -15,7 +15,7 @@
   <div class="row">&nbsp;</div>
   <!---Form Section-->
   <div class="bg-white p-2 border rounded ">
-    <form [formGroup]="serviceForm" (ngSubmit)="onSubmit()" class="p-4 grid">
+    <form [formGroup]="serviceForm" (ngSubmit)="saveService()" class="p-4 grid">
       
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4 ">
         <div class="w-full">
@@ -103,22 +103,11 @@
       -->
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
 
-        <!-- Fabric Provided By -->
-        <!-- <mat-form-field class="w-full">
-          <mat-label>Fabric Provided By</mat-label>
-          <mat-select formControlName="fabricProvidedBy" multiple>
-            <mat-option *ngFor="let fabric of fabrics" [value]="fabric">{{ fabric }}</mat-option>
-          </mat-select>
-          <mat-error *ngIf="f['fabricProvidedBy'].hasError('required')">
-            Please select who provides fabric
-          </mat-error>
-        </mat-form-field> -->
-
         <mat-form-field class="w-full">
           <mat-label>Status</mat-label>
           <mat-select formControlName="status">
-            <mat-option value="Active">Active</mat-option>
-            <mat-option value="Inactive">Inactive</mat-option>
+            <mat-option [value]="true">Active</mat-option>
+            <mat-option [value]="false">Inactive</mat-option>
           </mat-select>
         </mat-form-field>
 

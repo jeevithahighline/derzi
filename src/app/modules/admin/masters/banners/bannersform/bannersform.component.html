@@ -3,7 +3,7 @@
   <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2">
     <div class="col-6">
       <div class="heading pt-2">
-        <h2>{{ editMode ? 'Edit Banner' : 'Add Banner' }}</h2>
+        <h2>{{ bannerId ? 'Edit Banner' : 'Add Banner' }}</h2>
       </div>
     </div>
     <div class="col-6 dflexmain">       
@@ -15,15 +15,15 @@
   <div class="row">&nbsp;</div>
   <!---Form Section-->
   <div class="bg-white p-2 border rounded ">
-    <form [formGroup]="dynamicForm" (ngSubmit)="onSubmit()" class="p-4 grid">
+    <form [formGroup]="dynamicForm" (ngSubmit)="saveBanner()" class="p-4 grid">
   
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4 ">
         <!-- Title -->
         <div class="w-full">
           <label>Title</label><span class="required-astreik">*</span>
           <mat-form-field class="w-full">
-            <input matInput formControlName="name" placeholder="Enter title" />
-            <mat-error *ngIf="f['name'].hasError('minlength')">
+            <input matInput formControlName="title" placeholder="Enter title" />
+            <mat-error *ngIf="f['title'].hasError('minlength')">
               Minimum 3 characters required
             </mat-error>
           </mat-form-field>
@@ -33,8 +33,8 @@
         <div class="w-full">
           <label>Title - Arabic</label><span class="required-astreik">*</span>
           <mat-form-field class="w-full">
-            <input matInput formControlName="name_ar" placeholder="Enter title in Arabic" />
-            <mat-error *ngIf="f['name_ar'].hasError('minlength')">
+            <input matInput formControlName="title_ar" placeholder="Enter title in Arabic" />
+            <mat-error *ngIf="f['title_ar'].hasError('minlength')">
               Minimum 3 characters required
             </mat-error>
           </mat-form-field>
@@ -95,15 +95,15 @@
         <mat-form-field class="w-full">
           <mat-label>Image</mat-label>
         
+          <!-- hidden file input (❌ no formControlName here) -->
           <input
             type="file"
             class="hidden"
             #fileInput
             (change)="onFileSelected($event)"
-            formControlName="image"
           />
         
-          <!-- fake text input to show file name -->
+          <!-- fake input to display file name -->
           <input
             matInput
             placeholder="Choose file"
@@ -116,22 +116,22 @@
             <mat-icon>upload</mat-icon>
           </button>
         
-          <!-- <mat-error *ngIf="dynamicForm.get('image')?.hasError('required') && dynamicForm.get('image')?.touched">
+          <mat-error *ngIf="f['image'].hasError('required') && f['image'].touched">
             Image is required
-          </mat-error> -->
-        </mat-form-field>   
-        
+          </mat-error>
+        </mat-form-field>       
+      
       
         <!-- Status -->
-        <mat-form-field class="w-full">
+        <mat-form-field appearance="outline">
           <mat-label>Status</mat-label>
           <mat-select formControlName="status">
-            <mat-option value="Active">Active</mat-option>
-            <mat-option value="Inactive">Inactive</mat-option>
+            <mat-option [value]="true">Active</mat-option>
+            <mat-option [value]="false">Inactive</mat-option>
           </mat-select>
-          <mat-error *ngIf="dynamicForm.get('status')?.hasError('required')">
+          <!-- <mat-error *ngIf="dynamicForm.get('status')?.hasError('required')">
             Status is required
-          </mat-error>
+          </mat-error> -->
         </mat-form-field>
 
       </div>

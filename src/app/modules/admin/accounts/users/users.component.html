@@ -3,7 +3,7 @@
     <div class="row">
       <div class="col-6">
         <div class="heading">
-             Users
+             UserApp - Users
         </div>
       </div>
       <div class="col-6 dflexmain">
@@ -34,14 +34,14 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let user of filteredData()">
+        <tr *ngFor="let user of filteredData();let i = index">
           <td>
             <label class="customcheckbox">
                 <input type="checkbox" [(ngModel)]="user.isSelected"  (change)="isAllSelected()">
                 <span class="checkmark"></span>
               </label>
           </td>
-          <td>{{ user.id }}</td>
+          <td>{{ (pageIndex * pageSize) + i + 1 }}</td>
           <td>{{ user.firstname }}</td> 
           <td>{{ user.lastname }}</td> 
           <td>{{ user.email }}</td> 
