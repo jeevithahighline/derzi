@@ -7,13 +7,13 @@
         </div>
       </div>
       <div class="col-6 dflexmain">
-        <button class="btn btn-sm" (click)="deleteProduct(1)">
+        <!-- <button class="btn btn-sm" (click)="deleteSelected()">
               <i class="bi bi-trash"></i>
                <img src="/images/icon/delete.svg" alt="">
-            </button>      
+            </button>       -->     
         <input type="text" class="form-control searchinput" placeholder="Search Product" [(ngModel)]="searchText" />
         <button class="btn-add" (click)="addProduct()"> <img src="/images/icon/add-btn.svg" alt=""> Add Product</button>
-        <button class="btn-add" (click)="addProduct()"> <img src="/images/icon/upload.svg" alt=""> Import Product</button>
+        <!-- <button class="btn-add" (click)="addProduct()"> <img src="/images/icon/upload.svg" alt=""> Import Product</button> -->
         
       </div>
     </div>
@@ -29,7 +29,7 @@
           <th scope="col">ID</th>
           <th scope="col">Name</th>
           <th scope="col">Description</th>
-          <th scope="col">Image</th>
+          <!-- <th scope="col">Image</th> -->
           <th scope="col">Price</th>
           <th scope="col">Status</th>
           <th scope="col">Action</th>
@@ -46,10 +46,10 @@
           <td>{{ (pageIndex * pageSize) + i + 1 }}</td>
           <td>{{ product.name }}</td> 
           <td>{{ product.description }}</td> 
-          <td>
+          <!-- <td>
             <img [src]="backendUrl + product.product_images[0]" alt="Product Image" width="50" height="50">
-          </td>          
-          <td>{{ product.price }} BHD</td> 
+          </td>           -->
+          <td>{{ product.price }} </td> 
           <td>{{ product.status ? 'Active' : 'Inactive' }}</td>                             
           <td>
             <button class="btn btn-sm me-2" (click)="editProduct(product)">

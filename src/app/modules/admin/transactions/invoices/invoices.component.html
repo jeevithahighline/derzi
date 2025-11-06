@@ -8,7 +8,8 @@
     <div class="col-6">
       <div class="d-flex text-right">
         <!-- Search -->
-        <input type="text" class="form-control" placeholder="Search Invoices" [(ngModel)]="searchText" />
+        <input type="text" class="form-control" placeholder="Search Invoices" [(ngModel)]="searchText"  [(ngModel)]="searchText"
+        (ngModelChange)="onSearchChange()"/>
         <!-- Filters Button -->
         &nbsp;
         <button mat-raised-button color="primary mleft" [matMenuTriggerFor]="filterMenu" matMenuTriggerRestoreFocus="false">
@@ -39,16 +40,31 @@
         <mat-label>Paid Status</mat-label>
         <mat-select [(ngModel)]="selectedStatus" (click)="$event.stopPropagation()">
           <mat-option value="">All</mat-option>
-          <mat-option value="paid">Paid</mat-option>
-          <mat-option value="Unpaid">Unpaid</mat-option>
+          <mat-option value="success">Paid</mat-option>
+          <mat-option value="pending">Pending</mat-option>
+          <mat-option value="failed">Failed</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field class="w-full">
+        <mat-label>Payment Method</mat-label>
+        <mat-select [(ngModel)]="selectedmethod" (click)="$event.stopPropagation()">
+          <mat-option value="">All</mat-option>
+          <mat-option value="COD">COD</mat-option>
+          <mat-option value="TAP">TAP</mat-option>
         </mat-select>
       </mat-form-field>
   
       <!-- ✅ Customer Name -->
-      <mat-form-field class="w-full">
+      <!-- <mat-form-field class="w-full">
         <mat-label>Customer Name</mat-label>
         <input matInput [(ngModel)]="amount" (click)="$event.stopPropagation()" />
-      </mat-form-field>
+      </mat-form-field> -->
+
+      <!-- <mat-form-field class="w-full">
+        <mat-label>Amount</mat-label>
+        <input matInput [(ngModel)]="amount" (click)="$event.stopPropagation()" />
+      </mat-form-field> -->
   
       <!-- ✅ Buttons -->
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -73,10 +89,11 @@
             <th>Date</th>
             <th>Total</th>
             <th>Status</th>
+            <th>Action</th>
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let invoice of filteredInvoices()">
+          <tr *ngFor="let invoice of filteredInvoices">
             <td>
               <!-- <input type="checkbox" /> -->
               <label class="customcheckbox">
@@ -89,11 +106,17 @@
             <td>{{ invoice.createdAt | date:'dd/MM/yyyy' }}</td>
             <td>{{ invoice.amount  }} BHD</td>
             <td>{{ invoice.status }}</td>
-           
+            <td><button (click)="viewOrder(invoice.orderId,invoice._id)" class="table-link">
+              View Invoice
+            </button>
+            </td> 
+          </tr>
+          <tr *ngIf="filteredInvoices.length === 0">
+            <td colspan="6" class="text-center">No records found</td>
           </tr>
         </tbody>
       </table>
-      <mat-paginator [length]="totalItems"  [pageSize]="10" [pageSizeOptions]="[10,25,100]" ></mat-paginator>
+       <mat-paginator [length]="totalItems"  [pageSize]="10" [pageSizeOptions]="[10,25,100]" (page)="onPageChange($event)"></mat-paginator>
     </div>
   </div>
   

@@ -6,10 +6,12 @@ import { ToastService } from '../../../../core/services/toastr.service';
 import { Observable, throwError } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
 import { MATERIAL_IMPORTS } from '../../../material.import';
+import { QuillModule } from 'ngx-quill';   // ✅ Import here
+
 
 @Component({
   selector: 'app-pageform',
-  imports: [MATERIAL_IMPORTS],   // ✅ just one line
+  imports: [MATERIAL_IMPORTS, QuillModule],   
   templateUrl: './pageform.component.html',
   styleUrl: './pageform.component.scss'
 })
@@ -21,7 +23,23 @@ export class PageformComponent {
   usertoken: any;
   pageDetails: any;
  
-
+  quillConfig = {
+    toolbar: [
+      ['bold', 'italic', 'underline', 'strike'],        // toggled buttons
+      [{ header: 1 }, { header: 2 }],                  // custom button values
+      [{ list: 'ordered' }, { list: 'bullet' }],
+      [{ script: 'sub' }, { script: 'super' }],
+      [{ indent: '-1' }, { indent: '+1' }],
+      [{ direction: 'rtl' }],
+      [{ size: ['small', false, 'large', 'huge'] }],  // custom dropdown
+      [{ color: [] }, { background: [] }],            // dropdown with defaults
+      [{ font: [] }],
+      [{ align: [] }],
+      ['link', 'image', 'video'],
+      ['clean']
+    ]
+  };
+  
   constructor(private _router: Router,private fb: FormBuilder,private route: ActivatedRoute,private _masterservice: PageService,private _toastrService: ToastService) {}
 
   ngOnInit(): void {
@@ -32,8 +50,8 @@ export class PageformComponent {
     this.pageForm = this.fb.group({
       title: ['', [Validators.required, Validators.minLength(3)]],
       title_ar: ['', [Validators.required, Validators.minLength(3)]],   
-      content: ['', [Validators.required, Validators.maxLength(250)]],
-      content_ar: ['', [Validators.required, Validators.maxLength(250)]],    
+      content: ['', Validators.required],
+      content_ar: ['', Validators.required],
       page_name: ['', Validators.required],
       status: [true, Validators.required]
     });
@@ -87,7 +105,7 @@ export class PageformComponent {
        title: data.title,
        title_ar: data.title_ar,
        content:data.content,
-       content_ar:data.content,
+       content_ar:data.content_ar,
        status: data.status,
        page_name:data.page_name,
        userId:localStorage.getItem('userId') 
@@ -107,7 +125,7 @@ export class PageformComponent {
        title: data.title,
        title_ar: data.title_ar,
        content:data.content,
-       content_ar:data.content,
+       content_ar:data.content_ar,
        status: data.status,
        page_name:data.page_name,
       userId:localStorage.getItem('userId') 
@@ -155,6 +173,12 @@ export class PageformComponent {
     return this.pageForm.controls;
   }
 
+  onContentChanged(event: any, controlName: string) {
+    const content = event.editor.getText().trim(); // get plain text for validation
+    this.pageForm.get(controlName)?.setValue(content); // update form control
+    this.pageForm.get(controlName)?.markAsTouched(); // mark touched for validation
+  }
+  
   
   onCancel() {
     this.pageForm.reset({ status: 'Active' });

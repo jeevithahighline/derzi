@@ -51,6 +51,58 @@
           <!-- <mat-error *ngIf="f['description_ar'].hasError('required')">Arabic description is required</mat-error> -->
         </mat-form-field>
         </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+
+          <mat-form-field appearance="outline" class="w-full">
+            <mat-label>Default Image</mat-label>
+        
+            <!-- ✅ Show existing preview -->
+            <div *ngIf="previewUrls.default_images" class="mb-2">
+              <img [src]="previewUrls.default_images" alt="Default Image" class="w-[50px] h-[50px] object-cover"/>
+            </div>
+        
+            <input type="file" class="hidden" #catFileInput (change)="onFileSelected($event, 'default_images')" />
+        
+            <input
+              matInput
+              placeholder="Choose file"
+              [value]="selectedFileNames.default_images || ''"
+              readonly
+              (click)="catFileInput.click()"
+            />
+        
+            <button mat-icon-button matSuffix (click)="catFileInput.click()" type="button">
+              <mat-icon>upload</mat-icon>
+            </button>
+          </mat-form-field>
+        
+          <!-- Category Image (Arabic) -->
+          <mat-form-field appearance="outline" class="w-full">
+            <mat-label>Default Image - Arabic</mat-label>
+        
+            <!-- ✅ Show existing preview -->
+            <div *ngIf="previewUrls.default_ar_images" class="mb-2">
+              <img [src]="previewUrls.default_ar_images" alt="Default Arabic Image" class="w-[50px] h-[50px] object-cover" />
+            </div>
+        
+            <input type="file" class="hidden" #catArFileInput (change)="onFileSelected($event, 'default_ar_images')" />
+        
+            <input
+              matInput
+              placeholder="Choose file"
+              [value]="selectedFileNames.default_ar_images || ''"
+              readonly
+              (click)="catArFileInput.click()"
+            />
+        
+            <button mat-icon-button matSuffix (click)="catArFileInput.click()" type="button">
+              <mat-icon>upload</mat-icon>
+            </button>
+          </mat-form-field>
+        
+        </div>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
         <!-- Category -->
         <mat-form-field class="w-full">
@@ -73,7 +125,7 @@
         <!-- Merchant -->
         <mat-form-field class="w-full">
           <mat-label>Merchant</mat-label>
-          <mat-select formControlName="merchant_id" multiple>
+          <mat-select formControlName="merchant_id">
             <mat-option *ngFor="let merchant of merchants" [value]="merchant._id">{{ merchant.merchant_name }}</mat-option>
           </mat-select>
           <!-- <mat-error *ngIf="f['merchant_id'].hasError('required')">Merchant is required</mat-error> -->
@@ -124,119 +176,104 @@
         </mat-form-field>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <!-- Color -->
-        <mat-form-field class="w-full">
-          <mat-label>Color</mat-label>
-          <mat-select formControlName="color_id" multiple>
-            <mat-option *ngFor="let color of colors" [value]="color._id">{{ color.name }}</mat-option>
-          </mat-select>
-        </mat-form-field>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">              
   
-        <!-- Care -->
-        <mat-form-field class="w-full">
-          <mat-label>Care Instructions</mat-label>
-          <mat-select formControlName="care_id" multiple>
-            <mat-option *ngFor="let care of cares" [value]="care._id">{{ care.name }}</mat-option>
-          </mat-select>
-        </mat-form-field>
-        </div>
-        
-        <!-- Price & Currency -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <mat-form-field class="w-full">
+            <mat-label>Care Instructions</mat-label>
+            <mat-select formControlName="care_id" multiple>
+              <mat-option *ngFor="let care of cares" [value]="care._id">{{ care.name }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+
           <mat-form-field class="w-full">
             <mat-label>Price</mat-label>
             <input matInput type="number" formControlName="price" />
           </mat-form-field>
+        </div>
+        
+        <!-- Price & Currency -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          
   
           <mat-form-field class="w-full">
-            <mat-label>Currency</mat-label>
-            <mat-select formControlName="currency">
-              <mat-option *ngFor="let curr of currencies" [value]="curr._id">{{ curr.currency }}</mat-option>
+            <mat-label>VAT Percentage</mat-label>
+            <input matInput type="number" formControlName="vatPercentage" />
+          </mat-form-field>
+
+          <mat-form-field class="w-full">
+            <mat-label>Color</mat-label>
+            <mat-select formControlName="color_id" multiple>
+              <mat-option *ngFor="let color of colors" [value]="color._id">{{ color.name }}</mat-option>
             </mat-select>
           </mat-form-field>
+    
         </div>
 
         <!-- Product Images -->
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <!-- English Images -->
-          <mat-form-field class="w-full">
-            <mat-label>Product Image</mat-label>
-          
-            <!-- ✅ Show existing preview -->
-            <div *ngIf="previewUrls.product_images" class="mb-2">
-              <img [src]="previewUrls.product_images" alt="Product Image" class="w-[50px] h-[50px] object-cover"/>
+          <ng-container *ngFor="let color of colors">
+            <div
+              *ngIf="productForm.get('color_id')?.value?.includes(color._id)"
+              class="border rounded p-3 mb-3"
+            >
+              <h4 class="font-medium mb-2">{{ color.name }}</h4>
+        
+              <label class="block text-sm font-medium mb-1">
+                Product Images ({{ color.name }})
+              </label>
+              <input
+                type="file"
+                multiple
+                (change)="onColorFileSelected($event, color._id, 'product_images')"
+              />
+              <div class="flex gap-2 mt-1 flex-wrap">
+                <img
+                  *ngFor="let url of colorPreviewUrls[color._id]?.product_images"
+                  [src]="url"
+                  class="w-[50px] h-[50px] object-cover rounded border"
+                />
+              </div>
+        
+              <label class="block text-sm font-medium mt-3 mb-1">
+                AR Images ({{ color.name }})
+              </label>
+              <input
+                type="file"
+                multiple
+                (change)="onColorFileSelected($event, color._id, 'product_ar_images')"
+              />
+              <div class="flex gap-2 mt-1 flex-wrap">
+                <img
+                  *ngFor="let url of colorPreviewUrls[color._id]?.product_ar_images"
+                  [src]="url"
+                  class="w-[50px] h-[50px] object-cover rounded border"
+                />
+              </div>
             </div>
-          
-            <input type="file" class="hidden" #catFileInput (change)="onFileSelected($event, 'product_images')" />
-          
-            <input
-              matInput
-              placeholder="Choose file"
-              [value]="selectedFileNames.product_images || ''"
-              readonly
-              (click)="catFileInput.click()"
-            />
-          
-            <button mat-icon-button matSuffix (click)="catFileInput.click()" type="button">
-              <mat-icon>upload</mat-icon>
-            </button>
-          </mat-form-field>
-          
-          <!-- Product Image (Arabic) -->
-          <mat-form-field class="w-full">
-            <mat-label>Product Image - Arabic</mat-label>
-          
-            <!-- ✅ Show existing preview -->
-            <div *ngIf="previewUrls.product_ar_images" class="mb-2">
-              <img [src]="previewUrls.product_ar_images" alt="Product Arabic Image" class="w-[50px] h-[50px] object-cover" />
-            </div>
-          
-            <input type="file" class="hidden" #catArFileInput (change)="onFileSelected($event, 'product_ar_images')" />
-          
-            <input
-              matInput
-              placeholder="Choose file"
-              [value]="selectedFileNames.product_ar_images || ''"
-              readonly
-              (click)="catArFileInput.click()"
-            />
-          
-            <button mat-icon-button matSuffix (click)="catArFileInput.click()" type="button">
-              <mat-icon>upload</mat-icon>
-            </button>
-          </mat-form-field>
+          </ng-container>
         </div>
+        
+        
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
         <!-- VAT -->
-        <mat-form-field class="w-full">
-          <mat-label>VAT Percentage</mat-label>
-          <input matInput type="number" formControlName="vatPercentage" />
-        </mat-form-field>
-  
-        <mat-form-field class="w-full">
+        
+        <!-- <mat-form-field class="w-full">
           <mat-label>Price with VAT</mat-label>
           <input matInput type="number" formControlName="priceWithVAT" />
+        </mat-form-field> -->
+         
+        <mat-form-field class="w-full">
+          <mat-label>Status</mat-label>
+          <mat-select formControlName="status">
+            <mat-option [value]="true">Active</mat-option>
+            <mat-option [value]="false">Inactive</mat-option>
+          </mat-select>
         </mat-form-field>
-
         
         </div>
   
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          
-          <!-- Status -->
-          <mat-form-field class="w-full">
-            <mat-label>Status</mat-label>
-            <mat-select formControlName="status">
-              <mat-option [value]="true">Active</mat-option>
-              <mat-option [value]="false">Inactive</mat-option>
-            </mat-select>
-          </mat-form-field>
-  
-          
-          </div>
-  
+ 
         
       </form>
     </div>

@@ -21,6 +21,7 @@ export class DriversComponent {
   pageSize = 10;
   pageIndex = 0;
   usertoken:any;
+  isSuperAdmin:any;
   selectedIds: string[] = [];
   constructor(private _router: Router,private dialog: MatDialog,private _accountService: DriverService,private _toastrService: ToastService) {}
 
@@ -28,6 +29,7 @@ export class DriversComponent {
   drivers: any[] = [];
   
   ngOnInit(): void {
+    this.isSuperAdmin = localStorage.getItem('isSuperAdmin'); 
     this.loaddrivers();
   }
 
@@ -58,12 +60,13 @@ export class DriversComponent {
 
   editdriver(driver: any, index: number) {
     //alert(banner.id);
-    this._router.navigate(['/adddriver', driver.id]);   
+    this._router.navigate(['/adddriver', driver._id]);   
   }
 
-  deletedriver(data) {
 
+  deletedriver(data) {
     this.selectedIds = data._id;
+  
     const dialogRef = this.dialog.open(ConfirmdialogComponent, {
       width: '450px',
       height: '250px',
@@ -72,8 +75,14 @@ export class DriversComponent {
   
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        // ✅ Call delete API
-        this._accountService.deleteDriver(this.selectedIds,this.usertoken).subscribe({
+        const isSuperAdmin = localStorage.getItem('isSuperAdmin') === 'true';
+  
+        // ✅ Choose which delete API to call
+        const deleteObservable = isSuperAdmin
+          ? this._accountService.deleteCompleteDriver(this.selectedIds, this.usertoken)
+          : this._accountService.deleteDriver(this.selectedIds, this.usertoken);
+  
+        deleteObservable.subscribe({
           next: () => {
             this._toastrService.showSuccess("Deleted Successfully");
             this.loaddrivers(); // refresh table
@@ -83,12 +92,10 @@ export class DriversComponent {
           }
         });
       } else {
-        this._toastrService.showError("Deletion cancelled by driver");
+        this._toastrService.showError("Deletion cancelled");
       }
     });
   }
-
-  
 
   addForm(){
     this._router.navigate(['/adddriver']);
@@ -102,6 +109,49 @@ export class DriversComponent {
   // If all rows checked, master should be checked
   isAllSelected() {
     this.masterSelected = this.drivers.every(driver => driver.isSelected);
+  }
+
+  deleteSelected() {
+    const selectedIds = this.drivers.filter(item => item.isSelected).map(item => item._id);
+  
+    if (selectedIds.length === 0) {
+      this._toastrService.showError("Please select at least one record to delete.");
+      return;
+    }
+  
+    // ✅ Confirmation popup
+    const dialogRef = this.dialog.open(ConfirmdialogComponent, {
+      width: '450px',
+      height: '250px',
+      disableClose: true,
+    });
+  
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        // ✅ Prepare request body
+        const requestBody = { deleteIds: selectedIds };
+  
+        // ✅ Call multi-delete API
+        this._accountService.deleteMultipleData(requestBody, this.usertoken).subscribe({
+          next: () => {
+            this._toastrService.showSuccess("Selected drivers deleted successfully");
+            this.loaddrivers(); // refresh table
+          },
+          error: () => {
+            this._toastrService.showError("Failed to delete selected drivers");
+          }
+        });
+      } else {
+        this._toastrService.showError("Deletion cancelled by user");
+      }
+    });
+  }
+
+  onPageChange(event: any) {
+    this.page = event.pageIndex + 1;
+    this.pageIndex = event.pageIndex;
+    this.pageSize = event.pageSize;
+    this.loaddrivers(this.page, this.pageSize);
   }
 
 }

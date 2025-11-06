@@ -7,8 +7,8 @@
         </div>
       </div>
       <div class="col-6 dflexmain">       
-        <button class="btn-add" (click)="savePage()"> Save</button>      
-        <button class="btn-cancel" (click)="onCancel()">  Cancel</button>
+        <!-- <button class="btn-add" (click)="savePage()"> Save</button>       -->
+        <!-- <button class="btn-cancel" (click)="onCancel()">  Cancel</button> -->
       </div>
     </div>
   
@@ -16,99 +16,65 @@
     <!---Form Section-->
     <div class="bg-white p-2 border rounded ">
     
-      <form [formGroup]="globalform" (ngSubmit)="onSubmit()" class="p-4 grid gap-4">
+      <!-- Profile Update Form -->
+    <form [formGroup]="profileForm" (ngSubmit)="onUpdateProfile()" class="p-4 grid gap-4">
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 ">
-          <!-- Site Name -->          
-          <div class="w-full">
-          <label>Firstname</label><span class="required-astreik">*</span>
-          <mat-form-field class="w-full">            
-            <input matInput formControlName="firstname" class="w-full border rounded" placeholder="Enter first name" />            
-            <mat-error *ngIf="f['firstname'].hasError('minlength')">
-              Minimum 3 characters required
-            </mat-error>
-          </mat-form-field>
-           </div>
-          <!-- Site Email -->
-          <mat-form-field  class="w-full" floatLabel="always">
-            <mat-label>Lastname</mat-label>
-            <input matInput type="lastname" formControlName="lastname" placeholder="Enter last name" />
-            <!-- <mat-error *ngIf="f['siteemail'].hasError('required')">
-              Email is required
-            </mat-error> -->           
-          </mat-form-field>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 ">
-          <!-- Site Name -->          
-          <div class="w-full">
-          <label>Username</label><span class="required-astreik">*</span>
-          <mat-form-field class="w-full">            
-            <input matInput formControlName="username" class="w-full border rounded" placeholder="Enter username" />            
-            <mat-error *ngIf="f['username'].hasError('minlength')">
-              Minimum 3 characters required
-            </mat-error>
-          </mat-form-field>
-           </div>
-          <!-- Site Email -->
-          <mat-form-field  class="w-full" floatLabel="always">
-            <mat-label>Email</mat-label>
-            <input matInput type="email" formControlName="email" placeholder="Enter email" />
-            <!-- <mat-error *ngIf="f['siteemail'].hasError('required')">
-              Email is required
-            </mat-error> -->
-            <mat-error *ngIf="f['email'].hasError('email')">
-              Enter a valid email
-            </mat-error>
-          </mat-form-field>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 ">
-        <!-- Postal Code -->
-        <mat-form-field  class="w-full" floatLabel="always">
-          <mat-label>Phone number</mat-label>
-          <input matInput formControlName="phonenumber" placeholder="Enter phone number" />
-          <!-- <mat-error *ngIf="f['email'].hasError('required')">
-           Email is required
-          </mat-error> -->
-        </mat-form-field>
-      
-        <!-- Logo -->
-        <mat-form-field  class="w-full" floatLabel="always">
-          <mat-label>Mobile number</mat-label>
-          <input matInput formControlName="mobilenumber" placeholder="Enter mobile number" />
-          <!-- <mat-error *ngIf="f['logo'].hasError('required')">
-            Logo is required
-          </mat-error> -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <mat-form-field class="w-full">
+          <mat-label>Firstname</mat-label>
+          <input matInput formControlName="firstname" placeholder="Enter first name" />
         </mat-form-field>
 
-        </div>
+        <mat-form-field class="w-full">
+          <mat-label>Lastname</mat-label>
+          <input matInput formControlName="lastname" placeholder="Enter last name" />
+        </mat-form-field>
+      </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 ">
-          <!-- Postal Code -->
-          <mat-form-field  class="w-full" floatLabel="always">
-            <mat-label>Address</mat-label>
-            <input matInput formControlName="address" placeholder="Enter address" />
-            <!-- <mat-error *ngIf="f['email'].hasError('required')">
-             Email is required
-            </mat-error> -->
-          </mat-form-field>
-        
-          <!-- Logo -->
-          <mat-form-field  class="w-full" floatLabel="always">
-            <mat-label>Postal Code</mat-label>
-            <input matInput formControlName="postalcode" placeholder="Enter postal code" />
-            <!-- <mat-error *ngIf="f['logo'].hasError('required')">
-              Logo is required
-            </mat-error> -->
-          </mat-form-field>
-  
-          </div>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+      <mat-form-field class="w-full">
+        <mat-label>Email</mat-label>
+        <input matInput type="email" formControlName="email" placeholder="Enter email" />
+      </mat-form-field>
       
-       
-       
+      </div>
+      <div class="mt-4">
+        <button mat-raised-button color="primary" type="submit">Save Profile</button>
+      </div>
+    </form>
+
+
+<!-- 🔑 Password Change Form -->
+<form [formGroup]="passwordForm" (ngSubmit)="onChangePassword()" class="p-4 border rounded mt-6 bg-gray-50">
+  <h3 class="text-lg font-semibold mb-2">Change Password</h3>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <mat-form-field class="w-full">
+      <mat-label>Current Password</mat-label>
+      <input matInput type="password" formControlName="currentPassword" />
+    </mat-form-field>
+
+    <mat-form-field class="w-full">
+      <mat-label>New Password</mat-label>
+      <input matInput type="password" formControlName="newPassword" />
+    </mat-form-field>
+
+    <mat-form-field class="w-full">
+      <mat-label>Confirm Password</mat-label>
+      <input matInput type="password" formControlName="confirmPassword" />
+      <mat-error *ngIf="passwordForm.hasError('passwordMismatch')">
+        Passwords do not match
+      </mat-error>
+    </mat-form-field>
+  </div>
+
+  <div class="mt-4">
+    <button mat-raised-button color="accent" type="submit">Update Password</button>
+  </div>
+</form>
+
       
-      </form>
   
     </div>
   

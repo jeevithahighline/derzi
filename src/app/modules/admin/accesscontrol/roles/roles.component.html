@@ -7,10 +7,10 @@
         </div>
       </div>
       <div class="col-6 dflexmain">
-        <button class="btn btn-sm" (click)="deleterole(1)">
+        <!-- <button class="btn btn-sm" (click)="deleteSelected()">
               <i class="bi bi-trash"></i>
                <img src="/images/icon/delete.svg" alt="">
-            </button>      
+            </button>       -->     
         <input type="text" class="form-control searchinput" placeholder="Search role" [(ngModel)]="searchText" />
         <button class="btn-add" (click)="openAddForm()"> <img src="/images/icon/add-btn.svg" alt=""> Add Role</button>
         
@@ -43,7 +43,7 @@
           <td>{{ (pageIndex * pageSize) + i + 1 }}</td>
           <td>{{ role.role }}</td>    
           <td>{{ role.description }}</td> 
-          <td>Active</td>                
+          <td>{{ role.status ? 'Active' : 'Inactive' }}</td>                  
           <td>
             <button class="btn btn-sm me-2" (click)="editrole(role)">
               <img src="/images/icon/edit-2.svg" alt="">
@@ -53,6 +53,9 @@
                <img src="/images/icon/delete.svg" alt="">
             </button>
           </td>
+        </tr>
+        <tr *ngIf="filteredData().length === 0">
+          <td colspan="6" class="text-center">No records found</td>
         </tr>
       </tbody>
     </table>

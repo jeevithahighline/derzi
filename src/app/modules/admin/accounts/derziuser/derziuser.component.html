@@ -22,7 +22,7 @@
                 <input type="checkbox" [(ngModel)]="masterSelected" (change)="checkUncheckAll()">
                 <span class="checkmark"></span>
               </label></th>
-          <th scope="col">ID</th>
+          <th scope="col">Derzi ID</th>
           <th scope="col">Username</th>
           <th scope="col">First name</th>
           <th scope="col">Last name</th>
@@ -39,26 +39,32 @@
                 <span class="checkmark"></span>
               </label>
           </td>
-          <td>{{ (pageIndex * pageSize) + i + 1 }}</td>
+          <td>{{ derziuser.derziCode }}</td>
           <td>{{ derziuser.username }}</td> 
           <td>{{ derziuser.firstname }}</td> 
           <td>{{ derziuser.lastname }}</td> 
           <td>{{ derziuser.email }}</td> 
-          <td>Active</td>                     
+          <td>{{ derziuser.status | titlecase }}</td>                       
           <td>
             <button class="btn btn-sm me-2" (click)="editderziuser(derziuser)">
               <img src="/images/icon/edit-2.svg" alt="">
             </button>
-            <!-- <button class="btn btn-sm " (click)="deletederziuser(derziuser)">
-              <i class="bi bi-trash"></i>
-               <img src="/images/icon/delete.svg" alt="">
-            </button> -->
+            <button
+            class="btn btn-sm"
+            *ngIf="derziuser.email !== 'derziapp@gmail.com'"
+            (click)="deletederziuser(derziuser)"
+          >
+            <img src="/images/icon/delete.svg" alt="">
+          </button>
           </td>
+        </tr>
+        <tr *ngIf="filteredData().length === 0">
+          <td colspan="7" class="text-center">No records found</td>
         </tr>
       </tbody>
     </table>
     
-    <mat-paginator [length]="totalItems"  [pageSize]="10" [pageSizeOptions]="[10,25,100]" ></mat-paginator>
+     <mat-paginator [length]="totalItems"  [pageSize]="10" [pageSizeOptions]="[10,25,100]" (page)="onPageChange($event)"></mat-paginator>
     </div>
   </div>
   

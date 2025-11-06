@@ -32,7 +32,7 @@ export class FabricformComponent {
     this.dynamicForm = this.fb.group({
       name: ['', Validators.required],
       name_ar: ['', Validators.required],
-      status: [null, Validators.required]
+      status: [true, Validators.required]
     });
 
     // Prefill if editing

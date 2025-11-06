@@ -50,16 +50,16 @@ export class ProductService {
     const bearerToken = localStorage.getItem('bearertoken') || '';
     const authToken = localStorage.getItem('usertoken') || '';
   
-    const headers = new HttpHeaders()
-      .set('Authorization', `Bearer ${bearerToken}`)
-      .set('Auth-Token', authToken);
+    // ✅ DO NOT set Content-Type manually — Angular will handle it
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${bearerToken}`,
+      'Auth-Token': authToken
+    });
   
-    return this.httpClient.post<ProductResponse>(url, payload, { headers }).pipe(
-      map(res => ({
-        ...res
-      }))
-    );
-  }  
+    // ✅ Send FormData directly
+    return this.httpClient.post<ProductResponse>(url, payload, { headers });
+  }
+  
 
   public updateProduct(editId: string, payload: FormData, usertoken: string): Observable<ProductResponse> {
     const url = this._configService.getApiUrl() + environment.SERVICE_APIS.UPDATE_PRODUCT + '/' + editId;
@@ -94,16 +94,15 @@ export class ProductService {
       );
   }
 
-  public deleteMultipleData(requestBody:{product_list:string[]},usertoken) {
+  public deleteMultipleData(requestBody:{deleteIds:string[]}, usertoken) {
     return this._httpReqService.request({
-      method: APP_CONSTANTS.API_METHODS.POST,
-      url: this._configService.getApiUrl()+environment.SERVICE_APIS.BULK_PRODUCT_DELETE,
+      method: APP_CONSTANTS.API_METHODS.DELETE,
+      url: this._configService.getApiUrl() + environment.SERVICE_APIS.BULK_PRODUCT_DELETE,
       body: requestBody,
-      headerConfig: {token:usertoken}
-    })
-      .pipe(
-        map(response => this._extractResponse(response))
-      );
+      headerConfig: { token: usertoken }
+    }).pipe(
+      map(response => this._extractResponse(response))
+    );
   }
 
   public getAllCategories(usertoken: any) {
@@ -120,6 +119,16 @@ export class ProductService {
     return this._httpReqService.request({
       method: APP_CONSTANTS.API_METHODS.GET,
       url: `${this._configService.getApiUrl()}${environment.SERVICE_APIS.GET_ALL_MERCHANT}`,
+      headerConfig: { token: usertoken }
+    }).pipe(
+      map(response => this._extractResponse(response))
+    );
+  }
+
+  public getAllProductList(usertoken: any) {
+    return this._httpReqService.request({
+      method: APP_CONSTANTS.API_METHODS.GET,
+      url: `${this._configService.getApiUrl()}${environment.SERVICE_APIS.GET_ALL_PRODUCT}`,
       headerConfig: { token: usertoken }
     }).pipe(
       map(response => this._extractResponse(response))

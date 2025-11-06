@@ -42,7 +42,7 @@
           </td>
           <td>{{ (pageIndex * pageSize) + i + 1 }}</td>
           <td>{{ currency.currency }}</td>  
-          <td>Active</td>         
+          <td>{{ currency.status ? 'Active' : 'Inactive' }}</td>           
           <td>
             <button class="btn btn-sm me-2" (click)="editcurrency(currency)">
               <img src="/images/icon/edit-2.svg" alt="">
@@ -52,6 +52,9 @@
                <img src="/images/icon/delete.svg" alt="">
             </button>
           </td>
+        </tr>
+        <tr *ngIf="filteredData().length === 0">
+          <td colspan="5" class="text-center">No records found</td>
         </tr>
       </tbody>
     </table>

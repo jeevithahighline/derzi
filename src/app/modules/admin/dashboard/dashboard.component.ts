@@ -2,6 +2,9 @@ import { Component, ViewEncapsulation } from '@angular/core';
 import { BaseChartDirective } from 'ng2-charts';
 import { ChartConfiguration, ChartType } from 'chart.js';
 import { MATERIAL_IMPORTS } from '../../material.import';
+import { GlobalService } from '../../../core/services/global.service';
+import { Router,ActivatedRoute  } from '@angular/router';
+
 @Component({
     selector: 'dashboard',
     standalone: true,
@@ -13,6 +16,10 @@ import { MATERIAL_IMPORTS } from '../../material.import';
   
 export class DashboardComponent {
 
+    productSales:any;
+    salesbyGender:any;
+    salesbyCountry:any;
+    dashboardData:any;
     selectedStatus: string = '';
     amount: string = '';
     startDate: Date | null = null;
@@ -24,48 +31,86 @@ export class DashboardComponent {
       responsive: true,
       plugins: { legend: { position: 'top' } }
     };
-    barChartLabels = ['Jan', 'Feb', 'Mar', 'Apr', 'May','June','Jul','Aug','Oct','Nov','Dec'];
     barChartType: ChartType = 'bar';
-    barChartData = [
-      { data: [10, 20, 30, 40, 50,60,70,80,90,45,100,56], label: 'Sales' },
-      { data: [15, 25, 35, 45, 55,45,65,75,85,95,45,100], label: 'Revenue' }
-    ];
+
+    barChartLabels = [];
+    barChartData = [];
   
-    // Pie Chart (Sales by Product)
-    pieChartLabels = ['Male', 'Female', 'Unknown'];
-    pieChartData = [300, 500, 100];
+    // Pie Chart (Sales by Gender)
     pieChartType: ChartType = 'pie';
+    pieChartLabels = [];
+    pieChartData = [];
+    
   
     // Doughnut Chart (Sales by Countries)
-    doughnutChartLabels = ['UAE', 'BAHRAIN', 'KUWAIT','SAUDI'];
-    doughnutChartData = [120, 150, 90,120];
     doughnutChartType: ChartType = 'doughnut';
+    doughnutChartLabels = [];
+    doughnutChartData = [];
+    
 
-    totalItems = 2;
-    orders = [
-        { id: 'ORD1001', customer: 'John Doe', date: new Date('2025-08-28'), amount: 1200, status: 'Pending', isSelected: false },
-        { id: 'ORD1002', customer: 'Jane Smith', date: new Date('2025-08-29'), amount: 2500, status: 'Completed', isSelected: false },
-        { id: 'ORD1003', customer: 'Ahmed', date: new Date('2025-08-30'), amount: 2500, status: 'Completed', isSelected: false },
-        { id: 'ORD1004', customer: 'Syed', date: new Date('2025-08-31'), amount: 2500, status: 'Completed', isSelected: false },
-        { id: 'ORD1005', customer: 'Khan', date: new Date('2025-08-31'), amount: 2500, status: 'Completed', isSelected: false },
-        { id: 'ORD1006', customer: 'Qasim', date: new Date('2025-08-31'), amount: 2500, status: 'Completed', isSelected: false },
-    ];
+    usertoken:any;  
+    orders: any[] = [];
+    constructor(private _router: Router,private _globalService: GlobalService) {}
 
-    filteredOrders() {
-        return this.orders.filter(o =>
-        o.customer.toLowerCase().includes(this.searchText.toLowerCase()) ||
-        o.id.toLowerCase().includes(this.searchText.toLowerCase())
-        );
+    ngOnInit(): void {
+
+      this.usertoken = localStorage.getItem('usertoken');   
+      // ✅ Fetch existing site details if available
+      this.loadDashboardDetails();
+    } 
+
+    loadDashboardDetails() {
+      const token = localStorage.getItem('usertoken'); 
+      if (token) {
+        this._globalService.getAllDashboard(token).subscribe({
+          next: (res: any) => {
+            this.dashboardData = res.data;   // ✅ save all dashboard stats
+            this.orders = res.data.recentTransactions || [];  
+
+            this.productSales = res.data.productSales;
+
+            // Product Sales Section
+
+            // 🔹 Generate labels and data dynamically from API
+            this.barChartLabels = this.productSales.map((item: any) => item.month);
+            const salesData = this.productSales.map((item: any) => item.sales);
+            const revenueData = this.productSales.map((item: any) => item.revenue);
+
+            // 🔹 Assign to chart data
+            this.barChartData = [
+              { data: salesData, label: 'Sales' },
+              { data: revenueData, label: 'Revenue' }
+            ];
+            
+            //-------------------Ends here------------------//
+            
+            this.salesbyGender = res.data.salesByGender;
+
+            console.log(this.salesbyGender);
+
+            // 🔹 Map API data to chart labels and data
+            this.pieChartLabels = this.salesbyGender.map((item: any) => item.gender);
+            this.pieChartData = this.salesbyGender.map((item: any) => parseFloat(item.totalSales.toFixed(2)));
+
+            this.salesbyCountry = res.data.salesByCountry;
+
+            console.log(this.salesbyCountry);
+
+            this.doughnutChartLabels = this.salesbyCountry.map((item: any) => item.country);
+            this.doughnutChartData = this.salesbyCountry.map((item: any) => parseFloat(item.totalSales.toFixed(2)));
+          },
+          error: (err) => {
+            console.error('Error fetching invoices', err);
+          }
+        });
+      }
     }
 
+    filteredOrders() {
+      return this.orders;
+    }
 
-       // Toggle all checkboxes
-   checkUncheckAll() {
-    this.orders.forEach(country => country.isSelected = this.masterSelected);
-  }
-
-  // If all rows checked, master should be checked
-  isAllSelected() {
-    this.masterSelected = this.orders.every(country => country.isSelected);
-  }
+    viewOrder(orderId: string) {
+      this._router.navigate(['/detailorder', orderId]);
+    }
   }

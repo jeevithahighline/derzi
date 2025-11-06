@@ -1,6 +1,6 @@
 import { Component,Inject,OnInit } from '@angular/core';
 import { MATERIAL_IMPORTS } from '../../../material.import';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, AbstractControl } from '@angular/forms';
 import { Router,ActivatedRoute  } from '@angular/router';
 
 @Component({
@@ -10,51 +10,59 @@ import { Router,ActivatedRoute  } from '@angular/router';
   styleUrl: './profilesettings.component.scss'
 })
 export class ProfilesettingsComponent implements OnInit{
-  globalform: FormGroup;
-  
+  profileForm: FormGroup;
+  passwordForm: FormGroup;
 
   constructor(private _router: Router,private fb: FormBuilder) {}
 
   ngOnInit(): void {
-    this.globalform = this.fb.group({
+    // Profile form
+    this.profileForm = this.fb.group({
       firstname: ['', [Validators.required, Validators.minLength(3)]],
-      email: ['', [Validators.required, Validators.email]],   
-      mobilenumber: ['', [Validators.required, Validators.maxLength(250)]],
-      address: ['', [Validators.required, Validators.maxLength(250)]],  
-      postalcode: ['', Validators.required],   
-      phonenumber: ['', Validators.required],   
-      lastname: ['', Validators.required],   
-      username: ['', Validators.required],   
+      lastname: [''],
+      email: ['', [Validators.required, Validators.email]]
     });
+
+    // Password form
+    this.passwordForm = this.fb.group(
+      {
+        currentPassword: ['', Validators.required],
+        newPassword: ['', [Validators.minLength(6)]],
+        confirmPassword: ['']
+      },
+      { validators: this.passwordMatchValidator }
+    );
   }  
 
-  onSubmit() {
-    if (this.globalform.valid) {
-      console.log('✅ Form Data:', this.globalform.value);
-    } else {
-      this.globalform.markAllAsTouched();
+  passwordMatchValidator(form: AbstractControl) {
+    const newPassword = form.get('newPassword')?.value;
+    const confirmPassword = form.get('confirmPassword')?.value;
+    return newPassword === confirmPassword ? null : { passwordMismatch: true };
+  }
+
+  // Save profile info (only firstname, lastname, email)
+  onUpdateProfile() {
+    if (this.profileForm.valid) {
+      console.log('Profile Update:', this.profileForm.value);
+      // call API → update firstname, lastname, email
+    }
+  }
+
+  // Save password change separately
+  onChangePassword() {
+    if (this.passwordForm.valid) {
+      console.log('Password Change:', this.passwordForm.value);
+      // call API → update password only
     }
   }
 
   // helper for template
   get f() {
-    return this.globalform.controls;
+    return this.profileForm.controls;
   }
-
-  savePage(){
-
-    if (this.globalform.invalid) {
-      this.globalform.markAllAsTouched();  // ✅ show validation errors
-      return;
-    }
   
-    console.log(this.globalform.value); // ✅ form values when valid
-
-  }
-
   onCancel() {
-    this.globalform.reset();
-   
+    this.profileForm.reset();   
   }  
 }
 

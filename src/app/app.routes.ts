@@ -24,6 +24,8 @@ import { CategoriesComponent } from 'app/modules/admin/inventory/categories/cate
 import { ProductsComponent } from 'app/modules/admin/inventory/products/products.component';
 import { PromocodeComponent} from 'app/modules/admin/inventory/promocode/promocode.component';
 import { PromocodeformComponent} from 'app/modules/admin/inventory/promocode/promocodeform/promocodeform.component';
+import { PromotionComponent} from 'app/modules/admin/inventory/promotion/promotion.component';
+import { PromotionformComponent} from 'app/modules/admin/inventory/promotion/promotionform/promotionform.component';
 
 //Access Control
 import { PrivilegeComponent } from 'app/modules/admin/accesscontrol/privilege/privilege.component';
@@ -59,8 +61,10 @@ import { GlobalsettingsComponent } from 'app/modules/admin/settings/globalSettin
 //Transactions
 import { AllordersComponent } from 'app/modules/admin/transactions/allorders/allorders.component';
 import { InvoicesComponent } from 'app/modules/admin/transactions/invoices/invoices.component';
-import { PaymenthistoryComponent} from 'app/modules/admin/transactions/paymenthistory/paymenthistory.component';
+import { ManualorderComponent} from 'app/modules/admin/transactions/allorders/manualorder/manualorder.component';
 import { DetailordersComponent} from 'app/modules/admin/transactions/detailorders/detailorders.component';
+import { DetailinvoiceComponent} from 'app/modules/admin/transactions/detailinvoice/detailinvoice.component';
+
 
 import { UserreportComponent } from './modules/admin/reports/userreport/userreport.component';
 import { ProductformComponent } from './modules/admin/inventory/products/productform/productform.component';
@@ -69,10 +73,15 @@ import { FaqformComponent } from './modules/admin/faq/faqform/faqform.component'
 import { DriversformComponent } from './modules/admin/accounts/drivers/driversform/driversform.component';
 import { MerchantformComponent } from './modules/admin/accounts/merchants/merchantform/merchantform.component';
 import { UsersformComponent } from './modules/admin/accounts/users/usersform/usersform.component';
+import { DerziUsersformComponent } from './modules/admin/accounts/derziuser/derziusersform/derziusersform.component';
 import { EmailtemplatesformComponent } from './modules/admin/configuration/emailtemplates/emailtemplatesform/emailtemplatesform.component';
 import { PrivilegeformComponent } from './modules/admin/accesscontrol/privilege/privilegeform/privilegeform.component';
 import { ProfilesettingsComponent } from './modules/admin/settings/profilesettings/profilesettings.component';
 import { BannersformComponent } from './modules/admin/masters/banners/bannersform/bannersform.component';
+import { ConversionrateComponent } from './modules/admin/configuration/conversionrate/conversionrate.component';
+import { ReviewsComponent } from './modules/admin/settings/reviews/reviews.component';
+import { PrivacypolicyComponent } from './modules/admin/privacypolicy/privacypolicy.component';
+
 import { AuthService } from './core/services/auth.service';
 import { Router, ActivatedRoute,Routes, RouterModule, CanActivateFn, UrlTree } from '@angular/router';
 
@@ -105,6 +114,8 @@ export const appRoutes: Route[] = [
     { path: '', pathMatch: 'full', redirectTo: 'sign-in' },
 
     {path: 'dashboard', pathMatch : 'full', redirectTo: 'dashboard'},
+
+    {path: 'privacy', component: PrivacypolicyComponent},
 
     // Auth routes for guests
     {
@@ -146,6 +157,7 @@ export const appRoutes: Route[] = [
             {path: 'categories', component: CategoriesComponent},
             {path: 'products', component: ProductsComponent},
             {path: 'promocode', component: PromocodeComponent},
+            {path: 'promotion', component: PromotionComponent},
 
             {path: 'services', component: ServicesComponent},
             {path: 'pages', component: PagesComponent},
@@ -176,8 +188,8 @@ export const appRoutes: Route[] = [
             {path: 'addpromocode', component: PromocodeformComponent},
             {path: 'addpromocode/:id', component: PromocodeformComponent},
 
-            {path: 'addpromocode', component: PromocodeformComponent},
-            {path: 'addpromocode/:id', component: PromocodeformComponent},
+            {path: 'addpromotion', component: PromotionformComponent},
+            {path: 'addpromotion/:id', component: PromotionformComponent},
 
             {path: 'addPage', component: PageformComponent},
             {path: 'addPage/:id', component: PageformComponent},
@@ -194,8 +206,8 @@ export const appRoutes: Route[] = [
             {path: 'adduser', component: UsersformComponent},
             {path: 'adduser/:id', component: UsersformComponent},
 
-            {path: 'addderziuser', component: DerziuserComponent},
-            {path: 'addderziuser/:id', component: DerziuserComponent},
+            {path: 'addderziuser', component: DerziUsersformComponent},
+            {path: 'addderziuser/:id', component: DerziUsersformComponent},
 
 
             {path: 'addbanner', component: BannersformComponent},
@@ -204,6 +216,8 @@ export const appRoutes: Route[] = [
             {path: 'globalsettings', component: GlobalsettingsComponent},
 
             {path: 'currency', component: CurrencyComponent},
+
+            {path: 'conversionrate', component: ConversionrateComponent},
 
             {path: 'paymentmethod', component: PaymentmethodsComponent},
 
@@ -215,11 +229,20 @@ export const appRoutes: Route[] = [
             {path: 'addemailtemplate', component: EmailtemplatesformComponent},
             {path: 'addemailtemplate/:id', component: EmailtemplatesformComponent},
 
+            {path: 'manualorder/:id', component: ManualorderComponent},
+            {path: 'manualorder', component: ManualorderComponent},
+
             {path: 'privileges', component: PrivilegeComponent},
             {path: 'addprivileges', component: PrivilegeformComponent},
             {path: 'addprivileges/:id', component: PrivilegeformComponent},
             {path: 'detailorder/:id', component: DetailordersComponent},
+            {path: 'detailinvoice/:id', component: DetailinvoiceComponent},
+            {path: 'detailinvoice', component: DetailinvoiceComponent},
             {path: 'profilesettings', component: ProfilesettingsComponent},
+
+            {path: 'reviews', component: ReviewsComponent},
+
+            
         ]
     }
 ];

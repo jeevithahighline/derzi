@@ -42,7 +42,7 @@ export class CategoryformComponent {
       name_ar: ['', Validators.required],
       cat_images: [null],
       cat_ar_images: [null],
-      status: [null, Validators.required]
+      status: [true, Validators.required]
     });
 
     // Prefill if editing
@@ -97,8 +97,8 @@ export class CategoryformComponent {
     }
 
     const fileControl1 = this.dynamicForm.get('cat_ar_images')?.value;
-    if (fileControl instanceof File) {
-      formData.append('cat_ar_images', fileControl, fileControl1.name);
+    if (fileControl1 instanceof File) {
+      formData.append('cat_ar_images', fileControl1, fileControl1.name);
     }
 
     return this._masterservice.createCategory(formData, this.usertoken).pipe(
@@ -123,6 +123,11 @@ export class CategoryformComponent {
     const fileControl = this.dynamicForm.get('cat_images')?.value;
     if (fileControl instanceof File) {
       formData.append('cat_images', fileControl, fileControl.name);
+    }
+
+    const fileControl1 = this.dynamicForm.get('cat_ar_images')?.value;
+    if (fileControl1 instanceof File) {
+      formData.append('cat_ar_images', fileControl1, fileControl1.name);
     }
 
     return this._masterservice.updateCategory(editId, formData, this.usertoken).pipe(
@@ -155,8 +160,6 @@ export class CategoryformComponent {
     }
   }
 
-  
-  
   close() {
     this.dialogRef.close();
   }

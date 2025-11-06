@@ -62,31 +62,34 @@
               </mat-error>
             </mat-form-field>
           </div>
-        </div>
-  
+        </div>  
+        
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 ">
-           <!-- Description -->
-            <mat-form-field class="w-full">
-              <mat-label>Page Description</mat-label>
-              <textarea matInput rows="3" formControlName="content"></textarea>
-              <!-- <mat-error *ngIf="f['description'].hasError('required')">
-                Description is required
-              </mat-error> -->
-              <mat-error *ngIf="f['content'].hasError('maxlength')">
-                Maximum 250 characters allowed
-              </mat-error>
-            </mat-form-field>
+           <div class="w-full">
+            <label>Content (English)</label><br>
+            <quill-editor style="width: 580px;"
+              formControlName="content"
+              [modules]="quillConfig"
+              [placeholder]="'Enter content in English...'">
+            </quill-editor>
+            <div *ngIf="f.content.touched && f.content.invalid" class="text-danger mt-1">
+              <div *ngIf="f.content.errors?.required">Content is required.</div>
+              <div *ngIf="f.content.errors?.maxlength">Maximum 1000 characters allowed.</div>
+            </div>
+          </div>        
       
-            <mat-form-field class="w-full">
-              <mat-label>Page Description - Arabic</mat-label>
-              <textarea matInput rows="3" formControlName="content_ar"></textarea>
-              <!-- <mat-error *ngIf="f['description_ar'].hasError('required')">
-                Description - Arabic is required
-              </mat-error> -->
-              <mat-error *ngIf="f['content_ar'].hasError('maxlength')">
-                Maximum 250 characters allowed
-              </mat-error>
-            </mat-form-field>
+          <div class="w-full">
+            <label>Content (Arabic)</label> <br>
+            <quill-editor style="width: 580px;"
+              formControlName="content_ar"
+              [modules]="quillConfig"
+              [placeholder]="'Enter content in Arabic...'">
+            </quill-editor>
+            <div *ngIf="f.content_ar.touched && f.content_ar.invalid" class="text-danger mt-1">
+              <div *ngIf="f.content_ar.errors?.required">Content in Arabic is required.</div>
+              <div *ngIf="f.content_ar.errors?.maxlength">Maximum 1000 characters allowed.</div>
+            </div>
+          </div>
 
         </div>
                 

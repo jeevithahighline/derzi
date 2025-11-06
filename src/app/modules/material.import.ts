@@ -13,11 +13,15 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core'; 
 import { MatMenuModule } from '@angular/material/menu';
 import { MatCheckboxModule } from '@angular/material/checkbox';
-
+import { MatRadioModule } from '@angular/material/radio';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { RouterModule } from '@angular/router'; // ✅ Import this
 
 export const MATERIAL_IMPORTS = [
   CommonModule,
   FormsModule,
+  MatRadioModule,
+  MatSlideToggleModule,
   MatMenuModule,
   MatCheckboxModule,
   MatDatepickerModule,
@@ -31,5 +35,6 @@ export const MATERIAL_IMPORTS = [
   MatSortModule,     // ✅ corrected
   MatButtonModule,
   MatIconModule,
-  MatDialogModule
+  MatDialogModule,
+  RouterModule
 ];

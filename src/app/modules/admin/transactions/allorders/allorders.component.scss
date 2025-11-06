@@ -9,6 +9,26 @@
   img {
     border-radius: 4px;
   }
+  .small-button {
+    padding: 4px 12px;
+    font-size: 13px;
+    min-width: 80px; /* optional */
+  }
+
+  .table-link {
+    color: #802012;           /* blue color */
+    text-decoration: underline; /* underline text */
+    font-size: 15px;           /* smaller font */
+    padding: 2px 6px;          /* optional padding to make it clickable */
+    cursor: pointer;           /* pointer on hover */
+  }
+  
+  .table-link:hover {
+    color: #802012;           /* darker blue on hover */
+    text-decoration: none;     /* remove underline on hover if you want */
+  }
+  
+  
   .dflexmain{
     display: flex;
     gap: 10px;

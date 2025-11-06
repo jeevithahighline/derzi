@@ -11,68 +11,60 @@
   <mat-form-field appearance="outline">
     <mat-label>Name</mat-label>
     <input matInput formControlName="name" placeholder="Enter Category" />
-    <!-- <mat-error *ngIf="dynamicForm.get('name')?.hasError('required') && 
-    (dynamicForm.get('name')?.touched || dynamicForm.get('name')?.dirty)">
-    Category name is required
-    </mat-error> -->
   </mat-form-field>
 
   <!-- Name in Arabic -->
   <mat-form-field appearance="outline">
     <mat-label>Name - Ar</mat-label>
-    <input matInput formControlName="name_ar" placeholder="" />
-    <!-- <mat-error *ngIf="dynamicForm.get('name_ar')?.hasError('required') && 
-    (dynamicForm.get('name_ar')?.touched || dynamicForm.get('name_ar')?.dirty)">
-    Category name in Arabic is required
-    </mat-error> -->
+    <input matInput formControlName="name_ar" placeholder="" />  
   </mat-form-field>
   <!-- Category Image -->
-<mat-form-field appearance="outline" class="w-full">
-  <mat-label>Category Image</mat-label>
+  <mat-form-field appearance="outline" class="w-full">
+    <mat-label>Category Image</mat-label>
 
-  <!-- ✅ Show existing preview -->
-  <div *ngIf="previewUrls.cat_images" class="mb-2">
-    <img [src]="previewUrls.cat_images" alt="Category Image" class="w-[50px] h-[50px] object-cover"/>
-  </div>
+    <!-- ✅ Show existing preview -->
+    <div *ngIf="previewUrls.cat_images" class="mb-2">
+      <img [src]="previewUrls.cat_images" alt="Category Image" class="w-[50px] h-[50px] object-cover"/>
+    </div>
 
-  <input type="file" class="hidden" #catFileInput (change)="onFileSelected($event, 'cat_images')" />
+    <input type="file" class="hidden" #catFileInput (change)="onFileSelected($event, 'cat_images')" />
 
-  <input
-    matInput
-    placeholder="Choose file"
-    [value]="selectedFileNames.cat_images || ''"
-    readonly
-    (click)="catFileInput.click()"
-  />
+    <input
+      matInput
+      placeholder="Choose file"
+      [value]="selectedFileNames.cat_images || ''"
+      readonly
+      (click)="catFileInput.click()"
+    />
 
-  <button mat-icon-button matSuffix (click)="catFileInput.click()" type="button">
-    <mat-icon>upload</mat-icon>
-  </button>
-</mat-form-field>
+    <button mat-icon-button matSuffix (click)="catFileInput.click()" type="button">
+      <mat-icon>upload</mat-icon>
+    </button>
+  </mat-form-field>
 
-<!-- Category Image (Arabic) -->
-<mat-form-field appearance="outline" class="w-full">
-  <mat-label>Category Image - Arabic</mat-label>
+  <!-- Category Image (Arabic) -->
+  <mat-form-field appearance="outline" class="w-full">
+    <mat-label>Category Image - Arabic</mat-label>
 
-  <!-- ✅ Show existing preview -->
-  <div *ngIf="previewUrls.cat_ar_images" class="mb-2">
-    <img [src]="previewUrls.cat_ar_images" alt="Category Arabic Image" class="w-[50px] h-[50px] object-cover" />
-  </div>
+    <!-- ✅ Show existing preview -->
+    <div *ngIf="previewUrls.cat_ar_images" class="mb-2">
+      <img [src]="previewUrls.cat_ar_images" alt="Category Arabic Image" class="w-[50px] h-[50px] object-cover" />
+    </div>
 
-  <input type="file" class="hidden" #catArFileInput (change)="onFileSelected($event, 'cat_ar_images')" />
+    <input type="file" class="hidden" #catArFileInput (change)="onFileSelected($event, 'cat_ar_images')" />
 
-  <input
-    matInput
-    placeholder="Choose file"
-    [value]="selectedFileNames.cat_ar_images || ''"
-    readonly
-    (click)="catArFileInput.click()"
-  />
+    <input
+      matInput
+      placeholder="Choose file"
+      [value]="selectedFileNames.cat_ar_images || ''"
+      readonly
+      (click)="catArFileInput.click()"
+    />
 
-  <button mat-icon-button matSuffix (click)="catArFileInput.click()" type="button">
-    <mat-icon>upload</mat-icon>
-  </button>
-</mat-form-field>
+    <button mat-icon-button matSuffix (click)="catArFileInput.click()" type="button">
+      <mat-icon>upload</mat-icon>
+    </button>
+  </mat-form-field>
 
 
   <!-- Status -->

@@ -1,0 +1,173 @@
+<div class="container p-4">
+ 
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2">
+      <div class="col-6">
+        <div class="heading pt-2">
+          <h2>{{ editMode ? 'Edit Manual Order' : 'Add Manual Order' }}</h2>
+        </div>
+      </div>
+      <div class="col-6 dflexmain">       
+        <button class="btn-add" (click)="onSubmit()"> Save</button>      
+        <button class="btn-cancel" (click)="onCancel()">  Cancel</button>
+      </div>
+    </div>
+  
+    <div class="row">&nbsp;</div>
+    <!---Form Section-->
+    <div class="bg-white p-2 border rounded ">
+     
+        <form [formGroup]="manualOrderForm" (ngSubmit)="onSubmit()" class="p-4 grid gap-6">           
+          
+            <!-- 💰 Items Section -->
+            <div formArrayName="items" class="border p-4 rounded bg-white shadow-sm">
+                <h3 class="mb-3 font-semibold">Order Items</h3>
+              
+                <div *ngFor="let item of items.controls; let i = index" [formGroupName]="i" class="grid grid-cols-12 gap-3 items-center mb-3">
+                  
+                  <!-- Product ID -->
+                  <div class="col-span-3">
+                    <mat-form-field class="w-full">
+                        <mat-label>Select Product</mat-label>
+                        <mat-select formControlName="productId">
+                          <mat-option *ngFor="let product of products" [value]="product._id">
+                            {{ product.name }}
+                          </mat-option>
+                        </mat-select>
+                        <mat-error *ngIf="item.get('productId')?.hasError('required')">
+                          Product is required
+                        </mat-error>
+                    </mat-form-field>
+                  </div>
+
+                  <div class="col-span-3">
+                    <mat-form-field class="w-full">
+                        <mat-label>Select Size</mat-label>
+                        <mat-select formControlName="size_id">
+                          <mat-option *ngFor="let product of sizes" [value]="product._id">
+                            {{ product.name }}
+                          </mat-option>
+                        </mat-select>
+                        <mat-error *ngIf="item.get('size_id')?.hasError('required')">
+                          Size is required
+                        </mat-error>
+                    </mat-form-field>
+                  </div>
+
+                  <div class="col-span-3">
+                    <mat-form-field class="w-full">
+                        <mat-label>Select Color</mat-label>
+                        <mat-select formControlName="color_id">
+                          <mat-option *ngFor="let product of colors" [value]="product._id">
+                            {{ product.name }}
+                          </mat-option>
+                        </mat-select>
+                        <mat-error *ngIf="item.get('color_id')?.hasError('required')">
+                          Color is required
+                        </mat-error>
+                    </mat-form-field>
+                  </div>
+              
+                  <!-- Quantity -->
+                  <div class="col-span-2">
+                    <mat-form-field class="w-full">
+                      <mat-label>Quantity</mat-label>
+                      <input type="number" matInput formControlName="quantity" placeholder="Enter quantity" />
+                      <mat-error *ngIf="item.get('quantity')?.hasError('required')">Quantity required</mat-error>
+                    </mat-form-field>
+                  </div>
+              
+                  <!-- Remove button (inline) -->
+                  <div class="col-span-1 flex items-center justify-end">
+                    <button mat-raised-button color="primary" type="button" (click)="removeItem(i)">
+                      <mat-icon>remove_circle_outline</mat-icon>
+                    </button>
+                  </div>
+                </div>
+              
+                <!-- Add Item button -->
+                <div class="mt-3">
+                  <button mat-raised-button color="primary" type="button" (click)="addItem()">
+                    <mat-icon>add</mat-icon>
+                    Add Item
+                  </button>
+                </div>
+              </div>
+              
+          
+            <!-- 📦 Shipping Address -->
+            <div formGroupName="shippingAddress" class="border p-4 rounded mt-4">
+              <h3>Shipping Address</h3>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <mat-form-field class="w-full">
+                  <mat-label>Label</mat-label>
+                  <input matInput formControlName="label" placeholder="Home / Office" />
+                </mat-form-field>
+          
+                <mat-form-field class="w-full">
+                  <mat-label>Area</mat-label>
+                  <input matInput formControlName="area" placeholder="Enter area" />
+                </mat-form-field>
+          
+                <mat-form-field class="w-full">
+                  <mat-label>Street</mat-label>
+                  <input matInput formControlName="street" placeholder="Enter street" />
+                </mat-form-field>
+          
+                <mat-form-field class="w-full">
+                  <mat-label>City</mat-label>
+                  <input matInput formControlName="city" placeholder="Enter city" />
+                </mat-form-field>
+          
+                <mat-form-field class="w-full">
+                  <mat-label>State</mat-label>
+                  <input matInput formControlName="state" placeholder="Enter state" />
+                </mat-form-field>
+          
+                <mat-form-field class="w-full">
+                  <mat-label>Postal Code</mat-label>
+                  <input matInput formControlName="postalCode" placeholder="Enter postal code" />
+                </mat-form-field>         
+                
+
+                <mat-form-field class="w-full">
+                  <mat-label>Select Country</mat-label>
+                  <mat-select formControlName="country">
+                    <mat-option *ngFor="let data of countries" [value]="data._id">
+                      {{ data.name }}
+                    </mat-option>
+                  </mat-select>
+                  
+              </mat-form-field>
+              </div>
+            </div>
+          
+            <!-- 🧾 Payment and Totals -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
+              <mat-form-field class="w-full">
+                <mat-label>Payment Method</mat-label>
+                
+                <mat-select formControlName="paymentMethod">
+                  <mat-option *ngFor="let data of methods" [value]="data.methodname">
+                    {{ data.methodname }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>          
+              
+          
+              <mat-form-field class="w-full">
+                <mat-label>Delivery Fee</mat-label>
+                <input type="number" matInput formControlName="deliveryFee" placeholder="Enter delivery fee" />
+              </mat-form-field>
+          
+             
+            </div>
+          
+           
+          
+          </form>
+          
+  
+    </div>
+  
+  </div>
+

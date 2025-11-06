@@ -16,7 +16,7 @@
     <!---Form Section-->
     <div class="bg-white p-2 border rounded ">
      
-        <form [formGroup]="privilegeform" (ngSubmit)="onSubmit()" class="p-4 grid gap-4">
+        <form [formGroup]="privilegeform" class="p-4 grid gap-4">
 
             <!-- Privilege Name -->
             <mat-form-field class="w-full">
@@ -37,8 +37,8 @@
             <!-- Role Name -->
             <mat-form-field class="w-full">
               <mat-label>Role Name</mat-label>
-              <mat-select formControlName="rolename" multiple>          
-                <mat-option *ngFor="let role of roles" [value]="role">{{role}}</mat-option>
+              <mat-select formControlName="roleId">          
+                <mat-option *ngFor="let role of roles" [value]="role._id">{{role.role}}</mat-option>
               </mat-select>
             </mat-form-field>
           
@@ -47,59 +47,110 @@
             <!-- Merchant Name -->
             <mat-form-field class="w-full">
               <mat-label>Derzi Users</mat-label>
-              <mat-select formControlName="merchantname" multiple>
-                <mat-option *ngFor="let m of merchants" [value]="m">{{m}}</mat-option>                  
+              <mat-select formControlName="derziuserId" multiple>
+                <mat-option *ngFor="let m of merchants" [value]="m._id">{{m.username}}</mat-option>                  
               </mat-select>
             </mat-form-field>
           </div>
-            <!-- Permissions -->
-            <div class="">
-                <h3 class="font-semibold mb-2 heading">Permissions</h3>
-                
-                <table class="table-auto border-collapse w-full text-center">
-                  <thead>
-                    <tr class="bg-gray-100">
-                      <th class="border text-left">Module Name</th>
-                      <th class="border">Add</th>
-                      <th class="border">Edit</th>
-                      <th class="border">Delete</th>
-                      <th class="border">View</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr *ngFor="let module of modules">
-                      <td class="border text-left font-medium">{{ module.name }}</td>
-                      <td class="border">
-                        <mat-checkbox 
-                          [checked]="module.actions.includes('Add')" 
-                          (change)="onPermissionChange(module.name, 'Add', $event)">
-                        </mat-checkbox>
-                      </td>
-                      <td class="border">
-                        <mat-checkbox 
-                          [checked]="module.actions.includes('Edit')" 
-                          (change)="onPermissionChange(module.name, 'Edit', $event)">
-                        </mat-checkbox>
-                      </td>
-                     <td class="border">
-                        <mat-checkbox 
-                          [checked]="module.actions.includes('Delete')" 
-                          (change)="onPermissionChange(module.name, 'Delete', $event)">
-                        </mat-checkbox>
-                      </td>
-                      <td class="border">
-                        <mat-checkbox 
-                          [checked]="module.actions.includes('View')" 
-                          (change)="onPermissionChange(module.name, 'View', $event)">
-                        </mat-checkbox>
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-              
           
-         
+          <div class="permissions-section mt-4">
+            <h3 class="font-semibold mb-3 heading">Permissions</h3>
+          
+            <table class="table-auto border-collapse w-full text-center">
+              <thead>
+                <tr class="bg-gray-100">
+                  <th class="border text-left px-3 py-2">Module / Submodule</th>
+          
+                  <!-- Column-level "select all" checkboxes -->
+                  <th class="border px-3 py-2">
+                    Add <br>
+                    <mat-checkbox (change)="toggleColumn('add', $event)"></mat-checkbox>
+                  </th>
+                  <th class="border px-3 py-2">
+                    Edit <br>
+                    <mat-checkbox (change)="toggleColumn('edit', $event)"></mat-checkbox>
+                  </th>
+                  <th class="border px-3 py-2">
+                    Delete <br>
+                    <mat-checkbox (change)="toggleColumn('delete', $event)"></mat-checkbox>
+                  </th>
+                  <th class="border px-3 py-2">
+                    View <br>
+                    <mat-checkbox (change)="toggleColumn('view', $event)"></mat-checkbox>
+                  </th>
+                </tr>
+              </thead>
+          
+              <tbody>
+                <ng-container *ngFor="let parent of menus['root'] || []">
+                  <!-- Parent Row -->
+                  <tr class="bg-gray-50">
+                    <td class="border text-left font-semibold px-3 py-2">{{ parent.menuname }}</td>
+                  
+                    <td class="border px-2 py-2">
+                      <mat-checkbox
+                        (change)="onPermissionChange(parent.menuname, 'add', $event)"
+                        [checked]="privilegeform.get('permissions.' + normalizeMenu(parent.menuname) + '_add')?.value">
+                      </mat-checkbox>
+                    </td>
+                  
+                    <td class="border px-2 py-2">
+                      <mat-checkbox
+                        (change)="onPermissionChange(parent.menuname, 'edit', $event)"
+                        [checked]="privilegeform.get('permissions.' + normalizeMenu(parent.menuname) + '_edit')?.value">
+                      </mat-checkbox>
+                    </td>
+                  
+                    <td class="border px-2 py-2">
+                      <mat-checkbox
+                        (change)="onPermissionChange(parent.menuname, 'delete', $event)"
+                        [checked]="privilegeform.get('permissions.' + normalizeMenu(parent.menuname) + '_delete')?.value">
+                      </mat-checkbox>
+                    </td>
+                  
+                    <td class="border px-2 py-2">
+                      <mat-checkbox
+                        (change)="onPermissionChange(parent.menuname, 'view', $event)"
+                        [checked]="privilegeform.get('permissions.' + normalizeMenu(parent.menuname) + '_view')?.value">
+                      </mat-checkbox>
+                    </td>
+                  </tr>
+          
+                  <!-- Submenu Rows -->
+                  <tr *ngFor="let child of menus[parent.menuname] || []">
+                    <td class="border text-left px-6 py-2 text-gray-700">↳ {{ child.menuname }}</td>
+          
+                    <td class="border px-2 py-2">
+                      <mat-checkbox
+                        (change)="onPermissionChange(child.menuname, 'add', $event)"
+                        [checked]="privilegeform.get('permissions.' + normalizeMenu(child.menuname) + '_add')?.value">
+                      </mat-checkbox>
+                    </td>
+                    <td class="border px-2 py-2">
+                      <mat-checkbox
+                        (change)="onPermissionChange(child.menuname, 'edit', $event)"
+                        [checked]="privilegeform.get('permissions.' + normalizeMenu(child.menuname) + '_edit')?.value">
+                      </mat-checkbox>
+                    </td>
+                    <td class="border px-2 py-2">
+                      <mat-checkbox
+                        (change)="onPermissionChange(child.menuname, 'delete', $event)"
+                        [checked]="privilegeform.get('permissions.' + normalizeMenu(child.menuname) + '_delete')?.value">
+                      </mat-checkbox>
+                    </td>
+                    <td class="border px-2 py-2">
+                      <mat-checkbox
+                        (change)="onPermissionChange(child.menuname, 'view', $event)"
+                        [checked]="privilegeform.get('permissions.' + normalizeMenu(child.menuname) + '_view')?.value">
+                      </mat-checkbox>
+                    </td>
+                  </tr>
+                </ng-container>
+              </tbody>
+            </table>
+          </div>
+          
+                 
           </form>
           
   

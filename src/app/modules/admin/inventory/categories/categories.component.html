@@ -7,10 +7,10 @@
         </div>
       </div>
       <div class="col-6 dflexmain">
-        <button class="btn btn-sm" (click)="deletecategory(1)">
-              <i class="bi bi-trash"></i>
-               <img src="/images/icon/delete.svg" alt="">
-            </button>      
+        <button class="btn btn-sm" (click)="deleteSelected()">
+          <i class="bi bi-trash"></i>
+           <img src="/images/icon/delete.svg" alt="">
+        </button>         
         <input type="text" class="form-control searchinput" placeholder="Search Category" [(ngModel)]="searchText" />
         <button class="btn-add" (click)="openAddForm()"> <img src="/images/icon/add-btn.svg" alt=""> Add Category</button>
         

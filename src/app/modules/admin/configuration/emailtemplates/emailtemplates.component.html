@@ -7,10 +7,10 @@
         </div>
       </div>
       <div class="col-6 dflexmain">
-        <button class="btn btn-sm ">
-              <i class="bi bi-trash"></i>
-               <img src="/images/icon/delete.svg" alt="">
-            </button>      
+        <button class="btn btn-sm" (click)="deleteSelected()">
+          <i class="bi bi-trash"></i>
+           <img src="/images/icon/delete.svg" alt="">
+        </button>       
         <input type="text" class="form-control searchinput" placeholder="Search templates" [(ngModel)]="searchText" />
         <button class="btn-add" (click)="addTemplates()"> <img src="/images/icon/add-btn.svg" alt=""> Add Template</button>
         
@@ -28,24 +28,22 @@
           <th scope="col">ID</th>
           <th scope="col">Template Name</th>
           <th scope="col">Title</th>
-          <th scope="col">Message</th>
           <th scope="col">Status</th>
           <th scope="col">Action</th>
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let templates of filteredtemplates()">
+        <tr *ngFor="let templates of filteredtemplates();let i = index">
           <td>
             <label class="customcheckbox">
               <input type="checkbox" [(ngModel)]="templates.isSelected"  (change)="isAllSelected()">
               <span class="checkmark"></span>
             </label>
           </td>
-          <td>{{ templates.id }}</td>
+          <td>{{ (pageIndex * pageSize) + i + 1 }}</td>
           <td>{{ templates.templatename }}</td>  
           <td>{{ templates.title }}</td>  
-          <td>{{ templates.description }}</td>  
-          <td>Active</td>         
+          <td>{{ templates.status ? 'Active' : 'Inactive' }}</td>           
           <td>
             <button class="btn btn-sm me-2" (click)="edittemplates(templates)">
               <img src="/images/icon/edit-2.svg" alt="">
@@ -56,10 +54,14 @@
             </button>
           </td>
         </tr>
+         <!-- No records message -->
+        <tr *ngIf="filteredtemplates().length === 0">
+          <td colspan="7" class="text-center">No records found</td>
+        </tr>
       </tbody>
     </table>
     
-    <mat-paginator [length]="totalItems"  [pageSize]="10" [pageSizeOptions]="[10,25,100]" ></mat-paginator>
+     <mat-paginator [length]="totalItems"  [pageSize]="10" [pageSizeOptions]="[10,25,100]" (page)="onPageChange($event)"></mat-paginator>
     </div>
   </div>
   

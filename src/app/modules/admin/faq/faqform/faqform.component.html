@@ -83,6 +83,13 @@
               Status is required
             </mat-error> -->
           </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>FAQ Type</mat-label>
+            <mat-select formControlName="faqtype">
+              <mat-option *ngFor="let type of faqTypes" [value]="type">{{ type }}</mat-option>
+            </mat-select>
+          </mat-form-field>
         </div>
               
       </form>

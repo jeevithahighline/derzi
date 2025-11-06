@@ -7,10 +7,10 @@
         </div>
       </div>
       <div class="col-6 dflexmain">
-        <button class="btn btn-sm"  (click)="deletebanner(1)">
+        <!-- <button class="btn btn-sm" (click)="deleteSelected()">
               <i class="bi bi-trash"></i>
                <img src="/images/icon/delete.svg" alt="">
-            </button>      
+            </button>       -->     
         <input type="text" class="form-control searchinput" placeholder="Search Banner" [(ngModel)]="searchText" />
         <button class="btn-add" (click)="openAddForm()"> <img src="/images/icon/add-btn.svg" alt=""> Add Banner</button>
         
@@ -28,6 +28,7 @@
           <th scope="col">ID</th>
           <th scope="col">Title</th>
           <th scope="col">Content</th>
+          <th scope="col">Image</th>
           <th scope="col">Status</th>
           <th scope="col">Action</th>
         </tr>
@@ -45,7 +46,10 @@
           <!-- Use index + 1 for incremental ID -->
           <td>{{ (pageIndex * pageSize) + i + 1 }}</td>
           <td>{{ banner.title }}</td>
-          <td>{{ banner.description }}</td>     
+          <td>{{ banner.description }}</td>   
+          <td>
+            <img [src]="backendUrl + banner.images[0]" alt="Banner Image" width="50" height="50">
+          </td>  
           <td>
             <span 
               [ngClass]="banner.status ? 'status_active' : 'status_inactive'">

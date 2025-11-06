@@ -1,0 +1,68 @@
+<div class="container p-4">
+    <!-- 🔎 Search -->
+    <div class="row">
+      <div class="col-6">
+        <div class="heading">
+             Promotion
+        </div>
+      </div>
+      <div class="col-6 dflexmain">
+        <!-- <button class="btn btn-sm" (click)="deleteSelected()">
+              <i class="bi bi-trash"></i>
+               <img src="/images/icon/delete.svg" alt="">
+            </button>       -->     
+        <input type="text" class="form-control searchinput" placeholder="Search Promotion" [(ngModel)]="searchText" />
+        <button class="btn-add" (click)="addpromotion()"> <img src="/images/icon/add-btn.svg" alt=""> Add Promotion</button>
+        
+      </div>
+    </div>
+  
+    <!-- 📊 promotion Table --><div class="tableparent">
+    <table class="table table-striped table-bordered align-middle text-center">
+      <thead class="table-light">
+        <tr>
+           <th><label class="customcheckbox">
+                <input type="checkbox" [(ngModel)]="masterSelected" (change)="checkUncheckAll()">
+                <span class="checkmark"></span>
+              </label></th>
+          <th scope="col">ID</th>
+          <th scope="col">Promotion Name</th>
+          <th scope="col">Promotion Type</th>
+          <th scope="col">Description</th>
+          <th scope="col">Status</th>
+          <th scope="col">Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let promotion of filteredData(); let i = index">
+          <td>
+            <label class="customcheckbox">
+                <input type="checkbox" [(ngModel)]="promotion.isSelected"  (change)="isAllSelected()">
+                <span class="checkmark"></span>
+              </label>
+          </td>
+          <td>{{ (pageIndex * pageSize) + i + 1 }}</td>
+          <td>{{ promotion.promotionName }}</td> 
+          <td>{{ promotion.type }}</td> 
+          <td>{{ promotion.description }} </td> 
+          <td>{{ promotion.status ? 'Active' : 'Inactive' }}</td>                      
+          <td>
+            <button class="btn btn-sm me-2" (click)="editpromotion(promotion)">
+              <img src="/images/icon/edit-2.svg" alt="">
+            </button>
+            <button class="btn btn-sm " (click)="deletepromotion(promotion)">
+              <i class="bi bi-trash"></i>
+               <img src="/images/icon/delete.svg" alt="">
+            </button>
+          </td>
+        </tr>
+        <tr *ngIf="filteredData().length === 0">
+            <td colspan="6" class="text-center">No records found</td>
+          </tr>
+      </tbody>
+    </table>
+    <mat-paginator [length]="totalItems"  [pageSize]="10" [pageSizeOptions]="[10,25,100]" (page)="onPageChange($event)"></mat-paginator>
+  
+    </div>
+  </div>
+  

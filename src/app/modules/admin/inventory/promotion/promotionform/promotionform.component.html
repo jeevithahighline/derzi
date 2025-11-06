@@ -1,0 +1,99 @@
+<div class="container p-4">
+
+    <!-- Header with Actions -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2">
+      <div class="col-6">
+        <div class="heading pt-2">
+          <h2>{{ promoId ? 'Edit Promotion' : 'Add Promotion' }}</h2>
+        </div>
+      </div>
+      <div class="col-6 dflexmain">
+        <button class="btn-add" (click)="onSubmit()">
+          Save
+        </button>
+        <button class="btn-cancel" (click)="onCancel()">Cancel</button>
+      </div>
+    </div>
+  
+    <div class="row">&nbsp;</div>
+  
+    <!-- Form Section -->
+    <div class="bg-white p-2 border rounded">
+     
+        <form [formGroup]="promotionForm" (ngSubmit)="onSubmit()" class="p-6 grid gap-4">
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <mat-form-field class="w-full">
+                    <mat-label>Promotion Name</mat-label>
+                    <input matInput formControlName="promotionName" placeholder="Enter promotion name">
+                </mat-form-field>  
+              
+                <mat-form-field class="w-full">
+                    <mat-label>Description</mat-label>
+                    <textarea matInput rows="2" formControlName="description"></textarea>
+                </mat-form-field>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+                <mat-form-field class="w-full">
+                    <mat-label>Type</mat-label>
+                    <mat-select formControlName="type">
+                      <mat-option value="manual">Manual</mat-option>
+                      <mat-option value="dynamic">Dynamic</mat-option>
+                    </mat-select>
+                </mat-form-field>   
+                
+                <mat-form-field class="w-full">
+                    <mat-label>Status</mat-label>
+                    <mat-select formControlName="status">
+                      <mat-option [value]="true">Active</mat-option>
+                      <mat-option [value]="false">Inactive</mat-option>
+                    </mat-select>
+                </mat-form-field>
+
+            </div>
+    
+            <!-- Manual Type Section -->
+            <div *ngIf="promotionForm.get('type')?.value === 'manual'">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+                    <mat-form-field class="w-full">
+                        <mat-label>Select Products</mat-label>
+                        <mat-select formControlName="manualProductIds" multiple>
+                        <mat-option *ngFor="let product of products" [value]="product._id">
+                            {{ product.name }}
+                        </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+              </div>
+            </div>
+          
+            <!-- Dynamic Type Section -->
+            <div *ngIf="promotionForm.get('type')?.value === 'dynamic'" [formGroup]="promotionForm.get('dynamicRule')">
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <mat-form-field class="w-full">
+                  <mat-label>Rule Type</mat-label>
+                  <mat-select formControlName="ruleType">
+                    <mat-option value="most_selling">Most Selling</mat-option>
+                    <mat-option value="new_products">New Products</mat-option>
+                  </mat-select>
+                </mat-form-field>
+          
+                <mat-form-field class="w-full">
+                  <mat-label>Time Period</mat-label>
+                  <mat-select formControlName="timePeriod">
+                    <mat-option value="7d">Last 7 Days</mat-option>
+                    <mat-option value="30d">Last 30 Days</mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </div>
+          
+           
+          </form>
+          
+      
+    </div>
+  </div>
+  

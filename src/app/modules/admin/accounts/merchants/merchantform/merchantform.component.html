@@ -4,7 +4,7 @@
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2">
       <div class="col-6">
         <div class="heading pt-2">
-          <h2>{{ editMode ? 'Edit Merchant' : 'Add Merchant' }}</h2>
+          <h2>{{ merchantId ? 'Edit Merchant' : 'Add Merchant' }}</h2>
         </div>
       </div>
       <div class="col-6 dflexmain">
@@ -21,85 +21,165 @@
     <div class="bg-white p-2 border rounded">
       <form [formGroup]="merchantform" class="p-4 grid gap-4">
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <!-- Merchant Name & ID -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">          
+      
           <mat-form-field class="w-full">
-            <mat-label>Merchant Id</mat-label>
-            <input matInput formControlName="merchant_id" placeholder="Enter Merchant Id" />
-            <!-- <mat-error *ngIf="merchantform.get('code')?.hasError('required')">Code is required</mat-error> -->
+            <mat-label>Merchant Name</mat-label>
+            <input matInput formControlName="merchant_name" placeholder="Enter Merchant Name" />
           </mat-form-field>
-  
-          <mat-form-field class="w-full">
-              <mat-label>Merchant Name</mat-label>
-              <input matInput formControlName="merchant_name" placeholder="Enter merchant name" />
-              <!-- <mat-error *ngIf="merchantform.get('code')?.hasError('required')">Code is required</mat-error> -->
-            </mat-form-field>
-    
-          </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <mat-form-field class="w-full">
-          <mat-label>Firstname</mat-label>
-          <input matInput formControlName="firstname" placeholder="Enter Firstname" />
-          <!-- <mat-error *ngIf="merchantform.get('code')?.hasError('required')">Code is required</mat-error> -->
+          <mat-form-field class="w-full">
+          <mat-label>Description</mat-label>
+          <textarea matInput formControlName="description" placeholder="Enter Description"></textarea>
         </mat-form-field>
-
-        <mat-form-field class="w-full">
-            <mat-label>Lastname</mat-label>
-            <input matInput formControlName="lastname" placeholder="Enter lastname" />
-            <!-- <mat-error *ngIf="merchantform.get('code')?.hasError('required')">Code is required</mat-error> -->
-          </mat-form-field>
-  
         </div>
-             
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">            
-    
-            <mat-form-field class="w-full">
-                <mat-label>Email</mat-label>
-                <input matInput formControlName="email" placeholder="Enter email" />
-                <!-- <mat-error *ngIf="merchantform.get('code')?.hasError('required')">Code is required</mat-error> -->
-              </mat-form-field>
 
-              <mat-form-field class="w-full">
-                <mat-label>Mobile number</mat-label>
-                <input matInput formControlName="mobilenumber" placeholder="Enter mobilenumber" />
-                <!-- <mat-error *ngIf="merchantform.get('code')?.hasError('required')">Code is required</mat-error> -->
-              </mat-form-field>  
-      
-        </div>   
-
+        
+        <!-- Category & Services (multi-select dropdowns) -->
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <mat-form-field class="w-full">
-              <mat-label>Username</mat-label>
-              <input matInput formControlName="username" placeholder="Enter username" />
-              <!-- <mat-error *ngIf="merchantform.get('code')?.hasError('required')">Code is required</mat-error> -->
-            </mat-form-field>
-    
-            <mat-form-field class="w-full">
-                <mat-label>Password</mat-label>
-                <input matInput formControlName="password" placeholder="Enter password" />
-                <!-- <mat-error *ngIf="merchantform.get('code')?.hasError('required')">Code is required</mat-error> -->
-              </mat-form-field>
-      
-        </div>   
-      
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-
           <mat-form-field class="w-full">
-                <mat-label>Location</mat-label>
-                <input matInput formControlName="location" placeholder="Enter location" />
-                <!-- <mat-error *ngIf="merchantform.get('code')?.hasError('required')">Code is required</mat-error> -->
-          </mat-form-field>   
-
+            <mat-label>Category</mat-label>
+            <mat-select formControlName="category" multiple>
+              <mat-option *ngFor="let cat of categories" [value]="cat._id">{{ cat.name }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+      
           <mat-form-field class="w-full">
-            <mat-label>Status</mat-label>
-            <mat-select formControlName="status">
-              <mat-option value="Active">Active</mat-option>
-              <mat-option value="Inactive">Inactive</mat-option>
+            <mat-label>Services</mat-label>
+            <mat-select formControlName="service_id" multiple>
+              <mat-option *ngFor="let srv of services" [value]="srv._id">{{ srv.name }}</mat-option>
             </mat-select>
           </mat-form-field>
         </div>
+      
+      
+        <!-- Firstname & Lastname -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <mat-form-field class="w-full">
+            <mat-label>Firstname</mat-label>
+            <input matInput formControlName="firstname" placeholder="Enter Firstname" />
+          </mat-form-field>
+      
+          <mat-form-field class="w-full">
+            <mat-label>Lastname</mat-label>
+            <input matInput formControlName="lastname" placeholder="Enter Lastname" />
+          </mat-form-field>
+        </div>
+      
+        <!-- Email & Mobile -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <mat-form-field class="w-full">
+            <mat-label>Email</mat-label>
+            <input matInput formControlName="email" placeholder="Enter Email" />
+          </mat-form-field>
+      
+          <mat-form-field class="w-full">
+            <mat-label>Mobile Number</mat-label>
+            <input matInput formControlName="mobilenumber" placeholder="Enter Mobile Number" />
+          </mat-form-field>
+        </div>
+      
+        <!-- Username & Password -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <mat-form-field class="w-full">
+            <mat-label>Username</mat-label>
+            <input matInput formControlName="username" placeholder="Enter Username" />
+          </mat-form-field>
+      
+          <mat-form-field class="w-full">
+            <mat-label>Password</mat-label>
+            <input matInput type="password" formControlName="password" placeholder="Enter Password" />
+          </mat-form-field>
+        </div>
+      
+        <!-- Location & Status -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <mat-form-field class="w-full">
+            <mat-label>Latitude</mat-label>
+            <input matInput formControlName="latitude" placeholder="Enter latitude" />
+          </mat-form-field>
+      
+          <mat-form-field class="w-full">
+            <mat-label>Longitude</mat-label>
+            <input matInput formControlName="longitude" placeholder="Enter longitude" />
+          </mat-form-field>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <mat-form-field class="w-full">
+            <mat-label>Location</mat-label>
+            <input matInput formControlName="location" placeholder="Enter Location" />
+          </mat-form-field>
+      
+          <mat-form-field class="w-full">
+            <mat-label>Status</mat-label>
+            <mat-select formControlName="status">
+              <mat-option value="active">Active</mat-option>
+              <mat-option value="inactive">Inactive</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      
+        <!-- Description -->
         
+      
+        <!-- Logo & Backdrop Image Upload -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+          <mat-form-field appearance="outline" class="w-full">
+            <mat-label>Logo</mat-label>
+        
+            <!-- ✅ Show existing preview -->
+            <div *ngIf="previewUrls.logo?.length" class="mb-2">
+              <img [src]="previewUrls.logo" alt=" Image" class="w-[50px] h-[50px] object-cover"/>
+            </div>
+        
+            <input type="file" class="hidden" #catFileInput (change)="onFileSelected($event, 'logo')" />
+        
+            <input
+              matInput
+              placeholder="Choose file"
+              [value]="selectedFileNames.logo || ''"
+              readonly
+              (click)="catFileInput.click()"
+            />
+        
+            <button mat-icon-button matSuffix (click)="catFileInput.click()" type="button">
+              <mat-icon>upload</mat-icon>
+            </button>
+        </mat-form-field>
+        
+          <mat-form-field appearance="outline" class="w-full">
+            <mat-label>Backdrop Image</mat-label>
+        
+            <!-- ✅ Show existing preview -->
+            <div *ngIf="previewUrls.backdrop_image?.length" class="mb-2">
+              <img [src]="previewUrls.backdrop_image" alt=" Arabic Image" class="w-[50px] h-[50px] object-cover" />
+            </div>
+        
+            <input type="file" class="hidden" #catArFileInput (change)="onFileSelected($event, 'backdrop_image')" />
+        
+            <input
+              matInput
+              placeholder="Choose file"
+              [value]="selectedFileNames.backdrop_image || ''"
+              readonly
+              (click)="catArFileInput.click()"
+            />
+        
+            <button mat-icon-button matSuffix (click)="catArFileInput.click()" type="button">
+              <mat-icon>upload</mat-icon>
+            </button>
+          </mat-form-field>
+
+       
+        </div>
+      
+        
+      
       </form>
+      
       
     </div>
   </div>

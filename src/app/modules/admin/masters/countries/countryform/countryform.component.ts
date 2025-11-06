@@ -19,7 +19,7 @@ export class CountryformComponent {
   isEditMode = false;
   editId: string | null;
   usertoken:any;
-
+  code: any[] = [];
   constructor(
     private fb: FormBuilder,private _masterservice: CountryService,private _toastrService: ToastService,
     @Inject(MAT_DIALOG_DATA) public data: any,
@@ -31,18 +31,25 @@ export class CountryformComponent {
     this.usertoken = localStorage.getItem('usertoken'); // get token
     this.dynamicForm = this.fb.group({
       name: ['', Validators.required],
+      flag: ['', Validators.required],
       code: ['', Validators.required],
-      status: [null, Validators.required]
+      status: [true, Validators.required]
     });
+
+     this._masterservice.getAllConversionRate(this.usertoken).subscribe(res => this.code = res.data.docs);
 
     // Prefill if editing
     if (this.data?.country) {
-
-      //console.log(this.data.country);
-      this.editId = this.data.country._id;     
-      // Patch form directly with backend data
-      this.dynamicForm.patchValue(this.data.country);
+      this.editId = this.data.country._id;
+    
+      const patchData = {
+        ...this.data.country,
+        code: this.data.country.code?._id || this.data.country.code  // ensure ID only
+      };
+    
+      this.dynamicForm.patchValue(patchData);
     }
+    
   }
 
   save() {
@@ -72,6 +79,7 @@ export class CountryformComponent {
    const insertData = {
       name: data.name,
       code: data.code,
+      flag:data.flag,
       status: data.status   // ✅ convert
     };
    
@@ -88,6 +96,7 @@ export class CountryformComponent {
     const updatedInfo = {
       name: data.name,
       code: data.code,
+      flag:data.flag,
       status: data.status  // ✅ convert
     };
    

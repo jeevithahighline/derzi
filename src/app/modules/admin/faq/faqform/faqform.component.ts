@@ -21,7 +21,7 @@ export class FaqformComponent {
   editId: string | null;
   usertoken: any;
   faqDetails: any;
-
+  faqTypes = ['User', 'Merchant', 'Driver'];
   constructor(private _router: Router,private fb: FormBuilder,private route: ActivatedRoute,private _masterservice: FaqService,private _toastrService: ToastService) {}
 
  
@@ -37,7 +37,8 @@ export class FaqformComponent {
       question_ar: ['', [Validators.required, Validators.minLength(3)]],   
       answer: ['', [Validators.required, Validators.maxLength(250)]],
       answer_ar: ['', [Validators.required, Validators.maxLength(250)]],
-      status: [true, Validators.required]    
+      status: [true, Validators.required],    
+      faqtype: ["User", Validators.required]    
     });
 
      // ✅ get id from route
@@ -56,7 +57,8 @@ export class FaqformComponent {
               question_ar: this.faqDetails.question_ar || '',
               answer: this.faqDetails.answer || '',
               answer_ar: this.faqDetails.answer_ar || '',
-              status: this.faqDetails.status
+              status: this.faqDetails.status,
+              faqtype: this.faqDetails.faqtype
             });            
           }
         },
@@ -93,7 +95,7 @@ export class FaqformComponent {
        answer:data.answer,
        answer_ar:data.answer,
        status: data.status,
-       page_name:data.page_name,
+       faqtype: data.faqtype,
        userId:localStorage.getItem('userId') 
      };
     
@@ -113,7 +115,7 @@ export class FaqformComponent {
        answer:data.answer,
        answer_ar:data.answer,
        status: data.status,
-       page_name:data.page_name,
+       faqtype: data.faqtype,
        userId:localStorage.getItem('userId') 
      };
     

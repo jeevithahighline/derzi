@@ -9,7 +9,8 @@
       <div class="col-6 dflexmain">
          
         <input type="text" class="form-control searchinput" placeholder="Search User" [(ngModel)]="searchText" />
-        <button class="btn-add">Download</button>
+        <button class="btn-add" (click)="downloadCsv()">Download CSV</button>
+        <button class="btn-add" (click)="downloadExcel()">Download Excel</button>
         
       </div>
     </div>
@@ -17,36 +18,32 @@
     <!-- 📊 Country Table --><div class="tableparent">
     <table class="table table-striped table-bordered align-middle text-center">
       <thead class="table-light">
-        <tr>
-         <th><label class="customcheckbox">
-                <input type="checkbox" [(ngModel)]="masterSelected" (change)="checkUncheckAll()">
-                <span class="checkmark"></span>
-              </label></th>
-          <th scope="col">ID</th>
+        <tr>        
+          <th scope="col">User ID</th>
           <th scope="col">First name</th>
           <th scope="col">Last name</th>
           <th scope="col">Email</th>
+          <th scope="col">Mobilenumber</th>
           <th scope="col">Status</th>
+          <th scope="col">Action</th>
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let country of filteredData()">
-          <td>
-            <label class="customcheckbox">
-                <input type="checkbox" [(ngModel)]="country.isSelected"  (change)="isAllSelected()">
-                <span class="checkmark"></span>
-              </label>
+        <tr *ngFor="let user of filteredData();let i = index">          
+          <td>{{ user.userCode }}</td>
+          <td>{{ user.firstname }}</td> 
+          <td>{{ user.lastname }}</td> 
+          <td>{{ user.email }}</td> 
+          <td>{{ user.mobilenumber }}</td> 
+          <td>{{ user.status ? 'Active' : 'In-Active' }}</td>           
+          <td><button (click)="downloadData(user)" class="table-link">
+            Download
+          </button>
           </td>
-          <td>{{ country.id }}</td>
-          <td>{{ country.first_name }}</td> 
-          <td>{{ country.last_name }}</td> 
-          <td>{{ country.email }}</td> 
-          <td>Active</td>                     
-          
         </tr>
       </tbody>
     </table>
-    <mat-paginator [length]="totalItems"  [pageSize]="10" [pageSizeOptions]="[10,25,100]" ></mat-paginator>
+     <mat-paginator [length]="totalItems"  [pageSize]="10" [pageSizeOptions]="[10,25,100]" (page)="onPageChange($event)"></mat-paginator>
   
     </div>
   </div>

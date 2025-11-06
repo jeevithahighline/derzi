@@ -26,7 +26,15 @@ export class CountryService {
     );
   }
   
-
+  public getAllConversionRate(usertoken: any) {
+    return this._httpReqService.request({
+      method: APP_CONSTANTS.API_METHODS.GET,
+      url: `${this._configService.getApiUrl()}${environment.SERVICE_APIS.GET_ALL_CONVERSION_RATE}`,
+      headerConfig: { token: usertoken }
+    }).pipe(
+      map(response => this._extractResponse(response))
+    );
+  }
   public getSpecificCountry(groupId: string, usertoken: string) {
     return this._httpReqService.request({
       method: APP_CONSTANTS.API_METHODS.GET,
@@ -79,17 +87,17 @@ export class CountryService {
       );
   }
 
-  public deleteMultipleData(requestBody:{country_list:string[]},usertoken) {
+  public deleteMultipleData(requestBody:{deleteIds:string[]}, usertoken) {
     return this._httpReqService.request({
-      method: APP_CONSTANTS.API_METHODS.POST,
-      url: this._configService.getApiUrl()+environment.SERVICE_APIS.BULK_COUNTRY_DELETE,
+      method: APP_CONSTANTS.API_METHODS.DELETE,
+      url: this._configService.getApiUrl() + environment.SERVICE_APIS.BULK_COUNTRY_DELETE,
       body: requestBody,
-      headerConfig: {token:usertoken}
-    })
-      .pipe(
-        map(response => this._extractResponse(response))
-      );
+      headerConfig: { token: usertoken }
+    }).pipe(
+      map(response => this._extractResponse(response))
+    );
   }
+  
 
 
   private _extractResponse = (response: { data: any, success:any,status: number }) => {

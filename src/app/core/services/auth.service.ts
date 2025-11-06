@@ -7,15 +7,25 @@ import { Observable, of } from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { ConfigService } from './config.service';
+import { AuthUtils } from '../../core/auth/auth.utils';
 
 // Derzi Users
+
+export interface AuthResponse {
+  data?: any;
+  items: any[];
+  status?: number;
+  success?: string;
+  result?: any;
+}
+
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-
   constructor(private httpClient: HttpClient,private _httpReqService: HttpRequestService,public _router: Router,private _configService: ConfigService) { }
 
+  
   get isAuthenticated() {
     const token = localStorage.getItem('usertoken'); // ✅ match your login storage
     return !!token;
@@ -59,22 +69,7 @@ export class AuthService {
       "refresh": localStorage.getItem('usertoken')
     };
   
-    this._httpReqService.request({
-      method: APP_CONSTANTS.API_METHODS.POST,
-      url: this._configService.getApiUrl() + environment.SERVICE_APIS.LOGOUT_API,
-      body: payload
-    })
-    .pipe(map(response => this._extractResponse(response)))
-    .subscribe({
-      next: (res) => {
-        //console.log('Logged out successfully');
-        localStorage.clear();
-      },
-      error: (err) => {
-        console.warn('Logout API failed, clearing anyway');
-        localStorage.clear();
-      }
-    });
+    
   }
 
   // Example: check if token exists
@@ -111,6 +106,16 @@ export class AuthService {
     );
   }
 
+  public getAllRoles(usertoken: any) {
+    return this._httpReqService.request({
+      method: APP_CONSTANTS.API_METHODS.GET,
+      url: `${this._configService.getApiUrl()}${environment.SERVICE_APIS.GET_ALL_ROLE}`,
+      headerConfig: { token: usertoken }
+    }).pipe(
+      map(response => this._extractResponse(response))
+    );
+  }
+
   public getSpecificUser(userId: string, usertoken: string) {
     return this._httpReqService.request({
       method: APP_CONSTANTS.API_METHODS.GET,
@@ -132,6 +137,59 @@ export class AuthService {
       .pipe(
         map(response => this._extractResponse(response))
       );
+  }
+
+  public deleteCompleteUser(deleteId,usertoken) {
+
+
+    return this._httpReqService.request({
+      method: APP_CONSTANTS.API_METHODS.DELETE,
+      url: this._configService.getApiUrl()+environment.SERVICE_APIS.COMPLETE_DELETE_DERZI_USERS + '/' + deleteId,
+      headerConfig: {token:usertoken}
+    })
+      .pipe(
+        map(response => this._extractResponse(response))
+      );
+  }
+
+  public createUser(payload: FormData,usertoken): Observable<AuthResponse> {
+
+    console.log(payload);
+    const url = this._configService.getApiUrl() + environment.SERVICE_APIS.REGISTER_DERZI_USERS_APP;
+  
+    const bearerToken = localStorage.getItem('bearertoken') || '';
+    const authToken = localStorage.getItem('usertoken') || '';
+  
+    const headers = new HttpHeaders()
+      .set('Authorization', `Bearer ${bearerToken}`)
+      .set('Auth-Token', authToken);
+  
+    return this.httpClient.post<AuthResponse>(url, payload, { headers }).pipe(
+      map(res => ({
+        ...res
+      }))
+    );
+  }  
+
+
+  public updateUser(editId: string, payload: FormData, usertoken: string): Observable<AuthResponse> {
+    const url = this._configService.getApiUrl() + environment.SERVICE_APIS.UPDATE_DERZI_USERS_APP + '/' + editId;
+  
+    // Get tokens
+    const bearerToken = localStorage.getItem('bearertoken') || '';
+    const authToken = usertoken || localStorage.getItem('usertoken') || '';
+  
+    // Set headers
+    const headers = new HttpHeaders()
+      .set('Authorization', `Bearer ${bearerToken}`)
+      .set('Auth-Token', authToken);
+  
+    // PUT request with FormData
+    return this.httpClient.put<AuthResponse>(url, payload, { headers }).pipe(
+      map(res => ({
+        ...res
+      }))
+    );
   }
 
   private _extractResponse = (response: { data: any, success:any,status: number }) => {

@@ -1,0 +1,115 @@
+<div class="container p-4">
+  <!-- 🔎 Search -->
+  <div class="row">
+    <div class="col-6">
+      <div class="heading">
+           Conversion Rate
+      </div>
+    </div>
+    <div class="col-6 dflexmain">  
+      <button class="btn-add" (click)="addCurrency()"><img src="/images/icon/add-btn.svg" alt="" > Add Currency</button>
+      <button class="btn-add" (click)="updateAllRates()"> Update All Rates</button>
+    </div>
+  </div>
+
+  <!-- 📊 currency Table -->
+
+  <div class="tableparent"> 
+  <table mat-table [dataSource]="currencies" class="table table-striped table-bordered align-middle text-center">
+
+    <!-- Default -->
+    <ng-container matColumnDef="default">
+      <th mat-header-cell *matHeaderCellDef> Default </th>
+      <td mat-cell *matCellDef="let element">
+        <mat-radio-button
+          name="defaultCurrency"
+          [checked]="element.default"
+          (change)="setDefaultCurrency(element)">
+        </mat-radio-button>
+      </td>
+    </ng-container>
+
+    <!-- Show -->
+    <ng-container matColumnDef="show">
+      <th mat-header-cell *matHeaderCellDef> Show </th>
+      <td mat-cell *matCellDef="let element; let i = index">
+        <mat-slide-toggle name="show{{i}}" [(ngModel)]="element.show"></mat-slide-toggle>
+      </td>
+    </ng-container>
+
+    <!-- Currency -->
+    <ng-container matColumnDef="currency">
+      <th mat-header-cell *matHeaderCellDef> Currency </th>
+      <td mat-cell *matCellDef="let element; let i = index">
+        <mat-form-field appearance="outline" class="field">
+          <input
+            matInput
+            name="currency{{i}}"
+            [(ngModel)]="element.name"
+            placeholder="Currency" />
+        </mat-form-field>
+      </td>
+    </ng-container>
+
+    
+    <!-- Rate -->
+    <ng-container matColumnDef="rate">
+      <th mat-header-cell *matHeaderCellDef> Rate </th>
+      <td mat-cell *matCellDef="let element; let i = index">
+        <mat-form-field appearance="outline" class="small-field">
+          <input matInput name="rate{{i}}" type="number" [(ngModel)]="element.rate" />
+        </mat-form-field>
+      </td>
+    </ng-container>
+
+    <!-- Exchange Fee -->
+    <ng-container matColumnDef="exchangeFee">
+      <th mat-header-cell *matHeaderCellDef> Exchange Fee </th>
+      <td mat-cell *matCellDef="let element">
+        <mat-form-field appearance="outline" class="small-field">
+          <input matInput type="number" [(ngModel)]="element.exchangeFee">
+        </mat-form-field>
+      </td>
+    </ng-container>
+
+    <!-- Decimals -->
+    <ng-container matColumnDef="decimals">
+      <th mat-header-cell *matHeaderCellDef> Decimals </th>
+      <td mat-cell *matCellDef="let element">
+        <mat-form-field appearance="outline" class="tiny-field">
+          <input matInput type="number" [(ngModel)]="element.decimals">
+        </mat-form-field>
+      </td>
+    </ng-container>
+
+    <!-- Custom Symbol -->
+    <ng-container matColumnDef="customSymbol">
+      <th mat-header-cell *matHeaderCellDef> Custom Symbol </th>
+      <td mat-cell *matCellDef="let element">
+        <mat-form-field appearance="outline" class="tiny-field">
+          <input matInput [(ngModel)]="element.customSymbol">
+        </mat-form-field>
+      </td>
+    </ng-container>
+
+    <!-- Actions -->
+    <ng-container matColumnDef="actions">
+      <th mat-header-cell *matHeaderCellDef> Actions </th>
+      <td mat-cell *matCellDef="let element; let i = index">
+        <button mat-icon-button color="warn" (click)="deleteCurrency(i)">
+          <mat-icon>delete</mat-icon>
+        </button>
+      </td>
+    </ng-container>
+
+    <!-- Header and Row -->
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
+  </div>
+  
+
+ 
+  
+</div>
+  

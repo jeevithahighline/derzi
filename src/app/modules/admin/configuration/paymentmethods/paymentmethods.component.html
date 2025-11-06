@@ -7,10 +7,10 @@
         </div>
       </div>
       <div class="col-6 dflexmain">
-        <button class="btn btn-sm" (click)="deletepayment(1)">
+        <!-- <button class="btn btn-sm" (click)="deleteSelected()">
               <i class="bi bi-trash"></i>
                <img src="/images/icon/delete.svg" alt="">
-            </button>      
+            </button>       -->     
         <input payment="text" class="form-control searchinput" placeholder="Search Payment Method" [(ngModel)]="searchText" />
         <button class="btn-add" (click)="openAddForm()"> <img src="/images/icon/add-btn.svg" alt=""> Add Payment Method</button>
         
@@ -41,7 +41,7 @@
           </td>
           <td>{{ (pageIndex * pageSize) + i + 1 }}</td>
           <td>{{ payment.methodname }}</td>  
-          <td>Active</td>         
+          <td>{{ payment.status ? 'Active' : 'Inactive' }}</td>           
           <td>
             <button class="btn btn-sm me-2" (click)="editpayment(payment)">
               <img src="/images/icon/edit-2.svg" alt="">
@@ -51,6 +51,9 @@
                <img src="/images/icon/delete.svg" alt="">
             </button>
           </td>
+        </tr>
+        <tr *ngIf="filteredData().length === 0">
+          <td colspan="5" class="text-center">No records found</td>
         </tr>
       </tbody>
     </table>

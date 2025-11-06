@@ -1,0 +1,126 @@
+.container .row {
+    font-size: 14px;
+  }
+  
+  .font-weight-bold {
+    font-weight: 600;
+  }
+  
+  img {
+    border-radius: 4px;
+  }
+  .dflexmain{
+    display: flex;
+    gap: 10px;
+    justify-content: right;
+  }
+  .btn-search {
+      display: flex;
+      height: 45px;
+      background: #fafafa;
+      color: #666;
+      align-items: center;
+      gap: 15px;
+      padding: 0 20px;
+      border-radius: 6px;
+      border: 1px solid #eee;
+  
+    img {
+      width: 15px;
+    }
+  
+    
+  }
+  .action-buttons {
+    display: flex;
+    align-items: center;
+    gap: 10px; /* spacing between buttons */
+  }
+  
+  .btn-add {
+      display: flex;
+      height:35px;
+      background: #802012;
+      color: #fff;
+      align-items: center;
+      gap: 15px;
+      padding: 0 15px;
+      border-radius:3px;
+      border: 1px solid #eee;
+  
+    img {
+      width: 15px;
+    }
+  }
+  
+  .form-control {
+    height: 45px;
+    background: #fff;
+    border: 1px solid #eee;
+    padding: 1px 1rem;
+    border-radius: 5px;
+    
+  }
+  .searchinput{
+    background-image: url(../../../../../../public/images/icon/search-normal.svg);
+    background-repeat: no-repeat;
+    background-position: 5%;
+    background-size: 7%;
+    padding-left: 2.5rem;
+  }
+  .tableparent {
+    background: #fff;
+    padding: 1rem;
+    border-radius: 10px;
+    box-shadow: 0px 5px 5px #CDC;
+    border: 1px solid #802012;
+  
+    .table {
+      width: 100%;
+  
+      border-radius: 1px;
+  
+      th {
+        padding: .8rem .5rem;
+        background: #fafafa;
+        text-align: left;
+      }
+  
+      td {
+        text-align: left;
+        padding: .5rem;
+        border-bottom: 1px solid #eee;
+  
+        img {
+          height: 30px;
+          width: 40px;
+          object-fit: contain;
+  
+        }
+      }
+    }
+  }
+  .heading{
+    font-size: 1.3rem;
+    font-weight: 800;
+    color:#802012;
+    margin-left: 5px;
+  
+  }
+  .row{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+  }
+  .table{
+    tr{
+      td{
+        &:nth-child(1){
+           width: 1rem;
+        }
+        
+       
+      }
+    }
+  }

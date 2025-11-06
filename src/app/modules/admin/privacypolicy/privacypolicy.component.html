@@ -1,0 +1,15 @@
+<div class="privacy-page">
+  <!-- Header with Logo and Title -->
+  <div class="header">
+    <div class="logo">
+      <a [routerLink]="['/sign-in']">
+        <img src="images/logo/logo.svg" alt="Logo" />
+      </a>
+    </div>
+    <h1 class="title"></h1>
+  </div>
+
+  <!-- Content Section -->
+  <div class="privacy-policy-container" [innerHTML]="pageContent"></div>
+
+</div>

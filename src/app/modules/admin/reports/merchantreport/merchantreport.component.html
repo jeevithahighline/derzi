@@ -9,7 +9,8 @@
       <div class="col-6 dflexmain">
           
         <input type="text" class="form-control searchinput" placeholder="Search Merchant" [(ngModel)]="searchText" />
-        <button class="btn-add">Download</button>
+        <button class="btn-add" (click)="downloadmerchantsCsv()">Download CSV</button>
+        <button class="btn-add" (click)="downloadmerchantsExcel()">Download Excel</button>
         
       </div>
     </div>
@@ -18,39 +19,35 @@
     <table class="table table-striped table-bordered align-middle text-center">
       <thead class="table-light">
         <tr>
-         <th><label class="customcheckbox">
-                <input type="checkbox" [(ngModel)]="masterSelected" (change)="checkUncheckAll()">
-                <span class="checkmark"></span>
-              </label></th>
-          <th>Merchant ID</th>
-          <th>Merchant Name</th>
-          <th>Category</th>
-          <th>Email</th>
-          <th>Phone</th>
-          <th>Location</th>
-          <th>Status</th>
+          <th scope="col">ID</th>
+          <th scope="col">Merchant Name</th>
+          <th scope="col">Category</th>
+          <th scope="col">Email</th>
+          <th scope="col">Phone</th>
+          <th scope="col">Location</th>
+          <th scope="col">Status</th>
+          <th scope="col">Action</th>
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let merchant of filteredMerchants()">          
-          <td>
-            <label class="customcheckbox">
-                <input type="checkbox" [(ngModel)]="merchant.isSelected"  (change)="isAllSelected()">
-                <span class="checkmark"></span>
-              </label>
-          </td>
-          <td>{{ merchant.merchant_id }}</td>
+        <tr *ngFor="let merchant of filteredData();let i = index">          
+          <td>{{ merchant.merchantCode }}</td>
           <td>{{ merchant.merchant_name }}</td>
-          <td>{{ merchant.category }}</td>
-          <td>{{ merchant.contact_email }}</td>
-          <td>{{ merchant.phone }}</td>
+          <td><span *ngFor="let cat of merchant.category; let last = last">
+            {{ cat.name }}<span *ngIf="!last">, </span>
+          </span></td>
+          <td>{{ merchant.email }}</td>
+          <td>{{ merchant.mobilenumber }}</td>
           <td>{{ merchant.location }}</td>
-          <td>Active</td>                     
-          
+          <td>{{ merchant.status ? 'Active' : 'In-Active' }}</td>      
+          <td><button (click)="downloadData(merchant)" class="table-link">
+            Download
+          </button>
+          </td> 
         </tr>
       </tbody>
     </table>
-    <mat-paginator [length]="totalItems"  [pageSize]="10" [pageSizeOptions]="[10,25,100]" ></mat-paginator>
+     <mat-paginator [length]="totalItems"  [pageSize]="10" [pageSizeOptions]="[10,25,100]" (page)="onPageChange($event)"></mat-paginator>
   
     </div>
   </div>

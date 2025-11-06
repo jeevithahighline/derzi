@@ -130,20 +130,14 @@
     align-items: center;
     margin-bottom: 1rem;
   }
-  .table{
-    tr{
-      td{
-        &:nth-child(1){
-           width: 1rem;
-        }         
-       
-      }
-    }
-  }
+  
  mat-menu{
    min-width: 400px;
   }
   .mleft{
     margin-left: 10px;
+  }
+  .vieworderlink{
+    text-decoration: underline;
   }
   

@@ -21,6 +21,7 @@ export class MerchantsComponent {
   pageSize = 10;
   pageIndex = 0;
   usertoken:any;
+  isSuperAdmin:any;
   selectedIds: string[] = [];
   constructor(private _router: Router,private dialog: MatDialog,private _accountService: MerchantService,private _toastrService: ToastService) {}
 
@@ -28,6 +29,7 @@ export class MerchantsComponent {
   merchants: any[] = [];
   
   ngOnInit(): void {
+    this.isSuperAdmin = localStorage.getItem('isSuperAdmin'); 
     this.loadmerchants();
   }
 
@@ -58,12 +60,12 @@ export class MerchantsComponent {
 
   editmerchant(merchant: any, index: number) {
     //alert(banner.id);
-    this._router.navigate(['/addmerchant', merchant.id]);   
+    this._router.navigate(['/addmerchant', merchant._id]);   
   }
 
   deletemerchant(data) {
-
     this.selectedIds = data._id;
+  
     const dialogRef = this.dialog.open(ConfirmdialogComponent, {
       width: '450px',
       height: '250px',
@@ -72,8 +74,14 @@ export class MerchantsComponent {
   
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        // ✅ Call delete API
-        this._accountService.deleteMerchant(this.selectedIds,this.usertoken).subscribe({
+        const isSuperAdmin = localStorage.getItem('isSuperAdmin') === 'true';
+  
+        // ✅ Choose which delete API to call
+        const deleteObservable = isSuperAdmin
+          ? this._accountService.deleteCompleteMerchant(this.selectedIds, this.usertoken)
+          : this._accountService.deleteMerchant(this.selectedIds, this.usertoken);
+  
+        deleteObservable.subscribe({
           next: () => {
             this._toastrService.showSuccess("Deleted Successfully");
             this.loadmerchants(); // refresh table
@@ -83,12 +91,46 @@ export class MerchantsComponent {
           }
         });
       } else {
-        this._toastrService.showError("Deletion cancelled by merchant");
+        this._toastrService.showError("Deletion cancelled");
       }
     });
   }
 
+  deleteSelected() {
+    const selectedIds = this.merchants.filter(item => item.isSelected).map(item => item._id);
   
+    if (selectedIds.length === 0) {
+      this._toastrService.showError("Please select at least one record to delete.");
+      return;
+    }
+  
+    // ✅ Confirmation popup
+    const dialogRef = this.dialog.open(ConfirmdialogComponent, {
+      width: '450px',
+      height: '250px',
+      disableClose: true,
+    });
+  
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        // ✅ Prepare request body
+        const requestBody = { deleteIds: selectedIds };
+  
+        // ✅ Call multi-delete API
+        this._accountService.deleteMultipleData(requestBody, this.usertoken).subscribe({
+          next: () => {
+            this._toastrService.showSuccess("Selected merchants deleted successfully");
+            this.loadmerchants(); // refresh table
+          },
+          error: () => {
+            this._toastrService.showError("Failed to delete selected merchants");
+          }
+        });
+      } else {
+        this._toastrService.showError("Deletion cancelled by user");
+      }
+    });
+  }
 
   addForm(){
     this._router.navigate(['/addmerchant']);
@@ -102,6 +144,13 @@ export class MerchantsComponent {
   // If all rows checked, master should be checked
   isAllSelected() {
     this.masterSelected = this.merchants.every(merchant => merchant.isSelected);
+  }
+
+  onPageChange(event: any) {
+    this.page = event.pageIndex + 1;
+    this.pageIndex = event.pageIndex;
+    this.pageSize = event.pageSize;
+    this.loadmerchants(this.page, this.pageSize);
   }
 
 }

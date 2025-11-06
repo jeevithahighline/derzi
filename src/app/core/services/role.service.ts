@@ -26,6 +26,36 @@ export class RoleService {
     );
   }
 
+  public getAllDerziUser(usertoken: any) {
+    return this._httpReqService.request({
+      method: APP_CONSTANTS.API_METHODS.GET,
+      url: `${this._configService.getApiUrl()}${environment.SERVICE_APIS.GET_ALL_DERZI_USERS_API}`,
+      headerConfig: { token: usertoken }
+    }).pipe(
+      map(response => this._extractResponse(response))
+    );
+  }
+
+  public getAllDerziRoles(usertoken: any) {
+    return this._httpReqService.request({
+      method: APP_CONSTANTS.API_METHODS.GET,
+      url: `${this._configService.getApiUrl()}${environment.SERVICE_APIS.GET_ALL_ROLE}`,
+      headerConfig: { token: usertoken }
+    }).pipe(
+      map(response => this._extractResponse(response))
+    );
+  }
+
+  public getAllMenus(usertoken: any) {
+    return this._httpReqService.request({
+      method: APP_CONSTANTS.API_METHODS.GET,
+      url: `${this._configService.getApiUrl()}${environment.SERVICE_APIS.GET_ALL_MENU}`,
+      headerConfig: { token: usertoken }
+    }).pipe(
+      map(response => this._extractResponse(response))
+    );
+  }
+
   public getSpecificRole(editId: string, usertoken: string) {
     return this._httpReqService.request({
       method: APP_CONSTANTS.API_METHODS.GET,
@@ -78,16 +108,15 @@ export class RoleService {
       );
   }
 
-  public deleteMultipleData(requestBody:{page_list:string[]},usertoken) {
+  public deleteMultipleData(requestBody:{deleteIds:string[]}, usertoken) {
     return this._httpReqService.request({
-      method: APP_CONSTANTS.API_METHODS.POST,
-      url: this._configService.getApiUrl()+environment.SERVICE_APIS.BULK_ROLE_DELETE,
+      method: APP_CONSTANTS.API_METHODS.DELETE,
+      url: this._configService.getApiUrl() + environment.SERVICE_APIS.BULK_ROLE_DELETE,
       body: requestBody,
-      headerConfig: {token:usertoken}
-    })
-      .pipe(
-        map(response => this._extractResponse(response))
-      );
+      headerConfig: { token: usertoken }
+    }).pipe(
+      map(response => this._extractResponse(response))
+    );
   }
 
   private _extractResponse = (response: { data: any, success:any,status: number }) => {

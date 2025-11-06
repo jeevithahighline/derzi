@@ -48,6 +48,19 @@
       width: 15px;
     }
   }
+
+  .table-link {
+    color: #802012;           /* blue color */
+    text-decoration: underline; /* underline text */
+    font-size: 15px;           /* smaller font */
+    padding: 2px 6px;          /* optional padding to make it clickable */
+    cursor: pointer;           /* pointer on hover */
+  }
+  
+  .table-link:hover {
+    color: #802012;           /* darker blue on hover */
+    text-decoration: none;     /* remove underline on hover if you want */
+  }
   
   .form-control {
     height: 45px;

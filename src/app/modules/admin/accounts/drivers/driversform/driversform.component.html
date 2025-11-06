@@ -61,7 +61,7 @@
     
             <mat-form-field class="w-full">
                 <mat-label>Password</mat-label>
-                <input matInput formControlName="password" placeholder="Enter password" />
+                <input type="password" matInput formControlName="password" placeholder="Enter password" />
                 <!-- <mat-error *ngIf="driverform.get('code')?.hasError('required')">Code is required</mat-error> -->
               </mat-form-field>
       
@@ -78,8 +78,8 @@
           <mat-form-field class="w-full">
             <mat-label>Status</mat-label>
             <mat-select formControlName="status">
-              <mat-option value="Active">Active</mat-option>
-              <mat-option value="Inactive">Inactive</mat-option>
+              <mat-option value="active">Active</mat-option>
+              <mat-option value="inactive">Inactive</mat-option>
             </mat-select>
           </mat-form-field>
         </div>

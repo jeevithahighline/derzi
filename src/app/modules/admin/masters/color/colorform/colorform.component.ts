@@ -32,7 +32,7 @@ export class ColorformComponent {
     this.dynamicForm = this.fb.group({
       name: ['', Validators.required],
       color_code: ['', Validators.required],
-      status: [null, Validators.required]
+      status: [true, Validators.required]
     });
 
     // Prefill if editing

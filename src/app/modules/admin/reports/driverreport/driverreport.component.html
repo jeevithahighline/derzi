@@ -8,47 +8,41 @@
       </div>
       <div class="col-6 dflexmain">          
         <input type="text" class="form-control searchinput" placeholder="Search Driver" [(ngModel)]="searchText" />
-        <button class="btn-add">Download</button>
-        
+        <button class="btn-add" (click)="downloadDriverCsv()">Download CSV</button>
+        <button class="btn-add" (click)="downloadDriverExcel()">Download Excel</button>
       </div>
     </div>
   
     <!-- 📊 Country Table --><div class="tableparent">
-    <table class="table table-striped table-bordered align-middle text-center">
-      <thead class="table-light">
-        <tr>
-         <th><label class="customcheckbox">
-                <input type="checkbox" [(ngModel)]="masterSelected" (change)="checkUncheckAll()">
-                <span class="checkmark"></span>
-              </label></th>
-          <th scope="col">ID</th>
-          <th scope="col">Driver name</th>
-          <th scope="col">Email</th>
-          <th scope="col">Phone</th>
-          <th scope="col">Location</th>
-          <th scope="col">Status</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let country of filtereddrivers()">
-          <td>
-            <label class="customcheckbox">
-                <input type="checkbox" [(ngModel)]="country.isSelected"  (change)="isAllSelected()">
-                <span class="checkmark"></span>
-              </label>
-          </td>
-          <td>{{ country.id }}</td>
-          <td>{{ country.driver_name }}</td> 
-          <td>{{ country.contact_email }}</td> 
-          <td>{{ country.phone }}</td> 
-          <td>{{ country.location }}</td> 
-          <td>Active</td>                     
-        
-        </tr>
-      </tbody>
-    </table>
+      <table class="table table-striped table-bordered align-middle text-center">
+        <thead class="table-light">
+          <tr>           
+            <th scope="col">ID</th>
+            <th scope="col">First name</th>
+            <th scope="col">Last name</th>
+            <th scope="col">Email</th>
+            <th scope="col">Mobilenumber</th>
+            <th scope="col">Status</th>
+            <th scope="col">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let driver of filteredData();let i = index">           
+            <td>{{ driver.driverCode }}</td>
+            <td>{{ driver.firstname }}</td> 
+            <td>{{ driver.lastname }}</td> 
+            <td>{{ driver.email }}</td> 
+            <td>{{ driver.mobilenumber }}</td> 
+            <td>{{ driver.status ? 'Active' : 'In-Active' }}</td>         
+            <td><button (click)="downloadData(driver)" class="table-link">
+              Download
+            </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
     
-    <mat-paginator [length]="totalItems"  [pageSize]="10" [pageSizeOptions]="[10,25,100]" ></mat-paginator>
+     <mat-paginator [length]="totalItems"  [pageSize]="10" [pageSizeOptions]="[10,25,100]" (page)="onPageChange($event)"></mat-paginator>
     </div>
   </div>
   

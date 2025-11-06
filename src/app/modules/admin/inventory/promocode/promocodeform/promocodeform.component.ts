@@ -154,8 +154,8 @@ export class PromocodeformComponent implements OnInit {
     
     
      return this._promoservice.createPromocode(insertData, this.usertoken).pipe(
-       tap(res => this.handleApiResponse(res, 'Page created successfully', 'Type creation failed')),
-       catchError(error => this.handleError(error, 'Page is not created. Please contact administrator'))
+       tap(res => this.handleApiResponse(res, 'Promocode created successfully', 'Promocode creation failed')),
+       catchError(error => this.handleError(error, 'Promocode is not created. Please contact administrator'))
      );   
      
    }

@@ -77,16 +77,15 @@ export class ColorService {
       );
   }
 
-  public deleteMultipleData(requestBody:{color_list:string[]},usertoken) {
+  public deleteMultipleData(requestBody:{deleteIds:string[]}, usertoken) {
     return this._httpReqService.request({
-      method: APP_CONSTANTS.API_METHODS.POST,
-      url: this._configService.getApiUrl()+environment.SERVICE_APIS.BULK_COLOR_DELETE,
+      method: APP_CONSTANTS.API_METHODS.DELETE,
+      url: this._configService.getApiUrl() + environment.SERVICE_APIS.BULK_COLOR_DELETE,
       body: requestBody,
-      headerConfig: {token:usertoken}
-    })
-      .pipe(
-        map(response => this._extractResponse(response))
-      );
+      headerConfig: { token: usertoken }
+    }).pipe(
+      map(response => this._extractResponse(response))
+    );
   }
 
   private _extractResponse = (response: { data: any, success:any,status: number }) => {

@@ -6,12 +6,15 @@
 export const environment = {
   
   production: false,
-  apiUrl: 'http://localhost:3001/api/v1',  // for local
-  backendurlImages : 'http://localhost:3001',
+  //apiUrl: 'http://localhost:3001/api/v1',  // for local
+  //backendurlImages : 'http://localhost:3001',
 
-  //apiUrl : 'http://16.24.69.142:3001/api/v1/', // for dev server
+  apiUrl : 'http://16.24.69.142:3001/api/v1', // for dev server
+  backendurlImages : 'http://16.24.69.142:3001',
 
   SERVICE_APIS: {
+
+    GET_ALL_DASHBOARD : '/global/getAlldashboard',
     
     // Masters api 
 
@@ -22,7 +25,6 @@ export const environment = {
     BULK_DELETE : '/country/deletecountry',
     SPECIFIC_COUNTRY :'/country/getcountryById',
     BULK_COUNTRY_DELETE : '/country/bulkdelete',
-
 
     GET_ALL_TYPE : '/type/getAlltype',
     ADD_TYPE : '/type/addtype',
@@ -103,7 +105,12 @@ export const environment = {
     SPECIFIC_PROMOCODE :'/promocode/getpromocodeById',
     BULK_PROMOCODE_DELETE : '/promocode/bulkdelete',
 
-
+    GET_ALL_PROMOTION : '/promotion/getAllpromotion',
+    ADD_PROMOTION : '/promotion/addpromotion',
+    UPDATE_PROMOTION : '/promotion/updatepromotion',
+    DELETE_PROMOTION : '/promotion/deletepromotion',
+    SPECIFIC_PROMOTION :'/promotion/getpromotionById',
+    BULK_PROMOTION_DELETE : '/promotion/bulkdelete',
     //Services
 
     GET_ALL_TAILORING_SERVICE : '/service/getAllservice',
@@ -120,6 +127,7 @@ export const environment = {
     UPDATE_PAGE : '/page/updatepage',
     DELETE_PAGE : '/page/deletepage',
     SPECIFIC_PAGE :'/page/getpageById',
+    SPECIFIC_PAGE_NAME :'/page/getpageByName',
     BULK_PAGE_DELETE : '/page/bulkdelete',
 
     //FAQ
@@ -140,14 +148,33 @@ export const environment = {
     SPECIFIC_CURRENCY :'/currency/getcurrencyById',
     BULK_CURRENCY_DELETE : '/currency/bulkdelete',
 
+    //CONVERSION RATE
+    GET_ALL_CONVERSION_RATE : '/currency/getAllconversionrate',
+    ADD_CONVERSION_RATE : '/currency/addconversionrate',
+    UPDATE_CONVERSION_RATE : '/currency/updateconversionrate',
+    DELETE_CONVERSION_RATE : '/currency/deleteconversionrate',
+    SPECIFIC_CONVERSION_RATE :'/currency/getconversionrateById',
+    SAVE_UPDATE_CONVERSION_RATE :'/currency/bulkSaveOrUpdate ',
+    
     //role
 
     GET_ALL_ROLE : '/role/getAllrole',
+    GET_ALL_MENU : '/menu/getAllmenu?page=1&size=100',
+
     ADD_ROLE : '/role/addrole',
     UPDATE_ROLE : '/role/updaterole',
     DELETE_ROLE : '/role/deleterole',
     SPECIFIC_ROLE :'/role/getroleById',
     BULK_ROLE_DELETE : '/role/bulkdelete',
+
+    // Privilege
+
+    GET_ALL_PRIVILEGE : '/menu/privilege',
+    ADD_PRIVILEGE : '/menu/privilege',
+    UPDATE_PRIVILEGE : '/menu/privilege',
+    DELETE_PRIVILEGE : '/menu/privilege',
+    SPECIFIC_PRIVILEGE :'/menu/privilege',
+    BULK_PRIVILEGE_DELETE : '/menu/bulkdeleteprivilege',
 
     //paymentmethod
 
@@ -160,25 +187,34 @@ export const environment = {
 
     //Email templates
     
-    GET_ALL_EMAIL_TEMPLATES : '/emailtemplates/getAllemailtemplates',
-    ADD_EMAIL_TEMPLATES : '/emailtemplates/addemailtemplates',
-    UPDATE_EMAIL_TEMPLATES : '/emailtemplates/updateemailtemplates',
-    DELETE_EMAIL_TEMPLATES : '/emailtemplates/deleteemailtemplates',
-    SPECIFIC_EMAIL_TEMPLATES :'/emailtemplates/getemailtemplatesById',
-    BULK_EMAIL_TEMPLATES_DELETE : '/emailtemplates/bulkdelete',
+    GET_ALL_EMAIL_TEMPLATES : '/template/getAllemailtemplates',
+    ADD_EMAIL_TEMPLATES : '/template/addemailtemplates',
+    UPDATE_EMAIL_TEMPLATES : '/template/updateemailtemplates',
+    DELETE_EMAIL_TEMPLATES : '/template/deleteemailtemplates',
+    SPECIFIC_EMAIL_TEMPLATES :'/template/getemailtemplatesById',
+    BULK_EMAIL_TEMPLATES_DELETE : '/template/bulkdelete',
 
     //Email templates
     
     GET_ALL_ORDERS : '/cart/getAllorders',
     GET_ALL_INVOICES : '/cart/getAllpayment',
     SPECIFIC_ORDER : '/cart/getorderById',
+    DELETE_ORDER : '/cart/deleteorder',
+    CREATE_ORDER : '/cart/manualorder',
+    UPDATE_DEIVERY_STATUS : '/cart/updatedeliverystatus',
+    
+    // Site Information
+
+    ADD_OR_UPDATE_SITE_DETAILS : '/global/addupdatesitedetails',
+    GET_SITE_DETAILS : '/global/getsiteInfo',
 
     //MERCHANT
 
     GET_ALL_MERCHANT : '/merchant/getmerchantlist',
     ADD_MERCHANT : '/merchant/addmerchant',
     UPDATE_MERCHANT : '/merchant/updatemerchant',
-    DELETE_MERCHANT : '/merchant/deletemerchant',
+    DELETE_MERCHANT : '/merchant/softdelete',
+    COMPLETE_DELETE_MERCHANT : '/merchant/deletemerchant',
     SPECIFIC_MERCHANT :'/merchant/getmerchantById',
     BULK_MERCHANT_DELETE : '/merchant/bulkdelete',
 
@@ -187,7 +223,8 @@ export const environment = {
     GET_ALL_DRIVER : '/driver/getdriverlist',
     ADD_DRIVER : '/driver/adddriver',
     UPDATE_DRIVER : '/driver/updatedriver',
-    DELETE_DRIVER : '/driver/deletedriver',
+    DELETE_DRIVER : '/driver/softdelete',
+    COMPLETE_DELETE_DRIVER : '/driver/deletedriver',
     SPECIFIC_DRIVER :'/driver/getdriverById',
     BULK_DRIVER_DELETE : '/driver/bulkdelete',
 
@@ -196,21 +233,51 @@ export const environment = {
     LOGIN_USER : '/derziuser/login',
     REFRESH_TOKEN:'/derziuser/token/refresh/',
     GET_ALL_DERZI_USERS_API : '/derziuser/getuserslist',
-    SPECIFIC_DERZI_USERS_API : '/derziuser/users',
+    SPECIFIC_DERZI_USERS_API : '/derziuser/getderziuserById',
     LOGOUT_API : '/derziuser/logout/',
     REGISTER_DERZI_USERS_APP : '/derziuser/register',
-    UPDATE_DERZI_USERS_APP : '/derziuser/updateuser',
-    DELETE_DERZI_USERS_APP : '/derziuser/deleteuser',
+    UPDATE_DERZI_USERS_APP : '/derziuser/updateprofile',
+    DELETE_DERZI_USERS_APP : '/derziuser/softdelete',
+    COMPLETE_DELETE_DERZI_USERS : '/derziuser/deleteuser',
     BULK_DERZI_USERS_DELETE : '/derziuser/bulkdelete',
 
     //Userapp -users
 
     ADD_USER_APP : '/user/register',
     GET_ALL_USER_APP :'/user/getuserslist',
-    UPDATE_USER_APP :'/user/updateprofile',
-    DELETE_USER_APP :'/user/deleteuser',
+    UPDATE_USER_APP :'/user/updateuserprofile',
+    DELETE_USER_APP :'/user/softdelete',
+    COMPLETE_DELETE_USER_APP :'/user/deleteuser',
     BULK_USER_APP_DELETE :'/user/bulkdelete',
     SPECIFIC_USER_APP : '/user/getspecificuser',
+
+    //EXPORT 
+
+    EXPORT_DRIVER_CSV : '/export/exportDriversCSV',
+    EXPORT_DRIVER_EXCEL : '/export/exportDriversExcel',
+
+    EXPORT_MERCHANT_CSV : '/export/exportMerchantsCSV',
+    EXPORT_MERCHANT_EXCEL : '/export/exportMerchantsExcel',
+
+    EXPORT_USER_CSV : '/export/exportUserCSV',
+    EXPORT_USER_EXCEL : '/export/exportUserExcel',
+
+    EXPORT_ORDER_CSV : '/export/exportOrderCSV',
+    EXPORT_ORDER_EXCEL : '/export/exportOrderExcel',
+
+    EXPORT_PRODUCT_CSV : '/export/exportProductCSV',
+    EXPORT_PRODUCT_EXCEL : '/export/exportProductExcel',
+
+     //REVIEWS
+
+     GET_ALL_REVIEWS : '/review/get_all_ratings',
+     ADD_REVIEW : '/review/add_ratings',
+     UPDATE_REVIEW : '/review/edit',
+     DELETE_REVIEW : '/review/softdelete',
+     COMPLETE_DELETE_REVIEW : '/review/delete',
+     SPECIFIC_REVIEW :'/review/get_specific',
+     APPROVE_REVIEW : '/review/approve',
+     REJECT_REVIEW : '/review/reject',
 
   },  
 

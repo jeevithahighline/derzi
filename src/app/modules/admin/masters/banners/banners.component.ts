@@ -5,6 +5,7 @@ import { ToastService } from '../../../../core/services/toastr.service';
 import { ConfirmdialogComponent } from '../../confirmdialog/confirmdialog.component';
 import { Router,ActivatedRoute  } from '@angular/router';
 import { BannerService } from '../../../../core/services/banner.service';
+import { environment } from '../../../../../environments/environment';
 
 @Component({
   selector: 'app-banners',
@@ -26,7 +27,7 @@ export class BannersComponent {
   
 
   banners: any[] = [];
-
+  backendUrl = environment.backendurlImages;
   ngOnInit(): void {
     this.loadBanners();
   }
@@ -102,6 +103,42 @@ export class BannersComponent {
   // If all rows checked, master should be checked
   isAllSelected() {
     this.masterSelected = this.banners.every(banner => banner.isSelected);
+  }
+
+  deleteSelected() {
+    const selectedIds = this.banners.filter(item => item.isSelected).map(item => item._id);
+  
+    if (selectedIds.length === 0) {
+      this._toastrService.showError("Please select at least one record to delete.");
+      return;
+    }
+  
+    // ✅ Confirmation popup
+    const dialogRef = this.dialog.open(ConfirmdialogComponent, {
+      width: '450px',
+      height: '250px',
+      disableClose: true,
+    });
+  
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        // ✅ Prepare request body
+        const requestBody = { deleteIds: selectedIds };
+  
+        // ✅ Call multi-delete API
+        this._masterservice.deleteMultipleData(requestBody, this.usertoken).subscribe({
+          next: () => {
+            this._toastrService.showSuccess("Selected banners deleted successfully");
+            this.loadBanners(); // refresh table
+          },
+          error: () => {
+            this._toastrService.showError("Failed to delete selected banners");
+          }
+        });
+      } else {
+        this._toastrService.showError("Deletion cancelled by user");
+      }
+    });
   }
 
   onPageChange(event: any) {

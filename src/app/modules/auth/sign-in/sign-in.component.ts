@@ -109,6 +109,7 @@ export class AuthSignInComponent implements OnInit {
               localStorage.setItem('userId', response.data._id);
               localStorage.setItem('useremail', response.data.email);
               localStorage.setItem('firstname', response.data.firstname);
+              localStorage.setItem('isSuperAdmin', response.data.isSuperAdmin);
             }
       
             // ✅ Redirect to original URL or dashboard

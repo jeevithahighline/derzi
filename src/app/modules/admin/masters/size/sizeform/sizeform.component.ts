@@ -31,7 +31,7 @@ export class SizeformComponent {
     this.usertoken = localStorage.getItem('usertoken'); // get token
     this.dynamicForm = this.fb.group({
       name: ['', Validators.required],
-      status: [null, Validators.required]
+      status: [true, Validators.required]
     });
 
     // Prefill if editing

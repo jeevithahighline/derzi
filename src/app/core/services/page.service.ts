@@ -36,6 +36,17 @@ export class PageService {
     );
   }
 
+  public getSpecificPageName(pageName: string) {
+    return this._httpReqService.request({
+      method: APP_CONSTANTS.API_METHODS.GET,
+      url: this._configService.getApiUrl() + environment.SERVICE_APIS.SPECIFIC_PAGE_NAME,
+      params: { page_name: pageName }
+    }).pipe(
+      map(response => response.data)
+    );
+  }
+  
+
   public createPage(payload,usertoken) {
 
 
@@ -78,16 +89,15 @@ export class PageService {
       );
   }
 
-  public deleteMultipleData(requestBody:{page_list:string[]},usertoken) {
+  public deleteMultipleData(requestBody:{deleteIds:string[]}, usertoken) {
     return this._httpReqService.request({
-      method: APP_CONSTANTS.API_METHODS.POST,
-      url: this._configService.getApiUrl()+environment.SERVICE_APIS.BULK_PAGE_DELETE,
+      method: APP_CONSTANTS.API_METHODS.DELETE,
+      url: this._configService.getApiUrl() + environment.SERVICE_APIS.BULK_PAGE_DELETE,
       body: requestBody,
-      headerConfig: {token:usertoken}
-    })
-      .pipe(
-        map(response => this._extractResponse(response))
-      );
+      headerConfig: { token: usertoken }
+    }).pipe(
+      map(response => this._extractResponse(response))
+    );
   }
 
   private _extractResponse = (response: { data: any, success:any,status: number }) => {

@@ -1,0 +1,61 @@
+<div class="container p-4">
+    <!-- 🔎 Search -->
+    <div class="row">
+      <div class="col-6">
+        <div class="heading">
+             Reviews
+        </div>
+      </div>
+      <div class="col-6 dflexmain">
+        <!-- <button class="btn btn-sm" (click)="deleteSelected()">
+              <i class="bi bi-trash"></i>
+               <img src="/images/icon/delete.svg" alt="">
+            </button>       -->     
+        
+      </div>
+    </div>
+  
+    <!-- 📊 review Table --><div class="tableparent">
+    <table class="table table-striped table-bordered align-middle text-center">
+      <thead class="table-light">
+        <tr>
+           <th><label class="customcheckbox">
+                <input type="checkbox" [(ngModel)]="masterSelected" (change)="checkUncheckAll()">
+                <span class="checkmark"></span>
+              </label></th>
+          <th scope="col">Product Name</th>
+          <th scope="col">Rating</th>
+          <th scope="col">Comments</th>
+          <th scope="col">Status</th>
+          <th scope="col">Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let review of filteredData();let i = index">
+          <td>
+            <label class="customcheckbox">
+                <input type="checkbox" [(ngModel)]="review.isSelected"  (change)="isAllSelected()">
+                <span class="checkmark"></span>
+              </label>
+          </td>
+          <td>{{ review.product.name }}</td>
+          <td>{{ review.rating }}</td> 
+          <td>{{ review.comments }}</td> 
+          <td>{{ review.status | titlecase }}</td>         
+          <td class="action-buttons">
+             <button class="btn-add" (click)="approveReview(review)">Approve</button>     
+            <button class="btn-add" (click)="rejectReview(review)">Reject</button>
+            <button class="btn-add" (click)="deletereview(review)">Delete</button>
+          </td>        
+        </tr>
+        <tr *ngIf="filteredData().length === 0">
+          <td colspan="7" class="text-center">No records found</td>
+        </tr>
+      </tbody>
+    </table>
+    
+     <mat-paginator [length]="totalItems"  [pageSize]="10" [pageSizeOptions]="[10,25,100]" (page)="onPageChange($event)"></mat-paginator>
+    </div>
+  </div>
+  
+  

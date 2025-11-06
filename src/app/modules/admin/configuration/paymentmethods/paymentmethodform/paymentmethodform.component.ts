@@ -31,7 +31,7 @@ export class PaymentmethodformComponent {
     this.usertoken = localStorage.getItem('usertoken'); // get token
     this.dynamicForm = this.fb.group({
       methodname: ['', Validators.required],
-      status: [null, Validators.required]
+      status: [true, Validators.required]
     });
 
     // Prefill if editing

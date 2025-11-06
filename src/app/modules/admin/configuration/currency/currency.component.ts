@@ -116,6 +116,42 @@ export class CurrencyComponent {
     });
   }
 
+  deleteSelected() {
+    const selectedIds = this.currencies.filter(item => item.isSelected).map(item => item._id);
+  
+    if (selectedIds.length === 0) {
+      this._toastrService.showError("Please select at least one record to delete.");
+      return;
+    }
+  
+    // ✅ Confirmation popup
+    const dialogRef = this.dialog.open(ConfirmdialogComponent, {
+      width: '450px',
+      height: '250px',
+      disableClose: true,
+    });
+  
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        // ✅ Prepare request body
+        const requestBody = { deleteIds: selectedIds };
+  
+        // ✅ Call multi-delete API
+        this._masterservice.deleteMultipleData(requestBody, this.usertoken).subscribe({
+          next: () => {
+            this._toastrService.showSuccess("Selected currency deleted successfully");
+            this.loadCurrency(); // refresh table
+          },
+          error: () => {
+            this._toastrService.showError("Failed to delete selected services");
+          }
+        });
+      } else {
+        this._toastrService.showError("Deletion cancelled by user");
+      }
+    });
+  }
+
   onPageChange(event: any) {
     this.page = event.pageIndex + 1;
     this.pageIndex = event.pageIndex;

@@ -1,38 +1,62 @@
-import { Component,Inject } from '@angular/core';
+import { Component, ViewChild, AfterViewInit } from '@angular/core';
 import { MATERIAL_IMPORTS } from '../../../material.import';
+import { Router,ActivatedRoute  } from '@angular/router';
+import { OrderService } from '../../../../core/services/order.service';
+import { ToastService } from '../../../../core/services/toastr.service';
+import { ExportService } from '../../../../core/services/export.service';
+import { saveAs } from 'file-saver';
+
+
 @Component({
   selector: 'app-ordersreport',
   templateUrl: './ordersreport.component.html',
   styleUrls: ['./ordersreport.component.scss'],
   imports: [MATERIAL_IMPORTS]   // ✅ just one line
 })
+
 export class OrdersreportComponent {
-  searchText: string = '';
+  searchText = '';
+  totalItems = 0;
+  masterSelected: boolean = false;
+  page = 1;
+  pageSize = 10;
+  pageIndex = 0;
+  usertoken:any;
+  selectedIds: string[] = [];
   selectedStatus: string = '';
   amount: string = '';
   startDate: Date | null = null;
   endDate: Date | null = null;
-  masterSelected: boolean = false;
-  totalItems = 2;
+  constructor(private _router: Router,private _accountService: OrderService,private _toastrService: ToastService,private _exportService: ExportService) {}
+  
+  orders: any[] = [];
+  
+  ngOnInit(): void {
+    this.usertoken = localStorage.getItem('usertoken'); // get token
+    this.loadOrders();
+  }
 
-  orders = [
-    { id: 'ORD1001', customer: 'John Doe', date: '2025-08-18', amount: 1200, status: 'Pending',isSelected: false },
-    { id: 'ORD1002', customer: 'Jane Smith', date: '2025-08-19', amount: 2500, status: 'Completed',isSelected: false },
-  ];
+  loadOrders(page: number = this.page, size: number = this.pageSize) {
+    const token = localStorage.getItem('usertoken'); 
+    if (token) {
+      this._accountService.getAllOrder(token, this.page, this.pageSize).subscribe({
+        next: (res: any) => {
+          this.orders = res.data.docs || [];
+          this.totalItems = res.data.totalDocs || 0;  // backend must return total count
+          this.page = res.data.page || page;
+          this.pageSize = res.data.limit || size;
+        },
+        error: (err) => {
+          console.error('Error fetching orders', err);
+        }
+      });
+    }
+  }
 
-  filteredOrders() {
-    return this.orders.filter(o =>
-      o.customer.toLowerCase().includes(this.searchText.toLowerCase()) ||
-      o.id.toLowerCase().includes(this.searchText.toLowerCase())
+  filteredData() {
+    return this.orders.filter(c =>
+      c.orderStatus.toLowerCase().includes(this.searchText.toLowerCase())
     );
-  }
-
-  editOrder(order: any) {
-    alert(`Editing Order ${order.id}`);
-  }
-
-  deleteOrder(order: any) {
-    alert(`Deleting Order ${order.id}`);
   }
 
   // Toggle all checkboxes
@@ -45,6 +69,30 @@ export class OrdersreportComponent {
     this.masterSelected = this.orders.every(country => country.isSelected);
   }
 
+  downloadCsv() {
+    this._exportService.ExportOrderCsv(this.usertoken, 1, 100).subscribe((data: Blob) => {
+      this.downloadFile(data, 'orders.csv');
+    });
+  }
+  
+  downloadExcel() {
+    this._exportService.ExportOrderExcel(this.usertoken, 1, 100).subscribe((data: Blob) => {
+      this.downloadFile(data, 'orders.xlsx');
+    });
+  }
+  
+  private downloadFile(data: Blob, filename: string) {
+    const blob = new Blob([data], { type: data.type });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    window.URL.revokeObjectURL(url);
+  }
+  
   applyFilters() {
     console.log({
       search: this.searchText,
@@ -64,6 +112,16 @@ export class OrdersreportComponent {
     this.startDate = null;
     this.endDate = null;
   }
+
+  onPageChange(event: any) {
+    this.page = event.pageIndex + 1;
+    this.pageIndex = event.pageIndex;
+    this.pageSize = event.pageSize;
+    this.loadOrders(this.page, this.pageSize);
+  }
+
 }
+
+
 
 

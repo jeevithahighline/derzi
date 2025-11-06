@@ -98,6 +98,7 @@ const menuConfig: Record<string, { id: string; icon: string }> = {
         { title: 'Categories', type: 'basic', link: '/categories' },
         { title: 'Products', type: 'basic', link: '/products' },
         { title: 'Promo Code', type: 'basic', link: '/promocode' },
+        { title: 'Promotion', type: 'basic', link: '/promotion' },
       ],
     },
     {
@@ -121,7 +122,7 @@ const menuConfig: Record<string, { id: string; icon: string }> = {
         type: 'collapsable',
         children: [
           { title: 'Merchants', type: 'basic', link: '/merchants' },
-          { title: 'Users', type: 'basic', link: '/users' },
+          { title: 'App Users', type: 'basic', link: '/users' },
           { title: 'Drivers', type: 'basic', link: '/drivers' },
           { title: 'Derzi Users', type: 'basic', link: '/derziuser' },
         ],
@@ -160,8 +161,9 @@ const menuConfig: Record<string, { id: string; icon: string }> = {
         type: 'collapsable',
         children: [
             { title: 'Global Settings', type: 'basic', link: '/globalsettings' },
-            { title: 'Application Notification', type: 'basic', link: '/applicationnotification' },
-            { title: 'Currency', type: 'basic', link: '/currency' },
+            //{ title: 'Application Notification', type: 'basic', link: '/applicationnotification' },
+            { title: 'Reviews', type: 'basic', link: '/reviews' },
+            { title: 'Conversion Rate', type: 'basic', link: '/conversionrate' },
         ],
     },
     { title: 'FAQ', type: 'basic', link: '/faq' },

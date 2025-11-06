@@ -1,55 +1,52 @@
 <div class="container p-4">
-    <!-- 🔎 Search -->
-    <div class="row">
-      <div class="col-6">
-        <div class="heading">
-             Products
-        </div>
-      </div>
-      <div class="col-6 dflexmain">
-       
-        <input type="text" class="form-control searchinput" placeholder="Search Product" [(ngModel)]="searchText" />
-        <button class="btn-add">Download</button>
-        
+  <!-- 🔎 Search -->
+  <div class="row">
+    <div class="col-6">
+      <div class="heading">
+           Products
       </div>
     </div>
-  
-    <!-- 📊 Country Table --><div class="tableparent">
-    <table class="table table-striped table-bordered align-middle text-center">
-      <thead class="table-light">
-        <tr>
-            <th><label class="customcheckbox">
-                <input type="checkbox" [(ngModel)]="masterSelected" (change)="checkUncheckAll()">
-                <span class="checkmark"></span>
-              </label></th>
-          <th scope="col">ID</th>
-          <th scope="col">Name</th>
-          <th scope="col">Description</th>
-          <th scope="col">Image</th>
-          <th scope="col">Price</th>
-          <th scope="col">Status</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let country of filteredData()">
-          <td>
-            <label class="customcheckbox">
-                <input type="checkbox" [(ngModel)]="country.isSelected"  (change)="isAllSelected()">
-                <span class="checkmark"></span>
-              </label>
-          </td>
-          <td>{{ country.id }}</td>
-          <td>{{ country.name }}</td> 
-          <td>{{ country.description }}</td> 
-          <td><img src="/images/banner.jpeg" alt=""></td> 
-          <td>2 BHD</td>
-          <td>Active</td>                     
-          
-        </tr>
-      </tbody>
-    </table>
-    
-    <mat-paginator [length]="totalItems"  [pageSize]="10" [pageSizeOptions]="[10,25,100]" ></mat-paginator>
+    <div class="col-6 dflexmain">
+      <input
+        type="text"
+        class="form-control searchinput"
+        placeholder="Search Orders"
+        [(ngModel)]="searchText"
+      />
+      <button class="btn-add" (click)="downloadCsv()">Download CSV</button>
+      <button class="btn-add" (click)="downloadExcel()">Download Excel</button>
     </div>
   </div>
-  
+
+  <!-- 📊 product Table --><div class="tableparent">
+  <table class="table table-striped table-bordered align-middle text-center">
+    <thead class="table-light">
+      <tr>
+      
+        <th scope="col">ID</th>
+        <th scope="col">Name</th>
+        <th scope="col">Description</th>
+        <th scope="col">Image</th>
+        <th scope="col">Price</th>
+        <th scope="col">Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let product of filteredData(); let i = index">
+        
+        <td>{{ (pageIndex * pageSize) + i + 1 }}</td>
+        <td>{{ product.name }}</td> 
+        <td>{{ product.description }}</td> 
+        <td>
+          <img [src]="backendUrl + product.product_images[0]" alt="Product Image" width="50" height="50">
+        </td>          
+        <td>{{ product.price }} BHD</td> 
+        <td>{{ product.status ? 'Active' : 'Inactive' }}</td>                             
+        
+      </tr>
+    </tbody>
+  </table>
+  <mat-paginator [length]="totalItems"  [pageSize]="10" [pageSizeOptions]="[10,25,100]" (page)="onPageChange($event)"></mat-paginator>
+
+  </div>
+</div>

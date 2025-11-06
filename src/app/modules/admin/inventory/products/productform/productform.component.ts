@@ -1,7 +1,6 @@
 import { Component,Inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MATERIAL_IMPORTS } from '../../../../material.import';
-import { MatDialogRef,MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ProductService } from '../../../../../core/services/product.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { ToastService } from '../../../../../core/services/toastr.service';
@@ -16,10 +15,12 @@ import { environment } from '../../../../../../environments/environment';
   styleUrl: './productform.component.scss'
 })
 export class ProductformComponent {
+  colorImageGroups: any[] = [];
   productForm: FormGroup;
   editId: string | null;
   editMode: string;
- 
+  colorFiles: any = {}; // holds selected files per color
+  colorPreviewUrls: any = {}; // for showing previews
   backendUrl = environment.backendurlImages;
   usertoken: any;
   merchants: any[] = [];
@@ -40,7 +41,7 @@ export class ProductformComponent {
   selectedFileNames: { [key: string]: string[] } = {};
 
   // Track multiple previews for each control
-  previewUrls: { [key: string]: string[] } = {};
+  previewUrls: { [key: string]: string } = {};
   
  
   constructor(
@@ -54,9 +55,9 @@ export class ProductformComponent {
   ngOnInit(): void {
     this.usertoken = localStorage.getItem('usertoken');
     this.loadDropdownData();
-
+  
     this.productId = this.route.snapshot.paramMap.get('id') || '';
-
+  
     this.productForm = this.fb.group({
       name: ['', Validators.required],
       name_ar: ['', Validators.required],
@@ -64,80 +65,130 @@ export class ProductformComponent {
       description_ar: ['', Validators.required],
       category: ['', Validators.required],
       quantity: ['', Validators.required],
-      merchant_id: [[]],
-      length_id: [[]],
-      fabric_id: [[]],
-      type_id: [[]],
-      brand_id: [[]],
-      size_id: [[]],
-      color_id: [[]],
-      care_id: [[]],
-      priceWithVAT: ['', Validators.required],
+      merchant_id: ['', Validators.required],
+      length_id: [[], Validators.required],
+      fabric_id: [[], Validators.required],
+      type_id: [[], Validators.required],
+      brand_id: [[], Validators.required],
+      size_id: [[], Validators.required],
+      color_id: [[], Validators.required],
+      care_id: [[], Validators.required],
       price: ['', Validators.required],
-      currency: ['', Validators.required],
       vatPercentage: ['', Validators.required],
-      status: [null, Validators.required],
-      product_images: [[]],         // 👈 must start as empty array
-      product_ar_images: [[]],      // 👈 must start as empty array
+      status: [true, Validators.required],
+      default_images: [null],
+      default_ar_images: [null],
+      color_images: this.fb.control([]),
     });
-
+  
+    // ✅ EDIT MODE LOGIC
     if (this.productId) {
       this.editId = this.productId;
+  
       this._productservice.getSpecificProduct(this.productId, this.usertoken).subscribe({
         next: (res) => {
-          this.productDetails = res.data;
+          this.productDetails = res.data.product;
+          if (!this.productDetails) return;
+  
+          //console.log('🟢 Product details:', this.productDetails);
 
-          console.log(this.productDetails);
+          console.log('🟢 Backend URl:', this.backendUrl);
 
-          if (this.productDetails) {
+          // ✅ Default image previews
+          // ✅ Default English image
+      
 
-            // Preview URLs          
-
-            this.previewUrls['product_images'] = (this.productDetails.product_images || []).map(
-              (img: string) => this.backendUrl + img
-            );
-            
-            this.previewUrls['product_ar_images'] = (this.productDetails.product_ar_images || []).map(
-              (img: string) => this.backendUrl + img
-            );
-            
-
-            console.log(this.previewUrls['product_images']);
-
-            // For display purposes
-            this.selectedFileNames['product_images'] = this.productDetails.product_images?.map((p: string) => p.split('/').pop()) || [];
-            this.selectedFileNames['product_ar_images'] = this.productDetails.product_ar_images?.map((p: string) => p.split('/').pop()) || [];
-
-            this.productForm.patchValue({
-              name: this.productDetails.name || '',
-              name_ar: this.productDetails.name_ar || '',
-              description: this.productDetails.description || '',
-              description_ar: this.productDetails.description_ar || '',
-              price: +this.productDetails.price || 0,
-              priceWithVAT: +this.productDetails.priceWithVAT || 0,
-              vatPercentage: +this.productDetails.vatPercentage || 0,
-              quantity: +this.productDetails.quantity || 0,
-              currency: this.productDetails.currency || '',
-              status: this.productDetails.status ?? true,
-              category: this.productDetails.categories?.map((c: any) => c.id) || [],
-              merchant_id: this.productDetails.merchant?.map((m: any) => m.id) || [],
-              length_id: this.productDetails.lengths?.map((l: any) => l.id) || [],
-              fabric_id: this.productDetails.fabrics?.map((f: any) => f.id) || [],
-              type_id: this.productDetails.types?.map((t: any) => t.id) || [],
-              brand_id: this.productDetails.brands?.map((b: any) => b.id) || [],
-              size_id: this.productDetails.sizes?.map((s: any) => s.id) || [],
-              color_id: this.productDetails.colors?.map((c: any) => c.id) || [],
-              care_id: this.productDetails.cares?.map((c: any) => c.id) || [],
-              product_images: [],        // will be filled when user selects new files
-              product_ar_images: []
-            });
-            
+          if (this.productDetails.default_images?.length > 0) {
+            const imgObj = this.productDetails.default_images[0];
+            const imgPath = imgObj.image?.startsWith('http')
+              ? imgObj.image
+              : this.backendUrl + imgObj.image;
+          
+            this.previewUrls.default_images = imgPath;
+            this.selectedFileNames.default_images = imgObj.image.split('/').pop();
           }
+          
+          if (this.productDetails.default_ar_images?.length > 0) {
+            const imgObj = this.productDetails.default_ar_images[0];
+            const imgPath = imgObj.image?.startsWith('http')
+              ? imgObj.image
+              : this.backendUrl + imgObj.image;
+          
+            this.previewUrls.default_ar_images = imgPath;
+            this.selectedFileNames.default_ar_images = imgObj.image.split('/').pop();
+          }
+          
+  
+          this.colorPreviewUrls = {};
+          const colorImagesArray: any[] = [];
+  
+          (this.productDetails.colors || []).forEach((color: any) => {
+            const colorId = color.id || color._id;
+  
+            // --- Collect existing English images
+            const productImgs = (this.productDetails.product_images || [])
+              .filter((img: any) => img.color_id === colorId)
+              .map((img: any) =>
+                img.image?.startsWith('http')
+                  ? img.image
+                  : this.backendUrl + img.image
+              );
+  
+            // --- Collect existing Arabic images
+            const productArImgs = (this.productDetails.product_ar_images || [])
+              .filter((img: any) => img.color_id === colorId)
+              .map((img: any) =>
+                img.image?.startsWith('http')
+                  ? img.image
+                  : this.backendUrl + img.image
+              );
+  
+            // ✅ Set previews for UI display
+            this.colorPreviewUrls[colorId] = {
+              product_images: productImgs,
+              product_ar_images: productArImgs,
+            };
+  
+            // ✅ Maintain color structure in the form (files empty)
+            colorImagesArray.push({
+              color_id: colorId,
+              product_images: [],
+              product_ar_images: [],
+            });
+          });
+  
+          // ✅ Patch color_images array in the form
+          this.productForm.patchValue({ color_images: colorImagesArray });
+  
+          console.log('🟢 colorPreviewUrls:', this.colorPreviewUrls);
+          
+  
+          // ✅ Patch other non-image fields
+          this.productForm.patchValue({
+            name: this.productDetails.name || '',
+            name_ar: this.productDetails.name_ar || '',
+            description: this.productDetails.description || '',
+            description_ar: this.productDetails.description_ar || '',
+            price: +this.productDetails.price || 0,
+            vatPercentage: +this.productDetails.vatPercentage || 0,
+            quantity: +this.productDetails.quantity || 0,
+            status: this.productDetails.status ?? true,
+            merchant_id: this.productDetails.merchant?.[0]?.id || '',
+            category: (this.productDetails.categories || []).map((c: any) => c._id || c.id),
+            length_id: (this.productDetails.lengths || []).map((l: any) => l._id || l.id),
+            fabric_id: (this.productDetails.fabrics || []).map((f: any) => f._id || f.id),
+            type_id: (this.productDetails.types || []).map((t: any) => t._id || t.id),
+            brand_id: (this.productDetails.brands || []).map((b: any) => b._id || b.id),
+            size_id: (this.productDetails.sizes || []).map((s: any) => s._id || s.id),
+            care_id: (this.productDetails.cares || []).map((c: any) => c._id || c.id),
+            color_id: (this.productDetails.colors || []).map((clr: any) => clr._id || clr.id),
+          });
         },
-        error: (err) => console.error('Error fetching product details', err)
+        error: (err) => console.error('Error fetching product details', err),
       });
     }
   }
+  
 
   loadDropdownData(): void {
     this._productservice.getAllMerchants(this.usertoken).subscribe(res => this.merchants = res.data.docs);
@@ -149,7 +200,6 @@ export class ProductformComponent {
     this._productservice.getAllSizes(this.usertoken).subscribe(res => this.sizes = res.data.docs);
     this._productservice.getAllColors(this.usertoken).subscribe(res => this.colors = res.data.docs);
     this._productservice.getAllCares(this.usertoken).subscribe(res => this.cares = res.data.docs);
-    this._productservice.getAllCurrency(this.usertoken).subscribe(res => this.currencies = res.data.docs);
   }
 
   get f() {
@@ -172,6 +222,15 @@ export class ProductformComponent {
 
   saveData(data: any): Observable<any> {
     const formData = this.prepareFormData(data);
+
+
+
+     // 🧩 Debug log — verify FormData contents
+    for (const pair of (formData as any).entries()) {
+      console.log(pair[0], pair[1]);
+    }
+
+
     return this._productservice.createProduct(formData, this.usertoken).pipe(
       tap(res => {
         this._toastrService.showSuccess('Product created successfully');
@@ -201,66 +260,145 @@ export class ProductformComponent {
 
   private prepareFormData(data: any): FormData {
     const formData = new FormData();
-    formData.append('name', data.name || '');
-    formData.append('name_ar', data.name_ar || '');
-    formData.append('description', data.description || '');
-    formData.append('description_ar', data.description_ar || '');
-    formData.append('price', data.price?.toString() || '0');
-    formData.append('priceWithVAT', data.priceWithVAT?.toString() || '0');
-    formData.append('vatPercentage', data.vatPercentage?.toString() || '0');
-    formData.append('quantity', data.quantity || '');
-    formData.append('currency', data.currency || '');
-    formData.append('status', data.status ? 'true' : 'false');
+  
+    // 🧩 Basic fields
+    const basicFields = [
+      'name',
+      'name_ar',
+      'description',
+      'description_ar',
+      'price',
+      'vatPercentage',
+      'quantity',
+      'status',
+      'merchant_id',
+    ];
+  
+    basicFields.forEach((field) => {
+      formData.append(field, data[field]?.toString() || '');
+    });
+  
     formData.append('userId', localStorage.getItem('userId') || '');
-
-    // append array fields
-    const arrayFields = ['category', 'merchant_id', 'length_id', 'fabric_id', 'type_id', 'brand_id', 'size_id', 'color_id', 'care_id'];
-    arrayFields.forEach(field => {
-      if (data[field] && Array.isArray(data[field])) {
-        data[field].forEach((id: string) => formData.append(field, id));
+  
+    // 🧩 Multi-select fields
+    const arrayFields = [
+      'category',
+      'length_id',
+      'fabric_id',
+      'type_id',
+      'brand_id',
+      'size_id',
+      'color_id',
+      'care_id',
+    ];
+  
+    arrayFields.forEach((field) => {
+      if (Array.isArray(data[field])) {
+        data[field].forEach((val: string) => formData.append(field, val));
       }
     });
+  
+    // 🧩 Dynamic color-based image uploads
+    if (Array.isArray(data.color_images)) {
+      data.color_images.forEach((colorItem: any) => {
+        const colorId = colorItem.color_id;
+        if (!colorId) return;
+  
+        // Normal images
+        if (Array.isArray(colorItem.product_images)) {
+          colorItem.product_images.forEach((file: File) => {
+            if (file instanceof File) {
+              formData.append(`color_${colorId}_product_images`, file, file.name);
+            }
+          });
+        }
+  
+        // Arabic images
+        if (Array.isArray(colorItem.product_ar_images)) {
+          colorItem.product_ar_images.forEach((file: File) => {
+            if (file instanceof File) {
+              formData.append(`color_${colorId}_product_ar_images`, file, file.name);
+            }
+          });
+        }
+      });
+    }
 
-    // append multiple files
-    ['product_images', 'product_ar_images'].forEach(field => {
-      const files: File[] = data[field] || [];
-      if (Array.isArray(files)) {
-        files.forEach(file => {
-          if (file instanceof File) {
-            formData.append(field, file, file.name);
-          }
-        });
-      }
-    });
+    // 🧩 Default (main) images
+    if (data.default_images instanceof File) {
+      formData.append('default_images', data.default_images, data.default_images.name);
+    }
 
+    if (data.default_ar_images instanceof File) {
+      formData.append('default_ar_images', data.default_ar_images, data.default_ar_images.name);
+    }
+
+  
     return formData;
   }
+  
+ 
 
-  onCancel() {
-    this.productForm.reset({ status: 'Active' });
-    this._router.navigate(['/products']);
+  onColorFileSelected(event: any, colorId: string, type: 'product_images' | 'product_ar_images') {
+    const files = Array.from(event.target.files || []);
+  
+    // Initialize preview map for this color
+    if (!this.colorPreviewUrls[colorId]) {
+      this.colorPreviewUrls[colorId] = { product_images: [], product_ar_images: [] };
+    }
+  
+    // Update preview URLs
+    this.colorPreviewUrls[colorId][type] = files.map((f: any) => URL.createObjectURL(f));
+  
+    // Get existing form value
+    const formValue = this.productForm.value;
+  
+    // Ensure color_images array exists
+    if (!Array.isArray(formValue.color_images)) {
+      formValue.color_images = [];
+    }
+  
+    // Find existing color entry
+    let colorEntry = formValue.color_images.find((c: any) => c.color_id === colorId);
+  
+    // If not found, add a new one
+    if (!colorEntry) {
+      colorEntry = { color_id: colorId, product_images: [], product_ar_images: [] };
+      formValue.color_images.push(colorEntry);
+    }
+  
+    // Update product_images or product_ar_images for that color
+    colorEntry[type] = files;
+  
+    // Update the form control
+    this.productForm.patchValue({ color_images: formValue.color_images });
+  
+    console.log('✅ Updated color_images:', this.productForm.value.color_images);
   }
+
+  selectedFileNames1: { [key: string]: string } = {};
 
   onFileSelected(event: Event, controlName: string) {
     const input = event.target as HTMLInputElement;
-    if (!input.files || input.files.length === 0) return;
+    if (input.files && input.files.length > 0) {
+      const file = input.files[0];
   
-    const files = Array.from(input.files); // always an array
+      this.productForm.patchValue({ [controlName]: file });
+      this.productForm.get(controlName)?.updateValueAndValidity();
   
-    // patch the form with an array of files
-    this.productForm.patchValue({ [controlName]: files });
-    this.productForm.get(controlName)?.updateValueAndValidity();
+      this.selectedFileNames1[controlName] = file.name;
   
-    // save filenames for display
-    this.selectedFileNames[controlName] = files.map(f => f.name);
-  
-    // generate previews
-    this.previewUrls[controlName] = [];
-    files.forEach(file => {
+      // ✅ Generate preview
       const reader = new FileReader();
-      reader.onload = () => this.previewUrls[controlName].push(reader.result as string);
+      reader.onload = () => (this.previewUrls[controlName] = reader.result as string);
       reader.readAsDataURL(file);
-    });
+    }
+  }
+   
+  
+  onCancel() {
+    this.productForm.reset({ status: 'Active' });
+    this._router.navigate(['/products']);
   }
   
 }

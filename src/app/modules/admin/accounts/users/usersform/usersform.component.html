@@ -36,22 +36,29 @@
   
         </div>
              
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">            
-    
-            <mat-form-field class="w-full">
-                <mat-label>Email</mat-label>
-                <input matInput formControlName="email" placeholder="Enter email" />
-                <!-- <mat-error *ngIf="userform.get('code')?.hasError('required')">Code is required</mat-error> -->
-              </mat-form-field>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
 
-              <mat-form-field class="w-full">
-                <mat-label>Mobile number</mat-label>
-                <input matInput formControlName="mobilenumber" placeholder="Enter mobilenumber" />
-                <!-- <mat-error *ngIf="userform.get('code')?.hasError('required')">Code is required</mat-error> -->
-              </mat-form-field>  
-      
-        </div>   
-
+          <!-- Email -->
+          <mat-form-field class="w-full md:col-span-1">
+            <mat-label>Email</mat-label>
+            <input matInput formControlName="email" placeholder="Enter email" />
+          </mat-form-field>
+        
+          <!-- Phone Code -->
+          <mat-form-field class="w-full md:col-span-1">
+            <mat-label>Code</mat-label>
+            <input matInput formControlName="phonecode" placeholder="+973" />
+          </mat-form-field>
+        
+          <!-- Mobile Number -->
+          <mat-form-field class="w-full md:col-span-1">
+            <mat-label>Mobile Number</mat-label>
+            <input matInput formControlName="mobilenumber" placeholder="Enter mobile number" />
+          </mat-form-field>
+        
+        </div>
+        
+        
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <mat-form-field class="w-full">
               <mat-label>Username</mat-label>
@@ -63,7 +70,7 @@
                 <mat-label>Password</mat-label>
                 <input matInput formControlName="password" type="password" placeholder="Enter password" />
                 <!-- <mat-error *ngIf="userform.get('code')?.hasError('required')">Code is required</mat-error> -->
-              </mat-form-field>
+            </mat-form-field>
       
         </div>   
       
@@ -73,9 +80,10 @@
           <mat-form-field class="w-full">
             <mat-label>Status</mat-label>
             <mat-select formControlName="status">
-              <mat-option value="Active">Active</mat-option>
-              <mat-option value="Inactive">Inactive</mat-option>
+              <mat-option value="active">Active</mat-option>
+              <mat-option value="inactive">Inactive</mat-option>
             </mat-select>
+            
           </mat-form-field>
         </div>
         

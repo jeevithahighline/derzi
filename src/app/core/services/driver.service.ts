@@ -97,16 +97,28 @@ export class DriverService {
       );
   }
 
-  public deleteMultipleData(requestBody:{User_list:string[]},usertoken) {
+  public deleteCompleteDriver(deleteId,usertoken) {
+
+
     return this._httpReqService.request({
-      method: APP_CONSTANTS.API_METHODS.POST,
-      url: this._configService.getApiUrl()+environment.SERVICE_APIS.BULK_DRIVER_DELETE,
-      body: requestBody,
+      method: APP_CONSTANTS.API_METHODS.DELETE,
+      url: this._configService.getApiUrl()+environment.SERVICE_APIS.COMPLETE_DELETE_DRIVER + '/' + deleteId,
       headerConfig: {token:usertoken}
     })
       .pipe(
         map(response => this._extractResponse(response))
       );
+  }
+
+  public deleteMultipleData(requestBody:{deleteIds:string[]}, usertoken) {
+    return this._httpReqService.request({
+      method: APP_CONSTANTS.API_METHODS.DELETE,
+      url: this._configService.getApiUrl() + environment.SERVICE_APIS.BULK_DRIVER_DELETE,
+      body: requestBody,
+      headerConfig: { token: usertoken }
+    }).pipe(
+      map(response => this._extractResponse(response))
+    );
   }
 
   private _extractResponse = (response: { data: any, success:any,status: number }) => {

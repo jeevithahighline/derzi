@@ -97,16 +97,48 @@ export class MerchantService {
       );
   }
 
-  public deleteMultipleData(requestBody:{User_list:string[]},usertoken) {
+  public deleteCompleteMerchant(deleteId,usertoken) {
+
+
     return this._httpReqService.request({
-      method: APP_CONSTANTS.API_METHODS.POST,
-      url: this._configService.getApiUrl()+environment.SERVICE_APIS.BULK_MERCHANT_DELETE,
-      body: requestBody,
+      method: APP_CONSTANTS.API_METHODS.DELETE,
+      url: this._configService.getApiUrl()+environment.SERVICE_APIS.COMPLETE_DELETE_MERCHANT + '/' + deleteId,
       headerConfig: {token:usertoken}
     })
       .pipe(
         map(response => this._extractResponse(response))
       );
+  }
+
+  public deleteMultipleData(requestBody:{deleteIds:string[]}, usertoken) {
+    return this._httpReqService.request({
+      method: APP_CONSTANTS.API_METHODS.DELETE,
+      url: this._configService.getApiUrl() + environment.SERVICE_APIS.BULK_MERCHANT_DELETE,
+      body: requestBody,
+      headerConfig: { token: usertoken }
+    }).pipe(
+      map(response => this._extractResponse(response))
+    );
+  }
+
+  public getAllCategories(usertoken: any) {
+    return this._httpReqService.request({
+      method: APP_CONSTANTS.API_METHODS.GET,
+      url: `${this._configService.getApiUrl()}${environment.SERVICE_APIS.GET_ALL_CATEGORY}`,
+      headerConfig: { token: usertoken }
+    }).pipe(
+      map(response => this._extractResponse(response))
+    );
+  }
+
+  public getAllServices(usertoken: any) {
+    return this._httpReqService.request({
+      method: APP_CONSTANTS.API_METHODS.GET,
+      url: `${this._configService.getApiUrl()}${environment.SERVICE_APIS.GET_ALL_TAILORING_SERVICE}`,
+      headerConfig: { token: usertoken }
+    }).pipe(
+      map(response => this._extractResponse(response))
+    );
   }
 
   private _extractResponse = (response: { data: any, success:any,status: number }) => {

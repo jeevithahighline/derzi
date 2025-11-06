@@ -32,7 +32,7 @@ export class RoleformComponent {
     this.dynamicForm = this.fb.group({
       role: ['', Validators.required],
       description: ['', Validators.required],
-      status: [null, Validators.required]
+      status: [true, Validators.required]
     });
 
     // Prefill if editing

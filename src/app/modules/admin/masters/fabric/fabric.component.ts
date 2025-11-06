@@ -127,5 +127,41 @@ export class FabricComponent {
     this.loadFabric(this.page, this.pageSize);
   }
 
+  deleteSelected() {
+    const selectedIds = this.fabrics.filter(item => item.isSelected).map(item => item._id);
+  
+    if (selectedIds.length === 0) {
+      this._toastrService.showError("Please select at least one record to delete.");
+      return;
+    }
+  
+    // ✅ Confirmation popup
+    const dialogRef = this.dialog.open(ConfirmdialogComponent, {
+      width: '450px',
+      height: '250px',
+      disableClose: true,
+    });
+  
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        // ✅ Prepare request body
+        const requestBody = { deleteIds: selectedIds };
+  
+        // ✅ Call multi-delete API
+        this._masterservice.deleteMultipleData(requestBody, this.usertoken).subscribe({
+          next: () => {
+            this._toastrService.showSuccess("Selected fabric deleted successfully");
+            this.loadFabric(); // refresh table
+          },
+          error: () => {
+            this._toastrService.showError("Failed to delete selected fabric");
+          }
+        });
+      } else {
+        this._toastrService.showError("Deletion cancelled by user");
+      }
+    });
+  }
+
 }
 

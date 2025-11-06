@@ -26,6 +26,7 @@
               </label></th>
         <th scope="col">ID</th>
         <th scope="col">Country</th>
+        <th scope="col">Conversion Name</th>
         <th scope="col">Code</th>
         <th scope="col">Status</th>
         <th scope="col">Action</th>
@@ -41,7 +42,8 @@
         </td>
         <td>{{ (pageIndex * pageSize) + i + 1 }}</td>
         <td>{{ country.name }}</td>   
-        <td>{{ country.code }}</td>     
+        <td>{{ country.code.name }}</td>    
+        <td>{{ country.code.code }}</td>     
         <td>{{ country.status ? 'Active' : 'Inactive' }}</td>        
         <td>
           <button class="btn btn-sm me-2" (click)="editCountry(country)">

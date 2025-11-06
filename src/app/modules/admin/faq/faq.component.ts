@@ -85,6 +85,42 @@ export class FaqComponent {
     });
   }
 
+  deleteSelected() {
+    const selectedIds = this.faqs.filter(item => item.isSelected).map(item => item._id);
+  
+    if (selectedIds.length === 0) {
+      this._toastrService.showError("Please select at least one record to delete.");
+      return;
+    }
+  
+    // ✅ Confirmation popup
+    const dialogRef = this.dialog.open(ConfirmdialogComponent, {
+      width: '450px',
+      height: '250px',
+      disableClose: true,
+    });
+  
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        // ✅ Prepare request body
+        const requestBody = { deleteIds: selectedIds };
+  
+        // ✅ Call multi-delete API
+        this._faqService.deleteMultipleData(requestBody, this.usertoken).subscribe({
+          next: () => {
+            this._toastrService.showSuccess("Selected faqs deleted successfully");
+            this.loadFAQs(); // refresh table
+          },
+          error: () => {
+            this._toastrService.showError("Failed to delete selected faqs");
+          }
+        });
+      } else {
+        this._toastrService.showError("Deletion cancelled by user");
+      }
+    });
+  }
+
   addfaq(){
     this._router.navigate(['/addfaq']);
   }
@@ -97,6 +133,13 @@ export class FaqComponent {
   // If all rows checked, master should be checked
   isAllSelected() {
     this.masterSelected = this.faqs.every(faq => faq.isSelected);
+  }
+
+  onPageChange(event: any) {
+    this.page = event.pageIndex + 1;
+    this.pageIndex = event.pageIndex;
+    this.pageSize = event.pageSize;
+    this.loadFAQs(this.page, this.pageSize);
   }
 
 }

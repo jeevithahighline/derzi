@@ -21,6 +21,7 @@ export class DerziuserComponent {
   pageSize = 10;
   pageIndex = 0;
   usertoken:any;
+  isSuperAdmin:any;
   selectedIds: string[] = [];
   constructor(private _router: Router,private dialog: MatDialog,private _accountService: AuthService,private _toastrService: ToastService) {}
 
@@ -28,6 +29,8 @@ export class DerziuserComponent {
   derziusers: any[] = [];
   
   ngOnInit(): void {
+
+    this.isSuperAdmin = localStorage.getItem('isSuperAdmin'); 
     this.loadderziusers();
   }
 
@@ -58,12 +61,12 @@ export class DerziuserComponent {
 
   editderziuser(derziuser: any, index: number) {
     //alert(banner.id);
-    this._router.navigate(['/addderziuser', derziuser.id]);   
+    this._router.navigate(['/addderziuser', derziuser._id]);   
   }
 
   deletederziuser(data) {
-
     this.selectedIds = data._id;
+  
     const dialogRef = this.dialog.open(ConfirmdialogComponent, {
       width: '450px',
       height: '250px',
@@ -72,8 +75,14 @@ export class DerziuserComponent {
   
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        // ✅ Call delete API
-        this._accountService.deleteUser(this.selectedIds,this.usertoken).subscribe({
+        const isSuperAdmin = localStorage.getItem('isSuperAdmin') === 'true';
+  
+        // ✅ Choose which delete API to call
+        const deleteObservable = isSuperAdmin
+          ? this._accountService.deleteCompleteUser(this.selectedIds, this.usertoken)
+          : this._accountService.deleteUser(this.selectedIds, this.usertoken);
+  
+        deleteObservable.subscribe({
           next: () => {
             this._toastrService.showSuccess("Deleted Successfully");
             this.loadderziusers(); // refresh table
@@ -87,6 +96,7 @@ export class DerziuserComponent {
       }
     });
   }
+  
 
   
 
@@ -102,6 +112,13 @@ export class DerziuserComponent {
   // If all rows checked, master should be checked
   isAllSelected() {
     this.masterSelected = this.derziusers.every(derziuser => derziuser.isSelected);
+  }
+
+  onPageChange(event: any) {
+    this.page = event.pageIndex + 1;
+    this.pageIndex = event.pageIndex;
+    this.pageSize = event.pageSize;
+    this.loadderziusers(this.page, this.pageSize);
   }
 
 }

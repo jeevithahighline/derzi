@@ -1,57 +1,80 @@
 <div class="container p-4 mt-3">
-  <!-- 🔎 Search -->
-
+  <!-- 🔎 Search + Filters + Add -->
   <div class="row">
     <div class="col-6">
-      <div class="heading">
-        Orders
-      </div>
+      <div class="heading">Orders</div>
     </div>
-    <div class="col-6">
-      <div class="d-flex text-right">
-        <!-- Search -->
-        <input type="text" class="form-control" placeholder="Search Orders" [(ngModel)]="searchText" />
-        <!-- Filters Button -->
-        <button mat-raised-button color="primary mleft" [matMenuTriggerFor]="filterMenu" matMenuTriggerRestoreFocus="false">
-          Filters
-        </button>
-      </div>
+    <div class="col-6 dflexmain">
+      <input
+        type="text"
+        class="form-control"
+        placeholder="Search Orders"
+        [(ngModel)]="searchText"
+        (ngModelChange)="onSearchChange()"
+      />
+
+      <!-- Filters Button -->
+      <button
+        mat-raised-button
+        color="primary mleft"
+        [matMenuTriggerFor]="filterMenu"
+        matMenuTriggerRestoreFocus="false"
+      >
+        Filters
+      </button>
+
+      <button class="btn-add" (click)="addOrder()">
+        <img src="/images/icon/add-btn.svg" alt="" />Create Order
+      </button>
     </div>
   </div>
 
-
-  <!-- Filters Panel -->
-  <mat-menu #filterMenu="matMenu" [hasBackdrop]="true" [overlapTrigger]="false" class="filter-panel p-3 matmenums">
+  <!-- 🧩 Filters Menu -->
+  <mat-menu
+    #filterMenu="matMenu"
+    [hasBackdrop]="true"
+    [overlapTrigger]="false"
+    class="filter-panel p-3 matmenums"
+  >
     <div class="p-2" (click)="$event.stopPropagation()">
-      
       <!-- ✅ Date Range -->
       <mat-form-field class="w-full datemenu">
         <mat-label>Date Range</mat-label>
         <mat-date-range-input [rangePicker]="picker">
-          <input matStartDate placeholder="Start date" [(ngModel)]="startDate" (click)="$event.stopPropagation()">
-          <input matEndDate placeholder="End date" [(ngModel)]="endDate" (click)="$event.stopPropagation()">
+          <input
+            matStartDate
+            placeholder="Start date"
+            [(ngModel)]="startDate"
+            (click)="$event.stopPropagation()"
+          />
+          <input
+            matEndDate
+            placeholder="End date"
+            [(ngModel)]="endDate"
+            (click)="$event.stopPropagation()"
+          />
         </mat-date-range-input>
         <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
         <mat-date-range-picker #picker></mat-date-range-picker>
       </mat-form-field>
-  
+
       <!-- ✅ Order Status -->
       <mat-form-field class="w-full">
         <mat-label>Order Status</mat-label>
         <mat-select [(ngModel)]="selectedStatus" (click)="$event.stopPropagation()">
           <mat-option value="">All</mat-option>
-          <mat-option value="pending">Pending</mat-option>
-          <mat-option value="completed">Completed</mat-option>
-          <mat-option value="cancelled">Cancelled</mat-option>
+          <mat-option value="Pending">Pending</mat-option>
+          <mat-option value="Completed">Completed</mat-option>
+          <mat-option value="Cancelled">Cancelled</mat-option>
         </mat-select>
       </mat-form-field>
-  
-      <!-- ✅ Customer Name -->
+
+      <!-- ✅ Amount -->
       <mat-form-field class="w-full">
         <mat-label>Amount</mat-label>
         <input matInput [(ngModel)]="amount" (click)="$event.stopPropagation()" />
       </mat-form-field>
-  
+
       <!-- ✅ Buttons -->
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
         <button mat-stroked-button color="warn" (click)="clearFilters(); $event.stopPropagation()">Clear</button>
@@ -59,8 +82,6 @@
       </div>
     </div>
   </mat-menu>
-  
-
 
   <!-- 📊 Orders Table -->
   <div class="tableparent">
@@ -68,41 +89,61 @@
       <thead class="table-light">
         <tr>
           <th>
-            <!-- <input type="checkbox" /> -->
-             <label class="customcheckbox">
-              <input type="checkbox" [(ngModel)]="masterSelected" (change)="checkUncheckAll()">
+            <label class="customcheckbox">
+              <input type="checkbox" [(ngModel)]="masterSelected" (change)="checkUncheckAll()" />
               <span class="checkmark"></span>
             </label>
           </th>
           <th>ID</th>
-          <th>Customer</th>
+          <th>Customer Name</th>
           <th>Date</th>
           <th>Amount</th>
           <th>Status</th>
           <th>Info</th>
+          <th>Action</th>
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let order of filteredOrders()">
+        <tr *ngFor="let order of filteredOrders">
           <td>
-            <!-- <input type="checkbox" /> -->
             <label class="customcheckbox">
-              <input type="checkbox" [(ngModel)]="order.isSelected"  (change)="isAllSelected()">
+              <input type="checkbox" [(ngModel)]="order.isSelected" (change)="isAllSelected()" />
               <span class="checkmark"></span>
             </label>
           </td>
           <td>{{ order.orderId }}</td>
-          <td>{{ order.shippingAddress.fullName }}</td>
-          <td>{{ order.createdAt | date:'dd/MM/yyyy' }}</td>
-          <td>{{ order.totalAmount }} BHD</td>
+          <td>
+            {{
+              order.ordertype === 'Manual'
+                ? 'Derzi Team'
+                : (order.userInfo?.firstname || '') + ' ' + (order.userInfo?.lastname || '')
+            }}
+          </td>
+          <td>{{ order.createdAt | date: 'dd/MM/yyyy' }}</td>
+          <td>{{ order.total }} BHD</td>
           <td>{{ order.orderStatus }}</td>
           <td>
-            <button (click)="viewOrder(order._id)">View Order</button>
+            <button (click)="viewOrder(order._id)" class="table-link">View Order</button>
           </td>
-          
+          <td>
+            <button class="btn btn-sm" (click)="deleteOrder(order._id)">
+              <img src="/images/icon/delete.svg" alt="" />
+            </button>
+          </td>
+        </tr>
+
+        <tr *ngIf="filteredOrders.length === 0">
+          <td colspan="8" class="text-center">No records found</td>
         </tr>
       </tbody>
     </table>
-    <mat-paginator [length]="totalItems" [pageSize]="10" [pageSizeOptions]="[10,25,100]"></mat-paginator>
+
+    <!-- Pagination -->
+    <mat-paginator
+      [length]="totalItems"
+      [pageSize]="pageSize"
+      [pageSizeOptions]="[10, 25, 100]"
+      (page)="onPageChange($event)"
+    ></mat-paginator>
   </div>
 </div>

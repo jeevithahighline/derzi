@@ -11,10 +11,17 @@
     <input matInput formControlName="name" placeholder="Enter country name" /> 
   </mat-form-field>
 
+  <mat-form-field appearance="outline">
+    <mat-label>Country Flag</mat-label>
+    <input matInput formControlName="flag" placeholder="Enter country flag" /> 
+  </mat-form-field>
+
   <!-- Country Code -->
   <mat-form-field appearance="outline">
-    <mat-label>Country Code</mat-label>
-    <input matInput formControlName="code" placeholder="E.g. IN, US" />  
+    <mat-label>Currency</mat-label>
+    <mat-select formControlName="code">
+      <mat-option *ngFor="let currency of code" [value]="currency._id">{{ currency.name }}</mat-option>
+    </mat-select> 
   </mat-form-field>
 
   <!-- Status -->

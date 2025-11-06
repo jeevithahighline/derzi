@@ -1,46 +1,149 @@
-Detail Information About Order
+<div class="container p-4 mt-3">
 
-<div class="order-details">
- 
-    <p><strong>OrderId:</strong> {{ orderDetails?.orderId }}</p>
-    <!-- Shipping Info -->
-    <h3>Shipping Address</h3>
-    <p><strong>Name:</strong> {{ orderDetails?.shippingAddress?.fullName }}</p>
-    <p><strong>Address:</strong> {{ orderDetails?.shippingAddress?.address }}, {{ orderDetails?.shippingAddress?.city }}, {{ orderDetails?.shippingAddress?.postalCode }}, {{ orderDetails?.shippingAddress?.country }}</p>
+<div class="row">
+  <div class="col-6">
+    <div class="heading">
+      Orders
+    </div>
+  </div>
+  <div class="col-6 dflexmain"> 
+    
+      <button mat-raised-button color="primary mleft" class="back-btn" (click)="updateOrders()">Update Order</button>
+      <button mat-raised-button color="primary mleft" class="back-btn" (click)="goBack()">← Back to Orders</button>
+      <button mat-raised-button color="primary mleft" class="back-btn" (click)="downloadPDF()" [disabled]="isLoadingPDF">
+        {{ isLoadingPDF ? 'Downloading...' : 'Download PDF' }}
+      </button>
+    
+  </div>
+</div>
+
+<div *ngIf="isLoadingPDF" class="pdf-loader-overlay">
+  <div class="spinner"></div>
+  <div class="loading-text">Preparing your PDF...</div>
+</div>
+
+<div id="orderDetails" class="order-details" style="font-family: Arial, sans-serif;padding: 20px; border: 1px solid #ddd;">
+
+  <p style="align-content:center;"><strong>Order Id:</strong> {{ orderDetails?.orderId }}</p>
   
-    <!-- Payment & Status -->
-    <h3>Payment & Status</h3>
-    <p><strong>Payment Method:</strong> {{ orderDetails?.paymentMethod }}</p>
-    <p><strong>Payment Status:</strong> {{ orderDetails?.paymentStatus }}</p>
-    <p><strong>Order Status:</strong> {{ orderDetails?.orderStatus }}</p>
-  
-    <!-- Items -->
-    <h3>Products</h3>
-    <table border="1" cellspacing="0" cellpadding="5">
-      <thead>
-        <tr>
-          <th>Product Name</th>
-          <th>Description</th>
-          <th>Unit Price</th>
-          <th>Quantity</th>
-          <th>Total Price</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let item of orderDetails?.items">
-            <td>{{ item?.productId?.name }}</td>
-            <td>{{ item?.productId?.description }}</td>
-            <td>{{ item?.price }} BHD</td>
-            <td>{{ item?.quantity }}</td>
-            <td>{{ (item?.price * item?.quantity) }} BHD</td>
-        </tr>
-      </tbody>
-    </table>
-  
-    <!-- Total -->
-    <h3>Total Amount: {{ orderDetails?.totalAmount  }} BHD</h3>
-  
-    <!-- Order Dates -->
-    <p><strong>Ordered On:</strong> {{ orderDetails?.createdAt | date:'dd/MM/yyyy'  }}</p>
+  <div *ngIf="orderDetails?.ordertype === 'Manual'; else customerInfo">
+    <h3 style="text-align:left;">Customer Details</h3>
+    <p>Derzi Team</p>
   </div>
   
+  <ng-template #customerInfo>
+    <h3>Customer Details</h3>
+    <p><strong>Firstname:</strong> {{ orderDetails?.userInfo?.firstname }}</p>
+    <p><strong>Lastname:</strong> {{ orderDetails?.userInfo?.lastname }}</p>
+    <p><strong>Email:</strong> {{ orderDetails?.userInfo?.email }}</p>
+    <p><strong>Mobile Number:</strong> {{ orderDetails?.userInfo?.mobilenumber }}</p>
+  </ng-template>
+  
+  <!-- Shipping Info -->
+  <h3>Shipping Address</h3>
+  <p><strong>Label:</strong> {{ orderDetails?.shippingAddress?.label }}</p>
+  <p>
+    <strong>Address:</strong>
+    {{ orderDetails?.shippingAddress?.address }},
+    {{ orderDetails?.shippingAddress?.apartment }},
+    {{ orderDetails?.shippingAddress?.area }},
+    {{ orderDetails?.shippingAddress?.city }},
+    {{ orderDetails?.shippingAddress?.state }},
+    {{ orderDetails?.shippingAddress?.postalCode }},
+    {{ orderDetails?.shippingAddress?.country }}
+  </p>
+
+  <!-- Payment & Status -->
+  <h3>Payment & Status</h3>
+  <p><strong>Payment Method:</strong> {{ orderDetails?.paymentMethod }}</p>
+  <p><strong>Payment Status:</strong> {{ orderDetails?.paymentStatus }}</p>
+  <p><strong>Order Status:</strong> {{ orderDetails?.orderStatus }}</p>
+
+  <!-- Items -->
+  <h3>Products</h3>
+ 
+  <table border="1" cellspacing="0" cellpadding="5">
+    <thead>
+      <tr>
+        <th>Product Name</th>
+        <th>Description</th>
+        <th>Unit Price</th>
+        <th>VAT Percentage</th>
+        <th>Quantity</th>
+        <th>Total Price</th>
+        <th>Delivery Status</th>
+  
+        <!-- ✅ Conditionally show Driver column -->
+        <th *ngIf="showDriverColumn">Driver</th>
+  
+        <th>Delivery Date</th>
+        <th>Merchant Name</th>
+      </tr>
+    </thead>
+  
+    <tbody>
+      <tr *ngFor="let item of orderDetails?.items; let i = index">
+        <td>{{ item?.productInfo?.name }}</td>
+        <td>{{ item?.productInfo?.description }}</td>
+        <td>{{ item?.price }}</td>
+        <td>{{ item?.productInfo?.vatPercentage }}</td>
+        <td>{{ item?.quantity }}</td>
+        <td>{{ (item?.price * item?.quantity) }}</td>
+  
+        <!-- Delivery Status Dropdown -->
+        <td>
+          <select [(ngModel)]="item.deliverystatus"
+                  (change)="onDeliveryStatusChange(item)"
+                  style="padding: 4px; border-radius: 4px;">
+            <option *ngFor="let status of deliveryStatusOptions"
+                    [value]="status">
+              {{ status }}
+            </option>
+          </select>
+        </td>
+  
+        <!-- ✅ Driver column appears dynamically -->
+        <td *ngIf="showDriverColumn">
+          <ng-container *ngIf="item.deliverystatus === 'Assigned to Driver for delivery' || item.deliverystatus === 'Cancelled by Driver'">
+            <select [(ngModel)]="item.driverId"
+                    (change)="onDriverSelect(item)"
+                    style="padding: 4px; border-radius: 4px;">
+              <option *ngFor="let driver of driverList" [value]="driver._id">
+                {{ driver.firstname }} {{ driver.lastname }}
+              </option>
+            </select>
+          </ng-container>
+        </td>
+  
+        <td>{{ item?.deliveryDate | date:'dd/MM/yyyy' }}</td>
+        <td>{{ item?.productInfo?.merchantInfo[0]?.merchant_name }}</td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+
+  <!-- Summary -->
+  <h3>Summary</h3>
+  <p><strong>Subtotal (Inclusive VAT):</strong> {{ orderDetails?.subtotal }} </p>
+  <p><strong>Discount:</strong> {{ orderDetails?.discountAmount }} </p>
+  <p><strong>Delivery Fee:</strong> {{ orderDetails?.deliveryfee }} </p>
+  <p><strong>Default Currency:</strong> BHD </p>
+  <p><strong>Actual Price before Conversion Rate:</strong> {{ orderDetails?.total }} BHD</p>
+  
+
+  <h3>Conversion Rate</h3>
+  <p><strong>Discount:</strong> {{ orderDetails?.finalpricedetails.discount }} </p>
+  <p><strong>Currency:</strong> {{ orderDetails?.currency.code }} </p>
+  <p><strong>Currency Rate:</strong> {{ orderDetails?.currency.rate }} </p>
+  <p><strong>Subtotal (After Conversion Rate):</strong> {{ orderDetails?.finalpricedetails.subtotal }} {{ orderDetails?.currency.code }} </p>
+  <h3>Final Price: {{ orderDetails?.finalpricedetails.total }} {{ orderDetails?.currency.code }} </h3>
+
+  <!-- Order Dates -->
+  <p><strong>Ordered On:</strong> {{ orderDetails?.createdAt | date:'dd/MM/yyyy' }}</p>
+</div>
+
+</div>
+
+
+

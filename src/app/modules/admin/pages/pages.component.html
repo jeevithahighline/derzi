@@ -7,10 +7,10 @@
         </div>
       </div>
       <div class="col-6 dflexmain">
-        <button class="btn btn-sm" (click)="deletePage(1)">
+        <!-- <button class="btn btn-sm" (click)="deleteSelected()">
               <i class="bi bi-trash"></i>
                <img src="/images/icon/delete.svg" alt="">
-            </button>      
+            </button>       -->     
         <input type="text" class="form-control searchinput" placeholder="Search Pages" [(ngModel)]="searchText" />
         <button class="btn-add" (click)="addPages()"> <img src="/images/icon/add-btn.svg" alt=""> Add Page</button>
         
@@ -26,8 +26,8 @@
                 <span class="checkmark"></span>
               </label></th>
           <th scope="col">ID</th>
-          <th scope="col">Page title</th>
-          <th scope="col">Page Content</th>
+          <th scope="col">Page Name</th>
+          <th scope="col">Page Title</th>
           <th scope="col">Status</th>
           <th scope="col">Action</th>
         </tr>
@@ -41,9 +41,9 @@
             </label>
           </td>
           <td>{{ (pageIndex * pageSize) + i + 1 }}</td>
+          <td>{{ pages.page_name }}</td>  
           <td>{{ pages.title }}</td>  
-          <td>{{ pages.content }}</td>  
-          <td>Active</td>         
+          <td>{{ pages.status ? 'Active' : 'Inactive' }}</td>                  
           <td>
             <button class="btn btn-sm me-2" (click)="editPage(pages)">
               <img src="/images/icon/edit-2.svg" alt="">
