@@ -36,25 +36,33 @@
   
         </div>
              
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
 
-          <!-- Email -->
-          <mat-form-field class="w-full md:col-span-1">
+          <div class="w-full md:col-span-1">
+ <!-- Email -->
+  <mat-form-field class="w-full">
             <mat-label>Email</mat-label>
             <input matInput formControlName="email" placeholder="Enter email" />
           </mat-form-field>
-        
-          <!-- Phone Code -->
-          <mat-form-field class="w-full md:col-span-1">
+          </div>
+         <div class="dflexmain">
+    <mat-form-field class="w-25">
             <mat-label>Code</mat-label>
             <input matInput formControlName="phonecode" placeholder="+973" />
           </mat-form-field>
-        
-          <!-- Mobile Number -->
-          <mat-form-field class="w-full md:col-span-1">
+
+             <mat-form-field class="w-full md:col-span-2">
             <mat-label>Mobile Number</mat-label>
             <input matInput formControlName="mobilenumber" placeholder="Enter mobile number" />
           </mat-form-field>
+         </div>
+        
+        
+          <!-- Phone Code -->
+      
+        
+          <!-- Mobile Number -->
+       
         
         </div>
         
